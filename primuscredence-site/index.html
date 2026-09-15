@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PrimusCredence — Formal verification for cloud, protocols and AI</title>
+<meta name="description" content="PrimusCredence provides mathematical proof of security posture and protocol correctness — exhaustive verification of access policies, network isolation, smart contracts, distributed protocols, low-level code and AI guardrails.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230a0a0c'/><text y='66' x='50' text-anchor='middle' font-size='40' font-family='Georgia,serif' font-weight='700' fill='%23c9a227'>PC</text></svg>">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-raised:#101014;
+    --bg-panel:#0d0d11;
+    --gold:#c9a227;
+    --gold-bright:#e3c46b;
+    --gold-dim:#8c7526;
+    --rule:rgba(201,162,39,0.20);
+    --rule-soft:rgba(201,162,39,0.10);
+    --text:#e8e3d6;
+    --text-dim:#a29c8c;
+    --text-faint:#6f6a5e;
+    --sat:#d9836a;
+    --unsat:#7fb08a;
+    --maxw:1120px;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    font-size:16.5px; line-height:1.7; font-weight:300;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  h1,h2,h3,h4{ font-family:'Source Serif 4', Georgia, serif; font-weight:600; margin:0; text-wrap:balance; color:var(--text); }
+  a{ color:var(--gold-bright); text-decoration:none; }
+  a:hover{ color:#f0d792; }
+  a:focus-visible, [role="button"]:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; border-radius:2px; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  /* ---------- ambient logic symbols ---------- */
+  #logicfield{
+    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+  }
+  #logicfield span{
+    position:absolute; bottom:-12vh;
+    font-family:'Source Serif 4', Georgia, serif;
+    color:var(--gold-bright); line-height:1; user-select:none;
+    text-shadow:0 0 18px rgba(227,196,107,0.18);
+    will-change:transform, opacity;
+    animation-name:drift; animation-timing-function:linear; animation-iteration-count:infinite;
+  }
+  @keyframes drift{
+    0%   { transform:translate3d(0, 0, 0) rotate(0deg); }
+    100% { transform:translate3d(var(--sway), -118vh, 0) rotate(var(--spin)); }
+  }
+  header, .hero, section, footer{ position:relative; z-index:1; }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(10,10,12,0.88); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .bar{ display:flex; align-items:center; justify-content:space-between; gap:24px; padding:16px 28px; max-width:var(--maxw); margin:0 auto; }
+  .wordmark{ font-family:'Source Serif 4',serif; font-size:1.14rem; letter-spacing:0.045em; color:var(--text); font-weight:600; white-space:nowrap; }
+  .wordmark span{ color:var(--gold); }
+  nav.links{ display:flex; gap:25px; align-items:center; }
+  nav.links a{ font-size:13.5px; color:var(--text-dim); font-weight:400; letter-spacing:0.02em; }
+  nav.links a:hover{ color:var(--gold-bright); }
+  .mailbtn{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--gold);
+    border:1px solid var(--rule); padding:8px 14px; border-radius:3px; white-space:nowrap;
+    cursor:pointer; user-select:none; -webkit-user-select:none;
+    transition:background .2s, color .2s, border-color .2s;
+  }
+  .mailbtn:hover{ background:rgba(201,162,39,0.10); color:var(--gold-bright); border-color:var(--gold-dim); }
+  @media(max-width:980px){ nav.links{display:none;} }
+  @media(max-width:560px){ .bar .mailbtn{ font-size:11px; padding:7px 10px; } }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:92px 0 76px; overflow:hidden; }
+  .hero::before{
+    content:""; position:absolute; top:-230px; left:50%; transform:translateX(-50%);
+    width:940px; height:580px; pointer-events:none; z-index:-1;
+    background:radial-gradient(ellipse at center, rgba(201,162,39,0.13), rgba(201,162,39,0.04) 45%, transparent 70%);
+  }
+  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:22px; }
+  .hero h1{ font-size:clamp(2.1rem, 4.6vw, 3.25rem); line-height:1.12; letter-spacing:-0.015em; max-width:20ch; margin-bottom:22px; }
+  .hero h1 em{ font-style:normal; color:var(--gold); }
+  .hero p.lead{ font-size:1.08rem; color:var(--text-dim); max-width:62ch; margin:0 0 34px; font-weight:300; }
+
+  .proof{
+    border:1px solid var(--rule); border-radius:6px; background:var(--bg-panel);
+    font-family:'IBM Plex Mono',monospace; font-size:12.6px; line-height:1.85;
+    overflow-x:auto; box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  }
+  .proof .head{ display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid var(--rule-soft); color:var(--text-faint); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--gold-dim); opacity:0.55; }
+  .proof pre{ margin:0; padding:18px 20px 20px; color:var(--text-dim); white-space:pre; }
+  .proof .k{ color:var(--gold); }
+  .proof .q{ color:var(--gold-bright); }
+  .proof .sat{ color:var(--sat); font-weight:500; }
+  .proof .ok{ color:var(--unsat); }
+  .proof .c{ color:var(--text-faint); }
+
+  /* ---------- sections ---------- */
+  section{ padding:78px 0; border-top:1px solid var(--rule-soft); }
+  .sec-label{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:14px; }
+  section h2{ font-size:clamp(1.5rem,2.9vw,2.05rem); line-height:1.2; margin-bottom:16px; max-width:26ch; }
+  .sec-intro{ color:var(--text-dim); max-width:66ch; margin:0 0 38px; }
+
+  .grid{ display:grid; gap:18px; }
+  .g2{ grid-template-columns:repeat(2,1fr); }
+  .g3{ grid-template-columns:repeat(3,1fr); }
+  @media(max-width:860px){ .g2,.g3{ grid-template-columns:1fr; } }
+
+  .card{
+    border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised);
+    padding:24px 24px 26px; transition:border-color .2s, transform .2s;
+  }
+  .card:hover{ border-color:var(--rule); transform:translateY(-2px); }
+  .card .idx{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); letter-spacing:0.16em; display:block; margin-bottom:11px; }
+  .card h3{ font-size:1.09rem; margin-bottom:9px; color:var(--gold-bright); }
+  .card p{ margin:0; font-size:14.6px; color:var(--text-dim); line-height:1.68; }
+  .card p + p{ margin-top:11px; }
+  .card .out{ margin-top:15px; padding-top:13px; border-top:1px solid var(--rule-soft); font-family:'IBM Plex Mono',monospace; font-size:11.6px; color:var(--text-faint); }
+  .card .out b{ color:var(--gold-dim); font-weight:500; }
+  .card.wide{ grid-column:1/-1; }
+  .note{ margin-top:14px; padding:12px 15px; border-left:2px solid var(--rule); background:rgba(201,162,39,0.04); border-radius:0 3px 3px 0; font-size:13.8px; color:var(--text-dim); }
+  .note b{ color:var(--gold-dim); font-weight:500; }
+
+  /* sectors */
+  .sector{ display:grid; grid-template-columns:210px 1fr; gap:26px; padding:22px 0; border-bottom:1px solid var(--rule-soft); align-items:start; }
+  .sector:last-child{ border-bottom:none; }
+  .sector h3{ font-size:1.05rem; color:var(--gold-bright); margin:0; }
+  .sector p{ margin:0 0 9px; font-size:14.8px; color:var(--text-dim); }
+  .tags{ display:flex; flex-wrap:wrap; gap:7px; }
+  .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); border:1px solid var(--rule-soft); padding:3px 9px; border-radius:2px; letter-spacing:0.04em; }
+  @media(max-width:760px){ .sector{ grid-template-columns:1fr; gap:10px; } }
+
+  /* assessment */
+  .offer{ border:1px solid var(--rule); border-radius:8px; background:linear-gradient(160deg, rgba(201,162,39,0.06), rgba(201,162,39,0.015) 60%, transparent); padding:36px 34px; }
+  .offer ol{ margin:0; padding:0; list-style:none; counter-reset:step; display:grid; gap:15px; }
+  .offer ol li{ counter-increment:step; padding-left:40px; position:relative; color:var(--text-dim); font-size:15px; }
+  .offer ol li::before{
+    content:counter(step,decimal-leading-zero); position:absolute; left:0; top:1px;
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--gold); letter-spacing:0.08em;
+    border:1px solid var(--rule); border-radius:3px; padding:1px 6px;
+  }
+  .offer ol li b{ color:var(--text); font-weight:500; }
+
+  /* founder */
+  .founder{ display:grid; grid-template-columns:236px 1fr; gap:44px; align-items:start; }
+  @media(max-width:800px){ .founder{ grid-template-columns:1fr; gap:26px; } }
+  .portrait{ position:relative; width:236px; max-width:100%; aspect-ratio:1; border-radius:8px; overflow:hidden; border:1px solid var(--rule); background:var(--bg-raised); box-shadow:0 18px 44px rgba(0,0,0,0.5); }
+  .portrait img{ width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(0.22) contrast(1.04) brightness(0.9) sepia(0.12); }
+  /* vignette so the light studio backdrop sits into the dark page rather than on top of it */
+  .portrait::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(10,10,12,0.55) 88%),
+      linear-gradient(to bottom, rgba(10,10,12,0.18), transparent 34%, rgba(10,10,12,0.42));
+    box-shadow:inset 0 0 34px 12px rgba(10,10,12,0.6);
+  }
+  .founder h3{ font-size:1.32rem; margin-bottom:4px; }
+  .founder .role{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:20px; }
+  .founder p{ font-size:15.4px; color:var(--text-dim); margin:0 0 14px; max-width:68ch; }
+  .founder p b{ color:var(--text); font-weight:500; }
+  .idline{ font-family:'IBM Plex Mono',monospace; font-size:12.4px; color:var(--gold-dim); letter-spacing:0.04em; margin-top:4px; }
+  .stats{ display:flex; flex-wrap:wrap; gap:0; margin:24px 0 0; border:1px solid var(--rule-soft); border-radius:6px; overflow:hidden; }
+  .stat{ flex:1 1 150px; padding:16px 18px; border-right:1px solid var(--rule-soft); }
+  .stat:last-child{ border-right:none; }
+  .stat b{ display:block; font-family:'Source Serif 4',serif; font-size:1.5rem; color:var(--gold); font-weight:600; line-height:1.1; }
+  .stat span{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faint); }
+
+  /* contact */
+  #contact{ text-align:center; }
+  #contact h2{ margin:0 auto 16px; max-width:20ch; }
+  #contact p.lead{ color:var(--text-dim); max-width:54ch; margin:0 auto 34px; }
+  .maillarge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace;
+    font-size:clamp(0.98rem,2.7vw,1.5rem); color:var(--gold);
+    border:1px solid var(--rule); border-radius:5px; padding:19px 34px;
+    background:linear-gradient(160deg, rgba(201,162,39,0.08), transparent);
+    cursor:pointer; user-select:none; -webkit-user-select:none;
+    transition:background .2s, border-color .2s, color .2s;
+  }
+  .maillarge:hover{ background:rgba(201,162,39,0.14); border-color:var(--gold-dim); color:var(--gold-bright); }
+  .altmail{ margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:12.6px; color:var(--text-faint); user-select:none; -webkit-user-select:none; }
+  .altmail .lnk{ color:var(--text-dim); cursor:pointer; }
+  .altmail .lnk:hover{ color:var(--gold-bright); }
+
+  footer{ border-top:1px solid var(--rule-soft); padding:34px 0 46px; }
+  footer .wrap{ display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center; }
+  footer p{ margin:0; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--text-faint); letter-spacing:0.04em; }
+  footer .fw{ font-family:'Source Serif 4',serif; font-size:0.98rem; letter-spacing:0.04em; color:var(--text-dim); }
+  footer .fw span{ color:var(--gold-dim); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+    #logicfield{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="logicfield" aria-hidden="true"></div>
+
+<header>
+  <div class="bar">
+    <div class="wordmark">Primus<span>Credence</span></div>
+    <nav class="links">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#sectors">Sectors</a>
+      <a href="#assessment">Assessment</a>
+      <a href="#founder">Founder</a>
+    </nav>
+    <span class="mailbtn" data-mail="r" role="button" tabindex="0" aria-label="Email the founder"></span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Formal verification for cloud, protocols &amp; AI</div>
+    <h1>Mathematical proof of security posture — across <em>every</em> possible input.</h1>
+    <p class="lead">Penetration tests, code audits and policy reviews sample a handful of cases and infer the rest. PrimusCredence compiles your access policies, network topology, smart contracts, distributed protocols, low-level code and AI guardrails into logic, then uses automated reasoning to settle the question exhaustively: either a proof that a violation cannot occur, or a concrete counter-example showing exactly how it can.</p>
+
+    <div class="proof">
+      <div class="head"><span class="dot"></span> policy verification &middot; sample output</div>
+<pre><span class="c">$ primus verify --policy s3-finance.json --property no-external-read</span>
+
+  <span class="k">&#8704; request</span> &middot; <span class="q">&#172;( principal &#8713; Org &#8743; action = s3:GetObject</span>
+                <span class="q">&#8743; resource = finance-data/* )</span>
+
+  translating policy &#8594; SMT ..................... <span class="ok">ok</span>
+  solving over entire request space ............ <span class="ok">ok</span>
+
+  <span class="sat">SAT &#8212; counter-example found</span>
+    principal    arn:aws:iam::94xxxxxx:root
+    user-agent   "InternalApp/2.1"     <span class="c">(matches *InternalApp*)</span>
+    source-ip    203.0.113.9           <span class="c">(&#8713; 192.0.2.0/24)</span>
+
+  <span class="c">1 violation proven reachable. evidence bundle written.</span></pre>
+    </div>
+  </div>
+</div>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="sec-label">Capabilities</div>
+    <h2>Six practices, one method</h2>
+    <p class="sec-intro">Each takes an artefact you already have — a policy, a topology, a contract, a protocol, a binary, a guardrail — translates it into a precise logical model, and answers a security question over the whole input space rather than a sample of it.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="idx">01</span>
+        <h3>Cloud access-policy verification</h3>
+        <p>IAM, resource and bucket policies compiled into first-order logic over strings, numbers, dates, regular expressions and IP ranges, then checked with an SMT solver against every request that could ever arrive.</p>
+        <div class="out"><b>Output</b> &nbsp;proof of safety, or a concrete violating request</div>
+      </div>
+      <div class="card">
+        <span class="idx">02</span>
+        <h3>Network reachability proofs</h3>
+        <p>VPCs, route tables, security groups and firewall rules modelled as constraints, so isolation questions are settled statically — without sending a single probe packet into production.</p>
+        <div class="out"><b>Output</b> &nbsp;proof no path exists, or the exact path</div>
+      </div>
+      <div class="card">
+        <span class="idx">03</span>
+        <h3>API-usage conformance</h3>
+        <p>Static, pre-deployment analysis of how your code calls cloud and cryptographic SDKs — catching protocol and lifecycle misuse of credential, signing and encryption objects before it ships.</p>
+        <div class="out"><b>Output</b> &nbsp;the offending call site and trace</div>
+      </div>
+      <div class="card">
+        <span class="idx">04</span>
+        <h3>Low-level code verification</h3>
+        <p>Bounded model checking for firmware, bootloaders, hypervisor isolation layers and node clients — proving memory safety and state-transition correctness where a defect cannot be patched after shipment.</p>
+        <div class="out"><b>Output</b> &nbsp;bounded proof, or a failing execution trace</div>
+      </div>
+
+      <div class="card wide">
+        <span class="idx">05</span>
+        <h3>Formal verification of smart contracts and distributed protocols</h3>
+        <p>Contracts and protocols fail in ways testing rarely reaches. A reentrancy path that opens only under one specific call ordering. A consensus protocol that survives every scenario an engineer thought to write, yet admits a Byzantine execution that forks the chain. A bridge whose guarantee holds only while a rational actor stays rational. These are not implementation bugs to be found by sampling — they are properties of the design, and they have to be settled by proof.</p>
+        <p><b style="color:var(--text);font-weight:500">For smart contracts:</b> functional correctness against a written specification; conservation-of-value, access-control and solvency invariants; arithmetic and reentrancy safety; storage-layout and upgrade-path safety across proxy patterns. Checked exhaustively over all reachable states rather than over a test suite.</p>
+        <p><b style="color:var(--text);font-weight:500">For distributed protocols:</b> safety and liveness of consensus and state-machine replication; agreement and validity under Byzantine faults, asynchrony and partition; atomicity and economic soundness of cross-chain and bridge designs. Established through machine-checked inductive invariants and model checking in TLA+, IVy and Dafny — verifying the protocol itself, not merely one implementation of it.</p>
+        <div class="note"><b>Track record.</b> &nbsp;The Moonshot BFT consensus protocol (DSN 2024) was verified exactly this way — its safety established by model checking and published at FMBC 2024. This is not an adjacent capability; it is where the founder's research sits.</div>
+        <div class="out"><b>Output</b> &nbsp;machine-checked invariants, or the adversarial execution that breaks them</div>
+      </div>
+
+      <div class="card wide">
+        <span class="idx">06</span>
+        <h3>AI guardrail verification</h3>
+        <p>An agent's permitted action envelope — tool calls, system-prompt constraints, data-access boundaries — encoded as logical constraints, then checked for whether any combination of input can drive it outside that envelope. Robustness assessment follows the methodology of <span class="mono" style="color:var(--gold-dim)">ISO/IEC&nbsp;24029-2</span>, the international standard for applying formal methods to neural-network robustness.</p>
+        <div class="out"><b>Output</b> &nbsp;proof the boundary holds, or the sequence that breaks it</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="wrap">
+    <div class="sec-label">The evidence layer</div>
+    <h2>A proof is only useful once it becomes evidence</h2>
+    <p class="sec-intro">A solver verdict is not, by itself, something a compliance function can file. Every engagement therefore delivers the same finding in three forms, written for the three people who need it.</p>
+
+    <div class="grid g3">
+      <div class="card">
+        <span class="idx">Governance</span>
+        <h3>A control-status assertion</h3>
+        <p>Owned, dated, and re-run on change — the line a board or steering committee reads, with a named owner and a verification cadence.</p>
+      </div>
+      <div class="card">
+        <span class="idx">Risk</span>
+        <h3>A register entry with a delta</h3>
+        <p>Likelihood moved from a qualitative estimate to either <em>not reachable under the modelled conditions</em> or <em>confirmed exploitable</em> — with the residual risk stated honestly.</p>
+      </div>
+      <div class="card">
+        <span class="idx">Compliance</span>
+        <h3>An artefact tied to a clause</h3>
+        <p>Mapped to the specific control it evidences, timestamped, and reproducible — built to slot into your existing audit, not to replace it.</p>
+      </div>
+    </div>
+
+    <p class="sec-intro" style="margin:34px 0 0">PrimusCredence does not issue certificates and is not an independent auditor. We produce the technical evidence your assessors, certification body and regulator rely upon — which is precisely why our work strengthens their opinion rather than competing with it.</p>
+  </div>
+</section>
+
+<section id="sectors">
+  <div class="wrap">
+    <div class="sec-label">Who we work with</div>
+    <h2>Built for organisations that must prove it, not assert it</h2>
+
+    <div class="sector">
+      <h3>Web3 smart contracts &amp; digital assets</h3>
+      <div>
+        <p>Token issuers, DeFi protocols, custody platforms and virtual-asset service providers — where a single contract defect is unrecoverable once deployed, and where the regulator has begun naming the technique directly. Dubai's VARA Technology and Information Rulebook expects <em>"independent third-party audits before deployment and formal verification where applicable"</em> as part of its smart-contract security standard.</p>
+        <div class="tags"><span class="tag">VARA</span><span class="tag">contract invariants</span><span class="tag">reentrancy</span><span class="tag">upgrade safety</span><span class="tag">solvency</span></div>
+      </div>
+    </div>
+
+    <div class="sector">
+      <h3>Distributed protocols &amp; consensus</h3>
+      <div>
+        <p>Layer-1 and Layer-2 core teams, bridge and sequencer designers, validator networks — and distributed systems well beyond Web3, including replication layers and sovereign-cloud control planes. Wherever the correctness argument depends on how nodes behave under failure, asynchrony and adversarial conditions, testing cannot reach the property and a proof can.</p>
+        <div class="tags"><span class="tag">BFT consensus</span><span class="tag">safety &amp; liveness</span><span class="tag">TLA+</span><span class="tag">IVy</span><span class="tag">cross-chain</span></div>
+      </div>
+    </div>
+
+    <div class="sector">
+      <h3>Cloud service providers</h3>
+      <div>
+        <p>Tenant-isolation and access-control proofs you can hand to your own enterprise and government customers — turning an assurance question you currently answer with documentation into one you answer with evidence.</p>
+        <div class="tags"><span class="tag">tenant isolation</span><span class="tag">IAM semantics</span><span class="tag">multi-cloud</span></div>
+      </div>
+    </div>
+
+    <div class="sector">
+      <h3>Sovereign AI cloud</h3>
+      <div>
+        <p>Technical assurance for AI platforms carrying national and regulated workloads, where accuracy, robustness and adversarial resilience must be demonstrated rather than asserted.</p>
+        <div class="tags"><span class="tag">EU AI Act Art. 15</span><span class="tag">ISO/IEC 42001</span><span class="tag">ISO/IEC 24029-2</span><span class="tag">NIST AI RMF</span></div>
+      </div>
+    </div>
+
+    <div class="sector">
+      <h3>Banks &amp; financial institutions</h3>
+      <div>
+        <p>Evidence for AI model inventories, bias and robustness testing, and access-control review — under supervisory expectations that have begun to name AI governance and model risk explicitly.</p>
+        <div class="tags"><span class="tag">CBUAE</span><span class="tag">DFSA</span><span class="tag">ADGM FSRA</span><span class="tag">SAMA</span></div>
+      </div>
+    </div>
+
+    <div class="sector">
+      <h3>Critical infrastructure &amp; government</h3>
+      <div>
+        <p>Network isolation proofs, firmware and control-system verification, and supplier assurance evidence for entities operating under national information-assurance mandates.</p>
+        <div class="tags"><span class="tag">UAE IAS</span><span class="tag">DESC ISR</span><span class="tag">NCA ECC</span><span class="tag">DIFC Reg. 10</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="assessment">
+  <div class="wrap">
+    <div class="sec-label">Where engagements start</div>
+    <h2>The Micro-Proof Assessment</h2>
+    <p class="sec-intro">A bounded, low-cost first engagement on one slice of your environment — a policy set, a network segment, a single contract, or one protocol property. It exists so you can judge the method on your own infrastructure rather than on a slide.</p>
+
+    <div class="offer">
+      <ol>
+        <li><b>You scope it narrowly</b> — one non-production account, one network segment, one contract, or one protocol property. Read-only access is enough.</li>
+        <li><b>We model it and run the proofs</b> — days, not weeks, because the toolchain is built for this rather than assembled per engagement.</li>
+        <li><b>You receive the counter-example</b> — if one exists, the exact request, path, call ordering or adversarial execution that reaches the violation, reproducible on your side.</li>
+        <li><b>You receive the regulatory mapping</b> — the specific control the finding bears on, so it can go straight to whoever owns that control.</li>
+        <li><b>You decide what happens next.</b> No retainer is implied, and nothing obliges you to continue.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="founder">
+  <div class="wrap">
+    <div class="sec-label">Founder</div>
+    <h2>Twenty-two years of program analysis, cryptography and formal verification</h2>
+
+    <div class="founder">
+      <div>
+        <div class="portrait">
+          <img src="assets/raghavendra.jpeg" alt="Dr. Raghavendra Ramesh">
+        </div>
+      </div>
+      <div>
+        <h3>Dr. Raghavendra Ramesh</h3>
+        <div class="role">Founder &middot; PrimusCredence</div>
+
+        <p>PrimusCredence was founded to bring automated reasoning — the discipline behind formally verified protocols, compilers and operating systems — to cloud, protocol and AI security across MENAT.</p>
+
+        <p>Dr. Raghavendra holds a PhD and MSc (Engg) in Computer Science from the Indian Institute of Science, Bangalore, where he was a Microsoft PhD Fellow. His work spans program analysis, mathematical logic, automata theory, cryptography and fault-tolerant distributed systems.</p>
+
+        <p>At <b>Oracle Labs</b> he built static-analysis engines for vulnerability detection — information-flow type systems, scalable context-sensitive points-to analysis, and static detection of cursor leaks and second-order SQL injection, implemented in C++ within the Parfait/LLVM framework. At <b>ConsenSys R&amp;D</b> he designed and published atomic cross-chain transaction protocols, contributing to the Atomic Crosschain Technology prototype on Hyperledger Besu. As <b>Vice President of Research &amp; Development at Supra</b> he co-built a blockchain R&amp;D division from the ground up, co-invented the Moonshot BFT consensus protocol (DSN 2024) and led its formal safety verification by model checking (FMBC 2024), co-designed the HyperNova and HyperLoop cross-chain architectures, and co-invented parallel execution and optimal sharding for deconstructed state-machine replication (VLDB 2025).</p>
+
+        <p>He works in Dafny, TLA+, Datalog, IVy, F#, C, C++ and Java.</p>
+        <div class="idline">Person of Indian Origin &nbsp;|&nbsp; Australian Citizen &nbsp;|&nbsp; Dubai Resident</div>
+
+        <div class="stats">
+          <div class="stat"><b>22+</b><span>Years</span></div>
+          <div class="stat"><b>6</b><span>US patents</span></div>
+          <div class="stat"><b>16+</b><span>Publications</span></div>
+          <div class="stat"><b>PhD</b><span>IISc Bangalore</span></div>
+        </div>
+
+        <p style="margin-top:22px; font-size:14.6px;">Full publication list, patents and research whitepapers:
+          <a href="https://raghavendra.primuscredence.com" class="mono" style="font-size:13.6px">raghavendra.primuscredence.com</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-label">Contact</div>
+    <h2>Email directly</h2>
+    <p class="lead">No forms, no sales sequence, no scheduling funnel. Write to me and you will get a reply from me personally, usually within a day.</p>
+
+    <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra"></span>
+
+    <div class="altmail">General and administrative &middot; <span class="lnk" data-mail="i" role="button" tabindex="0" aria-label="Email the general enquiries address"></span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="fw">Primus<span>Credence</span></div>
+      <p style="margin-top:6px">Dubai, United Arab Emirates</p>
+    </div>
+    <p>&copy; 2026 PrimusCredence</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- ambient logic symbols ---------- */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) {
+    var glyphs = ['⊢','⊨','∀','∃','∧','∨','¬','⇒','⇔',
+                  '≡','⊥','⊤','□','◇','∈','∉','⊆','∅',
+                  'λ','⊕','∴','∎','⊑','≅','≠','⊂'];
+    var field = document.getElementById('logicfield');
+    var N = 30, frag = document.createDocumentFragment();
+    for (var i = 0; i < N; i++) {
+      var s = document.createElement('span');
+      s.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+      var size = 15 + Math.random()*46;            /* 15–61px */
+      var dur  = 42 + Math.random()*52;            /* 42–94s  */
+      /* larger glyphs cover more area, so dim them slightly — keeps body copy readable */
+      var sizeFactor = 1 - ((size - 15) / 46) * 0.38;
+      s.style.left = (Math.random()*100).toFixed(2) + '%';
+      s.style.fontSize = size.toFixed(1) + 'px';
+      s.style.opacity = ((0.16 + Math.random()*0.19) * sizeFactor).toFixed(3);
+      s.style.setProperty('--sway', ((Math.random()*140) - 70).toFixed(0) + 'px');
+      s.style.setProperty('--spin', ((Math.random()*90) - 45).toFixed(0) + 'deg');
+      s.style.animationDuration = dur.toFixed(1) + 's';
+      s.style.animationDelay = (-Math.random()*dur).toFixed(1) + 's';
+      frag.appendChild(s);
+    }
+    field.appendChild(frag);
+  }
+
+  /* ---------- email: assembled at runtime, not selectable ---------- */
+  var D = ['primuscredence', 'com'].join('.');
+  var BOX = { r: 'raghavendra', i: 'info' };
+  var SUBJ = { r: 'Micro-Proof Assessment — enquiry', i: 'Enquiry — PrimusCredence' };
+
+  function addr(k){ return BOX[k] + String.fromCharCode(64) + D; }
+
+  function open(k){
+    window.location.href = 'mailto:' + addr(k) + '?subject=' + encodeURIComponent(SUBJ[k]);
+  }
+
+  var nodes = document.querySelectorAll('[data-mail]');
+  Array.prototype.forEach.call(nodes, function(el){
+    var k = el.getAttribute('data-mail');
+    el.textContent = addr(k);
+    el.addEventListener('click', function(){ open(k); });
+    el.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(k); }
+    });
+    el.addEventListener('copy', function(e){ e.preventDefault(); });
+    el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+  });
+})();
+</script>
+
+</body>
+</html>
