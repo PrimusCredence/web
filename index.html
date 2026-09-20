@@ -238,9 +238,7 @@
   }
   .offer ol li b{ color:var(--text); font-weight:500; }
 
-  .opts{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:22px; }
-  @media(max-width:1000px){ .opts{ grid-template-columns:repeat(2,1fr); } }
-  @media(max-width:620px){ .opts{ grid-template-columns:1fr; } }
+  .opts{ display:grid; grid-template-columns:1fr; gap:16px; margin-top:22px; }
   .opt{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:20px 20px 22px; }
   .opt .letter{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); }
   .opt h4{ font-size:0.99rem; color:var(--gold-bright); margin:8px 0 10px; line-height:1.34; }
@@ -774,7 +772,7 @@
 
     <div class="offer">
       <ol>
-        <li><b>You scope it narrowly</b> — one non-production account, one network segment, one contract, one protocol property, or one agent's tool surface. Read-only credentials are sufficient.</li>
+        <li><b>You scope it narrowly</b> — one non-production cloud account or subscription. Read-only credentials are sufficient.</li>
         <li><b>We model it and run the proofs</b> — days to a small number of weeks. No production change, no software agent installed on any host, no traffic generation, no scanning window — which is why this typically clears change advisory in one pass rather than three.</li>
         <li><b>You receive the counter-example — or the clearance.</b> If a violation exists: the exact request, network path, call ordering or adversarial execution that reaches it, reproducible on your side. If none exists: a proof, with model assumptions and bounds stated.</li>
         <li><b>You receive the control mapping</b> — the specific control the finding bears on, so it routes directly to whoever owns it and lands in the risk register rather than in a PDF nobody reopens.</li>
@@ -782,47 +780,17 @@
       </ol>
     </div>
 
-    <p class="sec-intro" style="margin:38px 0 0">Milestone 1 is offered as a choice of four scoped assessments, each bounded to the same effort and each producing the same class of deliverable. Pick whichever matches your most pressing question — and if you cannot choose, the answer is usually in your most recent audit finding.</p>
+    <p class="sec-intro" style="margin:38px 0 0">Milestone 1 is a single scoped assessment: the <b>Privilege Escalation Path Review</b>. It is the question almost every estate that grew by accretion cannot answer, it is the one whose answer a board, an auditor and an engineer all recognise on sight, and it is bounded tightly enough to run read-only against one non-production environment.</p>
 
     <div class="opts">
       <div class="opt">
-        <span class="letter">Option A</span>
+        <span class="letter">Milestone 1</span>
         <h4>Privilege Escalation Path Review</h4>
-        <p>Can an external or low-privilege identity reach a privileged role, through any chain of grants?</p>
+        <p>Can an external or low-privilege identity reach a privileged role, through any chain of grants? We enumerate the transitive closure of the permission graph &mdash; role assumption, policy attachment, trust relationships, service-linked paths &mdash; rather than sampling it, and return either the exact chain or a proof that none exists within the stated model.</p>
         <dl>
           <dt>We need</dt><dd>Read-only access to one complex non-production cloud environment</dd>
           <dt>Evidences</dt><dd>Identity and access management, privileged access</dd>
           <dt>Best when</dt><dd>The estate grew by accretion and nobody can answer &ldquo;who can become admin?&rdquo;</dd>
-        </dl>
-      </div>
-      <div class="opt">
-        <span class="letter">Option B</span>
-        <h4>Segmentation and Sovereignty Proof</h4>
-        <p>Can a packet from an untrusted zone reach a regulated data store, north-south or east-west?</p>
-        <dl>
-          <dt>We need</dt><dd>VPC, route table, security group, firewall rule base and peering configuration</dd>
-          <dt>Evidences</dt><dd>Network security, boundary protection, data localisation</dd>
-          <dt>Best when</dt><dd>A localisation or isolation claim is being asserted to a regulator or a tenant</dd>
-        </dl>
-      </div>
-      <div class="opt">
-        <span class="letter">Option C</span>
-        <h4>AI Agent Boundary Check</h4>
-        <p>Can any input sequence drive this agent into an unauthorised action?</p>
-        <dl>
-          <dt>We need</dt><dd>The agent's tool manifest, system-prompt constraints and data-access surface</dd>
-          <dt>Evidences</dt><dd>AI governance, authorisation for non-human identities</dd>
-          <dt>Best when</dt><dd>An agent is being moved into a regulated decision path</dd>
-        </dl>
-      </div>
-      <div class="opt">
-        <span class="letter">Option D</span>
-        <h4>SDK Misuse Sweep</h4>
-        <p>Does this repository use its cloud and crypto SDKs the way their contracts require?</p>
-        <dl>
-          <dt>We need</dt><dd>Read access to one repository, and the SDK versions it builds against</dd>
-          <dt>Evidences</dt><dd>Secure development lifecycle, application security</dd>
-          <dt>Best when</dt><dd>Infrastructure keeps passing audit and incidents keep originating in application code</dd>
         </dl>
       </div>
     </div>
