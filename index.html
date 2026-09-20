@@ -3,8 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PrimusCredence — Formal verification for cloud, protocols and AI</title>
-<meta name="description" content="PrimusCredence provides mathematical proof of security posture and protocol correctness — exhaustive verification of access policies, network isolation, smart contracts, distributed protocols, low-level code and AI guardrails.">
+<title>PrimusCredence — Mathematical rigour to security, across cloud, AI and crypto</title>
+<meta name="description" content="PrimusCredence adds proof alongside testing. Nine solutions across cloud, AI and crypto security — access policies, network segmentation, SDK conformance, firmware, post-quantum migration, AI guardrails, smart contracts and distributed protocols — settled by automated reasoning over the whole input space, not a sample of it.">
+<meta property="og:title" content="PrimusCredence — proof alongside testing">
+<meta property="og:description" content="Testing shows you what your system does; proof shows you what it cannot do. Automated reasoning for cloud, AI and crypto security.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://primuscredence.com/">
+<link rel="canonical" href="https://primuscredence.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -80,20 +85,26 @@
     transition:background .2s, color .2s, border-color .2s;
   }
   .mailbtn:hover{ background:rgba(201,162,39,0.10); color:var(--gold-bright); border-color:var(--gold-dim); }
-  @media(max-width:980px){ nav.links{display:none;} }
-  @media(max-width:560px){ .bar .mailbtn{ font-size:11px; padding:7px 10px; } }
+  @media(max-width:1040px){ nav.links{display:none;} }
+  /* below ~620px the full address no longer fits beside the wordmark, so the
+     header button falls back to a short label; the address itself stays in
+     the contact section and in the button's title attribute. */
+  @media(max-width:620px){
+    .bar .mailbtn{ font-size:0; padding:8px 13px; }
+    .bar .mailbtn::before{ content:"Email"; font-size:12.5px; letter-spacing:0.06em; }
+  }
 
   /* ---------- hero ---------- */
-  .hero{ padding:92px 0 76px; overflow:hidden; }
+  .hero{ padding:92px 0 64px; overflow:hidden; }
   .hero::before{
     content:""; position:absolute; top:-230px; left:50%; transform:translateX(-50%);
     width:940px; height:580px; pointer-events:none; z-index:-1;
     background:radial-gradient(ellipse at center, rgba(201,162,39,0.13), rgba(201,162,39,0.04) 45%, transparent 70%);
   }
   .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:22px; }
-  .hero h1{ font-size:clamp(2.1rem, 4.6vw, 3.25rem); line-height:1.12; letter-spacing:-0.015em; max-width:20ch; margin-bottom:22px; }
+  .hero h1{ font-size:clamp(2.1rem, 4.6vw, 3.25rem); line-height:1.12; letter-spacing:-0.015em; max-width:21ch; margin-bottom:22px; }
   .hero h1 em{ font-style:normal; color:var(--gold); }
-  .hero p.lead{ font-size:1.08rem; color:var(--text-dim); max-width:62ch; margin:0 0 34px; font-weight:300; }
+  .hero p.lead{ font-size:1.08rem; color:var(--text-dim); max-width:64ch; margin:0 0 34px; font-weight:300; }
 
   .proof{
     border:1px solid var(--rule); border-radius:6px; background:var(--bg-panel);
@@ -112,8 +123,9 @@
   /* ---------- sections ---------- */
   section{ padding:78px 0; border-top:1px solid var(--rule-soft); }
   .sec-label{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:14px; }
-  section h2{ font-size:clamp(1.5rem,2.9vw,2.05rem); line-height:1.2; margin-bottom:16px; max-width:26ch; }
-  .sec-intro{ color:var(--text-dim); max-width:66ch; margin:0 0 38px; }
+  section h2{ font-size:clamp(1.5rem,2.9vw,2.05rem); line-height:1.2; margin-bottom:16px; max-width:28ch; }
+  .sec-intro{ color:var(--text-dim); max-width:68ch; margin:0 0 38px; }
+  .sec-intro b{ color:var(--text); font-weight:500; }
 
   .grid{ display:grid; gap:18px; }
   .g2{ grid-template-columns:repeat(2,1fr); }
@@ -135,10 +147,81 @@
   .note{ margin-top:14px; padding:12px 15px; border-left:2px solid var(--rule); background:rgba(201,162,39,0.04); border-radius:0 3px 3px 0; font-size:13.8px; color:var(--text-dim); }
   .note b{ color:var(--gold-dim); font-weight:500; }
 
+  /* ---------- stat strip ---------- */
+  .statstrip{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:30px 0 0; border:1px solid var(--rule-soft); border-radius:6px; overflow:hidden; background:var(--bg-raised); }
+  .statstrip > div{ padding:20px 22px; border-right:1px solid var(--rule-soft); }
+  .statstrip > div:last-child{ border-right:none; }
+  .statstrip b{ display:block; font-family:'Source Serif 4',serif; font-size:1.75rem; color:var(--gold); font-weight:600; line-height:1.1; margin-bottom:6px; }
+  .statstrip span{ font-size:13.4px; color:var(--text-dim); line-height:1.55; display:block; }
+  .statstrip i{ display:block; font-family:'IBM Plex Mono',monospace; font-style:normal; font-size:10.8px; color:var(--text-faint); letter-spacing:0.04em; margin-top:7px; }
+  @media(max-width:760px){ .statstrip{ grid-template-columns:1fr; } .statstrip > div{ border-right:none; border-bottom:1px solid var(--rule-soft); } .statstrip > div:last-child{ border-bottom:none; } }
+
+  /* ---------- figures ---------- */
+  figure.chart{ margin:34px 0 0; padding:26px 26px 20px; border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); }
+  figure.chart svg{ width:100%; height:auto; display:block; }
+  figure.chart figcaption{ margin-top:16px; padding-top:13px; border-top:1px solid var(--rule-soft); font-size:13.2px; color:var(--text-dim); }
+  figure.chart figcaption .src{ display:block; margin-top:5px; font-family:'IBM Plex Mono',monospace; font-size:10.8px; color:var(--text-faint); line-height:1.6; }
+
+  /* ---------- the layer table ---------- */
+  .layer{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media(max-width:860px){ .layer{ grid-template-columns:1fr; } }
+  .layer > div{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:22px 22px 24px; }
+  .layer > div.mid{ border-color:var(--rule); background:linear-gradient(165deg, rgba(201,162,39,0.075), rgba(201,162,39,0.02) 55%, transparent); }
+  .layer h3{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); font-weight:500; margin-bottom:15px; }
+  .layer ul{ margin:0 0 15px; padding:0; list-style:none; }
+  .layer li{ font-size:14.2px; color:var(--text-dim); padding:5px 0 5px 17px; position:relative; line-height:1.55; }
+  .layer li::before{ content:"·"; position:absolute; left:3px; color:var(--gold-dim); }
+  .layer q{ display:block; font-family:'Source Serif 4',serif; font-size:15.6px; color:var(--text); line-height:1.5; font-style:italic; padding-top:14px; border-top:1px solid var(--rule-soft); }
+  .layer .mid q{ color:var(--gold-bright); font-style:normal; }
+  .layer p.close{ margin:0; font-family:'Source Serif 4',serif; font-size:15.6px; color:var(--text); line-height:1.5; font-style:italic; padding-top:14px; border-top:1px solid var(--rule-soft); }
+  .layer p.sub{ margin:10px 0 0; font-size:13.4px; color:var(--text-faint); }
+
+  /* ---------- tables ---------- */
+  .tbl{ width:100%; border-collapse:collapse; font-size:14.2px; }
+  .tbl th{ text-align:left; font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); font-weight:500; padding:0 14px 11px 0; border-bottom:1px solid var(--rule); vertical-align:bottom; }
+  .tbl td{ padding:13px 14px 13px 0; border-bottom:1px solid var(--rule-soft); color:var(--text-dim); vertical-align:top; line-height:1.6; }
+  .tbl td b{ color:var(--text); font-weight:500; }
+  .tbl tr:last-child td{ border-bottom:none; }
+  .tbl .nums{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold-dim); white-space:nowrap; letter-spacing:0.06em; }
+  .scroller{ overflow-x:auto; }
+  .scroller .tbl{ min-width:600px; }
+
+  /* ---------- solution families ---------- */
+  .fam{ margin-bottom:46px; }
+  .fam:last-child{ margin-bottom:0; }
+  .famhead{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; padding-bottom:12px; margin-bottom:8px; border-bottom:1px solid var(--rule); }
+  .famhead h3{ font-size:1.32rem; color:var(--text); }
+  .famhead .count{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); }
+  .fam > p.famlead{ font-size:14.8px; color:var(--text-dim); margin:0 0 22px; max-width:74ch; }
+  .fam > p.famlead b{ color:var(--text); font-weight:500; }
+
+  .sol{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:22px 24px 24px; transition:border-color .2s, transform .2s; }
+  .sol:hover{ border-color:var(--rule); transform:translateY(-2px); }
+  .sol .num{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); letter-spacing:0.16em; }
+  .sol h4{ font-size:1.05rem; color:var(--gold-bright); margin:7px 0 4px; line-height:1.3; }
+  .sol .tagline{ font-family:'Source Serif 4',serif; font-style:italic; font-size:14px; color:var(--text-faint); margin:0 0 12px; }
+  .sol .q{ font-size:14.4px; color:var(--text-dim); margin:0; line-height:1.66; }
+  .sol .q b{ color:var(--text); font-weight:500; }
+  .sol .meta{ margin-top:15px; padding-top:13px; border-top:1px solid var(--rule-soft); font-family:'IBM Plex Mono',monospace; font-size:11.4px; color:var(--text-faint); line-height:1.75; }
+  .sol .meta b{ color:var(--gold-dim); font-weight:500; }
+  .sol .meta span{ display:block; }
+
+  .mat{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:2px 8px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--text-faint); margin-top:12px; }
+  .mat.now{ color:var(--unsat); border-color:rgba(127,176,138,0.3); }
+  .mat.eng{ color:var(--gold); border-color:var(--rule); }
+  .mat.edge{ color:var(--sat); border-color:rgba(217,131,106,0.3); }
+
+  /* ---------- kicker pull-quote ---------- */
+  .kicker{ margin:38px 0 0; padding:24px 28px; border-left:3px solid var(--gold-dim); background:linear-gradient(90deg, rgba(201,162,39,0.06), transparent 70%); }
+  .kicker p{ margin:0; font-family:'Source Serif 4',serif; font-size:1.16rem; line-height:1.55; color:var(--text); }
+  .kicker p b{ color:var(--gold-bright); font-weight:600; }
+  .kicker .who{ display:block; margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-faint); }
+
   /* sectors */
   .sector{ display:grid; grid-template-columns:210px 1fr; gap:26px; padding:22px 0; border-bottom:1px solid var(--rule-soft); align-items:start; }
   .sector:last-child{ border-bottom:none; }
   .sector h3{ font-size:1.05rem; color:var(--gold-bright); margin:0; }
+  .sector .sols{ display:block; font-family:'IBM Plex Mono',monospace; font-size:10.8px; color:var(--text-faint); letter-spacing:0.1em; margin-top:5px; }
   .sector p{ margin:0 0 9px; font-size:14.8px; color:var(--text-dim); }
   .tags{ display:flex; flex-wrap:wrap; gap:7px; }
   .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); border:1px solid var(--rule-soft); padding:3px 9px; border-radius:2px; letter-spacing:0.04em; }
@@ -154,6 +237,18 @@
     border:1px solid var(--rule); border-radius:3px; padding:1px 6px;
   }
   .offer ol li b{ color:var(--text); font-weight:500; }
+
+  .opts{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:22px; }
+  @media(max-width:1000px){ .opts{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:620px){ .opts{ grid-template-columns:1fr; } }
+  .opt{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:20px 20px 22px; }
+  .opt .letter{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); }
+  .opt h4{ font-size:0.99rem; color:var(--gold-bright); margin:8px 0 10px; line-height:1.34; }
+  .opt p{ margin:0; font-size:13.8px; color:var(--text-dim); line-height:1.6; }
+  .opt dl{ margin:14px 0 0; padding-top:12px; border-top:1px solid var(--rule-soft); }
+  .opt dt{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-faint); margin-top:9px; }
+  .opt dt:first-child{ margin-top:0; }
+  .opt dd{ margin:3px 0 0; font-size:13px; color:var(--text-dim); line-height:1.55; }
 
   /* founder */
   .founder{ display:grid; grid-template-columns:236px 1fr; gap:44px; align-items:start; }
@@ -217,10 +312,12 @@
   <div class="bar">
     <div class="wordmark">Primus<span>Credence</span></div>
     <nav class="links">
-      <a href="#capabilities">Capabilities</a>
+      <a href="#why">Why now</a>
+      <a href="#layer">What we add</a>
+      <a href="#method">Method</a>
+      <a href="#solutions">Solutions</a>
       <a href="#evidence">Evidence</a>
-      <a href="#sectors">Sectors</a>
-      <a href="#assessment">Assessment</a>
+      <a href="#assessment">Milestone 1</a>
       <a href="#founder">Founder</a>
     </nav>
     <span class="mailbtn" data-mail="r" role="button" tabindex="0" aria-label="Email the founder"></span>
@@ -229,9 +326,9 @@
 
 <div class="hero">
   <div class="wrap">
-    <div class="eyebrow">Formal verification for cloud, protocols &amp; AI</div>
-    <h1>Mathematical proof of security posture — across <em>every</em> possible input.</h1>
-    <p class="lead">Penetration tests, code audits and policy reviews sample a handful of cases and infer the rest. PrimusCredence compiles your access policies, network topology, smart contracts, distributed protocols, low-level code and AI guardrails into logic, then uses automated reasoning to settle the question exhaustively: either a proof that a violation cannot occur, or a concrete counter-example showing exactly how it can.</p>
+    <div class="eyebrow">Cloud &middot; AI &middot; Crypto security</div>
+    <h1>Mathematical rigour to security — <em>proof alongside testing</em>.</h1>
+    <p class="lead">Penetration tests, code audits and posture tooling sample a few hundred cases and infer the rest. They answer <i>we looked, and within the time available we did not find a way in</i> — a genuinely valuable result, and no longer sufficient on its own against an adversary that enumerates. PrimusCredence compiles your access policies, network topology, application code, firmware, smart contracts, protocols and agent guardrails into logic, then settles the question over the whole modelled space: either a proof that a violation cannot occur, or a concrete counter-example, every hop named, reproducible on your own estate.</p>
 
     <div class="proof">
       <div class="head"><span class="dot"></span> policy verification &middot; sample output</div>
@@ -253,159 +350,613 @@
   </div>
 </div>
 
-<section id="capabilities">
+<!-- ============================ WHY NOW ============================ -->
+<section id="why">
   <div class="wrap">
-    <div class="sec-label">Capabilities</div>
-    <h2>Six practices, one method</h2>
-    <p class="sec-intro">Each takes an artefact you already have — a policy, a topology, a contract, a protocol, a binary, a guardrail — translates it into a precise logical model, and answers a security question over the whole input space rather than a sample of it.</p>
+    <div class="sec-label">Why now</div>
+    <h2>The attacker's side of the equation was industrialised</h2>
+    <p class="sec-intro">The argument for formal verification used to be made on principle: proof is better than testing because proof is complete. That argument was true but commercially weak, because in practice the adversary was also incomplete. Both sides sampled. Through 2024&ndash;2026 that symmetry broke — not through a novel technique or a new ATT&amp;CK entry, but through a collapse in what it costs to try one.</p>
+
+    <div class="statstrip">
+      <div>
+        <b>4.5&times;</b>
+        <span>the revenue of AI-assisted scam operations versus their non-AI equivalents</span>
+        <i>Chainalysis, Jan 2026</i>
+      </div>
+      <div>
+        <b>USD 3.52</b>
+        <span>average compute cost per LLM-agent exploit attempt against real one-day CVEs</span>
+        <i>Fang et al., arXiv 2404.08144</i>
+      </div>
+      <div>
+        <b>87%</b>
+        <span>of a 15-CVE sample exploited by an LLM agent given only the public description</span>
+        <i>same study &middot; 0% for every non-GPT-4 agent tested</i>
+      </div>
+    </div>
+
+    <p class="sec-intro" style="margin:30px 0 0">The cost of attempting an exploit has fallen to roughly the price of a coffee, the success rate is non-trivial, and the return on an automated campaign is several times the manual equivalent. That changes how many times the existing techniques get tried, and therefore <b>how thin a control's coverage can afford to be</b>.</p>
+
+    <figure class="chart">
+      <svg viewBox="0 0 680 232" role="img" aria-label="Annual crypto theft: 2021 3.2 billion, 2022 3.7 billion, 2023 1.7 billion, 2024 2.2 billion, 2025 3.4 billion US dollars">
+        <g stroke="rgba(201,162,39,0.18)" stroke-width="1">
+          <line x1="58" y1="200" x2="668" y2="200" stroke="rgba(201,162,39,0.35)"/>
+          <line x1="58" y1="155" x2="668" y2="155" stroke-dasharray="2 4"/>
+          <line x1="58" y1="110" x2="668" y2="110" stroke-dasharray="2 4"/>
+          <line x1="58" y1="65"  x2="668" y2="65"  stroke-dasharray="2 4"/>
+          <line x1="58" y1="20"  x2="668" y2="20"  stroke-dasharray="2 4"/>
+        </g>
+        <g font-size="12.2" fill="#6f6a5e" text-anchor="end" font-family="IBM Plex Mono, monospace">
+          <text x="50" y="204">0</text><text x="50" y="159">1</text><text x="50" y="114">2</text>
+          <text x="50" y="69">3</text><text x="50" y="24">4</text>
+        </g>
+        <text x="16" y="112" font-size="11" fill="#6f6a5e" font-family="IBM Plex Mono, monospace" letter-spacing="1.4" transform="rotate(-90 16 112)" text-anchor="middle">USD BN</text>
+        <g fill="#c9a227">
+          <path d="M85,200 L85,60 Q85,56 89,56 L151,56 Q155,56 155,60 L155,200 Z"/>
+          <path d="M205,200 L205,33 Q205,29 209,29 L271,29 Q275,29 275,33 L275,200 Z"/>
+          <path d="M325,200 L325,128 Q325,124 329,124 L391,124 Q395,124 395,128 L395,200 Z"/>
+          <path d="M445,200 L445,105 Q445,101 449,101 L511,101 Q515,101 515,105 L515,200 Z"/>
+          <path d="M565,200 L565,51 Q565,47 569,47 L631,47 Q635,47 635,51 L635,200 Z"/>
+        </g>
+        <g font-size="13.9" fill="#e3c46b" text-anchor="middle" font-weight="600" font-family="Source Serif 4, Georgia, serif">
+          <text x="120" y="48">3.2</text><text x="240" y="21">3.7</text><text x="360" y="116">1.7</text>
+          <text x="480" y="93">2.2</text><text x="600" y="39">3.4</text>
+        </g>
+        <g font-size="12.4" fill="#a29c8c" text-anchor="middle" font-family="IBM Plex Mono, monospace">
+          <text x="120" y="222">2021</text><text x="240" y="222">2022</text><text x="360" y="222">2023</text>
+          <text x="480" y="222">2024</text><text x="600" y="222">2025</text>
+        </g>
+      </svg>
+      <figcaption>Annual crypto theft, 2021&ndash;2025 — the sector with the best public loss data, because the losses are on-chain and therefore countable.
+        <span class="src">Chainalysis, on-chain stolen funds. 2022 restated from $3.8bn. Trackers measure different things — 2025 totals across Chainalysis, CertiK and Immunefi span roughly USD 0.68bn to 3.95bn and are not interchangeable. The 2025 figure is heavily driven by one event, the February 2025 Bybit theft of ~USD 1.46bn. Chainalysis describes its own figures as lower bounds that revise upward.</span>
+      </figcaption>
+    </figure>
+
+    <figure class="chart">
+      <svg viewBox="0 0 680 128" role="img" aria-label="2025 Web3 losses by cause: access control and operational security 53.9 percent, unclassified 33.2 percent, smart contract vulnerabilities 12.9 percent">
+        <g>
+          <rect x="58" y="30" width="322" height="38" fill="#3a3730"/>
+          <rect x="384" y="30" width="197" height="38" fill="#2a2823"/>
+          <rect x="585" y="30" width="83" height="38" fill="#c9a227"/>
+        </g>
+        <g font-size="13.6" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono, monospace">
+          <text x="219" y="54" fill="#a29c8c">53.9%</text><text x="482" y="54" fill="#6f6a5e">33.2%</text><text x="626" y="54" fill="#0a0a0c">12.9%</text>
+        </g>
+        <g font-size="12.6" font-family="IBM Plex Sans, sans-serif">
+          <text x="58" y="92" fill="#a29c8c">Access control &amp; operational security</text>
+          <text x="58" y="110" fill="#6f6a5e" font-size="11.6">Stolen keys, compromised signers, off-boarding gaps &mdash; USD 2.12bn</text>
+          <text x="384" y="92" fill="#6f6a5e">Unclassified</text>
+          <text x="585" y="92" fill="#e3c46b" font-weight="600">Smart contract</text>
+          <text x="585" y="110" fill="#6f6a5e" font-size="11.6">USD 512m</text>
+        </g>
+      </svg>
+      <figcaption>Where 2025 Web3 losses came from — and which slice formal verification actually addresses.
+        <span class="src">Hacken, 2025 Yearly Security Report (vendor-collected), total USD 3.95bn.</span>
+      </figcaption>
+    </figure>
+
+    <div class="kicker">
+      <p><b>Formal verification does not address the majority of 2025 dollars.</b> The majority walked out through key management and operational security — compromised signers, mismanaged multisig quorums, off-boarding failures, social engineering of privileged operators. No amount of contract verification prevents a signer whose key an attacker holds, and anyone claiming otherwise is overselling. What verification addresses is narrower and more defensible: <b>the class of failure that scales with protocol complexity rather than with operational discipline</b> — roughly 89% of 2025 DeFi-protocol losses, and the bridge exploits that were about 73% of DeFi losses in 2022.</p>
+      <span class="who">The honest scoping of the claim</span>
+    </div>
+
+    <h2 style="margin-top:56px">AI is also the new attack surface</h2>
+    <p class="sec-intro">An enterprise LLM agent with tool-calling permissions is, architecturally, a remote code execution primitive wrapped in natural language. It is a <b>non-human identity</b> holding long-lived credentials, calling internal APIs, crossing trust boundaries, and deciding what to do next based on text that may include attacker-controlled content. It is the highest-privilege, least-governed identity class most enterprises have ever deployed, and it typically sits outside whatever PAM regime governs their human administrators.</p>
 
     <div class="grid g2">
       <div class="card">
-        <span class="idx">01</span>
-        <h3>Cloud access-policy verification</h3>
-        <p>IAM, resource and bucket policies compiled into first-order logic over strings, numbers, dates, regular expressions and IP ranges, then checked with an SMT solver against every request that could ever arrive.</p>
-        <div class="out"><b>Output</b> &nbsp;proof of safety, or a concrete violating request</div>
+        <span class="idx">OWASP LLM01</span>
+        <h3>Prompt injection, direct and indirect</h3>
+        <p>Instructions smuggled through retrieved documents, tool outputs or user data. Architecturally this is injection in the classical sense — control and data sharing a channel, exactly as in SQL injection, but with no parameterisation primitive available.</p>
       </div>
       <div class="card">
-        <span class="idx">02</span>
-        <h3>Network reachability proofs</h3>
-        <p>VPCs, route tables, security groups and firewall rules modelled as constraints, so isolation questions are settled statically — without sending a single probe packet into production.</p>
-        <div class="out"><b>Output</b> &nbsp;proof no path exists, or the exact path</div>
+        <span class="idx">ATT&amp;CK TA0004</span>
+        <h3>Confused-deputy escalation</h3>
+        <p>The agent holds broader standing privilege than the requesting user and can be manipulated into exercising it. Invisible to detection tuned on anomalous credentials, because the credential used is the correct one.</p>
       </div>
       <div class="card">
-        <span class="idx">03</span>
-        <h3>API-usage conformance</h3>
-        <p>Static, pre-deployment analysis of how your code calls cloud and cryptographic SDKs — catching protocol and lifecycle misuse of credential, signing and encryption objects before it ships.</p>
-        <div class="out"><b>Output</b> &nbsp;the offending call site and trace</div>
+        <span class="idx">OWASP LLM06</span>
+        <h3>Excessive agency and unsafe composition</h3>
+        <p>Individually permitted tool calls composing into an unsafe trajectory that no single-call authorisation check rejects. The agent's effective permissions are the transitive closure of its tool graph, not the union of its individual grants.</p>
       </div>
       <div class="card">
-        <span class="idx">04</span>
-        <h3>Low-level code verification</h3>
-        <p>Bounded model checking for firmware, bootloaders, hypervisor isolation layers and node clients — proving memory safety and state-transition correctness where a defect cannot be patched after shipment.</p>
-        <div class="out"><b>Output</b> &nbsp;bounded proof, or a failing execution trace</div>
+        <span class="idx">Structural</span>
+        <h3>Boundary erosion via context</h3>
+        <p>Data-access limits enforced only by instructions in a system prompt, which is a request rather than an access control. A control the subject can argue with is not a control.</p>
+      </div>
+    </div>
+
+    <p class="sec-intro" style="margin:30px 0 0">Guardrails implemented as another model judging the first model's output are probabilistic mitigations of a probabilistic failure — detective controls with a tunable false-negative rate, not preventive ones. A regulator asking <i>&ldquo;can this agent ever disclose a customer's PII?&rdquo;</i> is asking a question a classifier's confidence score cannot answer. And alongside what an agent <b>does</b> sits a separate question: whether what it <b>says</b> actually follows from the policy the organisation operates under. That is an entailment failure rather than an access-control failure, it lands on the second line rather than the SOC, and it needs different machinery.</p>
+  </div>
+</section>
+
+<!-- ============================ WHAT WE ADD ============================ -->
+<section id="layer">
+  <div class="wrap">
+    <div class="sec-label">Positioning</div>
+    <h2>We add a layer to your stack — we do not replace it</h2>
+    <p class="sec-intro">The answer is not to abandon testing. Offensive testing, detection engineering and continuous monitoring find what models miss — configuration drift, shadow IT, undocumented components, insider misuse, human process failures, everything outside the formal model's boundary. In control-taxonomy terms they are <b>detective</b>; a proof is evidence that a <b>preventive</b> control actually prevents. Neither substitutes for the other, and any consultancy claiming otherwise is selling you a story.</p>
+
+    <div class="layer">
+      <div>
+        <h3>What your stack answers today</h3>
+        <ul>
+          <li>Pen test &amp; red team</li>
+          <li>CSPM / CIEM</li>
+          <li>ASPM / SAST</li>
+          <li>Vulnerability management</li>
+          <li>SOC &middot; EDR &middot; SIEM</li>
+        </ul>
+        <q>We looked, and within the time available we did not find a way in.</q>
+      </div>
+      <div class="mid">
+        <h3>What we add</h3>
+        <ul>
+          <li>Properties quantified over the entire modelled input space</li>
+          <li>UNSAT, or a counter-example with every hop named</li>
+          <li>Re-run on every change, in the pipeline</li>
+        </ul>
+        <q>No way it exists — over the whole modelled space.</q>
+        <p class="sub">A preventive control with evidence behind it.</p>
+      </div>
+      <div>
+        <h3>What stays with you</h3>
+        <ul>
+          <li>Configuration drift, shadow assets and anything outside the model</li>
+          <li>Insider misuse, and valid credentials used exactly as intended</li>
+          <li>Detection, response and the rest of the programme you already run</li>
+        </ul>
+        <p class="close">The two disciplines cover each other's blind spots — defence in depth applied to assurance itself.</p>
+      </div>
+    </div>
+
+    <div class="kicker">
+      <p><b>Testing shows you what your system does; proof shows you what it cannot do.</b> Against an adversary that enumerates, a mature programme needs both — and most organisations currently have only the first.</p>
+      <span class="who">The thesis in one line</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ METHOD ============================ -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-label">The method</div>
+    <h2>What automated reasoning actually does</h2>
+    <p class="sec-intro">We translate an artefact your estate already contains — an IAM policy set, a network topology, a contract, a protocol, a firmware build, an agent's tool manifest — into a precise logical model, state the security property as a formula, and ask a solver whether any assignment of variables violates it. The answer is one of exactly two things, and both are useful.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="idx" style="color:var(--unsat)">UNSAT</span>
+        <h3>No such assignment exists</h3>
+        <p>Not &ldquo;none was found.&rdquo; None exists, over the entire space, under the stated model. An adversary that enumerates finds what exists; if nothing exists within the modelled space, enumeration there finds nothing — and that is precisely what a proof establishes and a test cannot.</p>
+      </div>
+      <div class="card">
+        <span class="idx" style="color:var(--sat)">SAT + witness</span>
+        <h3>Here is the exact violation</h3>
+        <p>The request, network path, call ordering or input sequence that produces it — an attack path with a named entry condition, reproducible on your own infrastructure and ready to hand to the remediation owner. Not a severity score. The path.</p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:22px">
+      <b>Note the qualifier, because it is doing real work:</b> <i>within the modelled space.</i> Everything outside the model — the asset nobody inventoried, the stack that drifted from its IaC template, the third party with a VPN account — remains exactly where vulnerability management, EDR, SIEM detections, threat hunting and red-teaming earn their keep. A proof is relative to a model and a specification, and every deliverable we issue states both.
+    </div>
+
+    <h2 style="margin-top:56px">This is already industrial practice</h2>
+    <p class="sec-intro">Formal verification stayed confined to microkernels, compilers and avionics for thirty years for a good reason: it was extraordinarily expensive. seL4's ~8,700 lines of C required on the order of 200,000 lines of Isabelle/HOL and about 20 person-years. What changed is that SMT solvers replaced interactive proof for large classes of problem — for the work below, most of the effort is not theorem-proving, it is <b>faithful modelling</b>. Most defenders already consume the result without knowing it.</p>
+
+    <div class="scroller">
+      <table class="tbl">
+        <thead><tr><th style="width:150px">Organisation</th><th>What is deployed</th></tr></thead>
+        <tbody>
+          <tr><td><b>AWS</b></td><td>Zelkova (IAM Access Analyzer, S3 Block Public Access); Tiros (VPC reachability); RAPID for cloud API-usage checking, shipped externally as CodeGuru; Coastguard, gating third-party device integrations for Prime Video; s2n TLS verification; Kani in production CI for Firecracker and s2n-quic; TLA+ across S3, DynamoDB and EBS; ~330,000 lines of Isabelle/HOL for the Nitro isolation engine; Automated Reasoning checks in Bedrock Guardrails</td></tr>
+          <tr><td><b>Microsoft</b></td><td>SLAM / Static Driver Verifier shipped in the Windows Driver Kit; Z3 (ACM SIGPLAN Software Award 2015); Dafny; Project Everest and F*, whose HACL* verified cryptography ships in Firefox NSS, the Linux kernel, WireGuard and mbedTLS</td></tr>
+          <tr><td><b>Meta</b></td><td>Infer, running at commit scale with a reported ~80% fix rate and diff-time analysis returning in about 15 minutes</td></tr>
+          <tr><td><b>Google</b></td><td>AlphaProof and Baldur; Big Sleep for LLM-driven vulnerability discovery</td></tr>
+          <tr><td><b>Intel</b></td><td>Formal verification of floating-point algorithms after the 1994 FDIV defect — a USD 475 million charge, and the canonical example of a defect with no patch path</td></tr>
+          <tr><td><b>Airbus</b></td><td>Astr&eacute;e on A380 flight-control code since 2003, proving absence of run-time errors; CompCert qualifiable under DO-178C / DO-330 / DO-333</td></tr>
+          <tr><td><b>Defence</b></td><td>seL4 on Boeing's Unmanned Little Bird under DARPA HACMS — a professional red team with six weeks and privileged access inside a non-critical partition could not break out or disrupt the flight mission</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sec-intro" style="margin:30px 0 0">One caveat we offer unprompted, because sophisticated buyers will find it anyway: AWS's own account of its correctness practices describes a <b>portfolio</b> — formal methods alongside property-based testing, deterministic simulation and lightweight formal methods — not proof everywhere. That is the correct model, and it is the one we recommend.</p>
+
+    <h2 style="margin-top:56px">The toolchain</h2>
+    <p class="sec-intro">Every component is open source and licensed for commercial use, which also means <b>no proprietary agent is introduced into your estate and no telemetry leaves it</b>. The defensible asset is not the solver — it is the translation layer from real-world cloud, protocol and AI artefacts into faithful logical models.</p>
+
+    <div class="scroller">
+      <table class="tbl">
+        <thead><tr><th style="width:180px">Layer</th><th style="width:220px">Tooling</th><th>Where it sits in the security stack</th></tr></thead>
+        <tbody>
+          <tr><td><b>SMT solving</b></td><td class="nums">Z3, CVC5</td><td>Decision engine under entitlement and guardrail analysis</td></tr>
+          <tr><td><b>Datalog / reachability</b></td><td class="nums">Souffl&eacute;, Batfish</td><td>Segmentation and exposure analysis</td></tr>
+          <tr><td><b>Protocol / distributed systems</b></td><td class="nums">TLA+, IVy, Dafny</td><td>Design-phase threat modelling for protocols</td></tr>
+          <tr><td><b>Low-level code</b></td><td class="nums">CBMC, Kani</td><td>Firmware assurance and CVE reachability triage</td></tr>
+          <tr><td><b>Interactive proof</b></td><td class="nums">Isabelle/HOL</td><td>Hypervisor and tenant-isolation assurance</td></tr>
+          <tr><td><b>Authorization runtime</b></td><td class="nums">Cedar + Symbolic Compiler</td><td>Policy-as-code enforcement point</td></tr>
+          <tr><td><b>Static analysis / type-state</b></td><td class="nums">Soot (IFDS/IDE), CodeQL, Infer</td><td>AppSec — SAST and taint analysis at the PR gate</td></tr>
+          <tr><td><b>Policy theories</b></td><td class="nums">Z3, CVC5, Lean, Dafny</td><td>AI assurance and model risk evidence</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SOLUTIONS ============================ -->
+<section id="solutions">
+  <div class="wrap">
+    <div class="sec-label">Solutions</div>
+    <h2>Nine solutions, three families</h2>
+    <p class="sec-intro">The families are not a filing convenience. Each has a different buyer, a different regulatory hook and a different sales cycle. The nine are also not uniformly mature, and we do not present them as though they were — each carries its honest state below.</p>
+
+    <!-- ---- family 1 ---- -->
+    <div class="fam">
+      <div class="famhead">
+        <h3>Cybersecurity Solutions</h3>
+        <span class="count">Solutions 1&ndash;5 &middot; the infrastructure you already run</span>
+      </div>
+      <p class="famlead">The entitlements that grant access, the network that carries the data, the code that calls the platform, the firmware underneath it, and the cryptography that will shortly have to be replaced. Each consumes something you already have rather than requiring a new agent, sensor or platform — and each answers a question your existing controls are structurally unable to answer, because they evaluate a snapshot against a rule catalogue rather than quantifying over the input space.</p>
+
+      <div class="grid g2">
+        <div class="sol">
+          <span class="num">Solution 01</span>
+          <h4>Cloud access-policy and entitlement verification</h4>
+          <p class="tagline">Entitlement questions decided, not scored</p>
+          <p class="q">Can any principal, in any request context, reach this resource from outside the trust boundary — and does the modelled entitlement graph admit a path from a low-privilege identity to a privileged one? <b>Under the shared responsibility model your platform may be fully compliant while your tenants' entitlements are not, and the breach will still be yours to explain.</b></p>
+          <div class="meta">
+            <span><b>Consumes</b> &nbsp;IAM, resource and bucket policies</span>
+            <span><b>Output</b> &nbsp;proof over all requests, or the violating request and the escalation path it opens — with affected principals, data classification and blast radius</span>
+          </div>
+          <span class="mat eng">Mature substrate &middot; translation engineering</span>
+        </div>
+
+        <div class="sol">
+          <span class="num">Solution 02</span>
+          <h4>Network reachability and segmentation proofs</h4>
+          <p class="tagline">Sovereignty is a reachability question</p>
+          <p class="q">Does any path exist from the public internet to this subnet, and does east-west microsegmentation actually hold? <b>Data-localisation law asks whether regulated data <i>can</i> leave the jurisdiction</b> — packet capture and DLP telemetry cannot answer that; they report what left yesterday. Settled statically, without a probe packet in production.</p>
+          <div class="meta">
+            <span><b>Consumes</b> &nbsp;VPCs, route tables, security groups, firewall rules, peering</span>
+            <span><b>Output</b> &nbsp;proof no path exists, or the exact path hop by hop, with the permitting rule and its owner at each hop</span>
+          </div>
+          <span class="mat eng">Mature substrate &middot; translation engineering</span>
+        </div>
+
+        <div class="sol">
+          <span class="num">Solution 03</span>
+          <h4>API-usage conformance</h4>
+          <p class="tagline">Type-state and taint analysis at the PR gate</p>
+          <p class="q">Does this code use the cloud, credential and cryptographic SDKs the way their contracts require? <b>Your entitlement proof says the bucket cannot be read from outside the account. Your own code then reads it with a paginated call it never drains, and renders the result without sanitising it.</b> Both statements are true at once, and the second one is the breach.</p>
+          <div class="meta">
+            <span><b>Consumes</b> &nbsp;one repository, and the SDK versions it builds against</span>
+            <span><b>Output</b> &nbsp;the call site, the inter-procedural taint trace, the pattern violated, its CWE class and the corrected sequence — plus an explicit statement of which patterns were checked, because the coverage claim is bounded by the library</span>
+          </div>
+          <span class="mat eng">Mature substrate &middot; translation engineering</span>
+        </div>
+
+        <div class="sol">
+          <span class="num">Solution 04</span>
+          <h4>Hypervisor, firmware and CVE-reachability assurance</h4>
+          <p class="tagline">Is this week's CVE actually reachable on our build?</p>
+          <p class="q">Can tenant isolation or memory safety be violated below the guest? Bounded model checking for firmware, bootloaders and hypervisor isolation layers — where a defect cannot be patched after shipment, and where ISO 26262 ASIL-D and DO-178C already make the method a requirement rather than a differentiator.</p>
+          <div class="meta">
+            <span><b>Consumes</b> &nbsp;firmware and hypervisor source or build artefacts</span>
+            <span><b>Output</b> &nbsp;bounded proof of memory safety and tenant isolation with the bound stated explicitly, or a failing execution trace; for triage, a per-CVE reachability verdict that drops straight into VEX and the vulnerability register</span>
+          </div>
+          <span class="mat edge">Unsettled at the edges &middot; limits stated per engagement</span>
+        </div>
+
+        <div class="sol wide" style="grid-column:1/-1">
+          <span class="num">Solution 05</span>
+          <h4>Post-quantum cryptography migration</h4>
+          <p class="tagline">A crypto-agility programme, not an algorithm swap</p>
+          <p class="q">Where is every cryptographic asset, in what order does it move, and does security hold at every stage of the transition? <b>Post-quantum migration is being sold as an algorithm swap. It is not.</b> It is an asset-inventory problem, a protocol change, a key-management change and a state-machine change, executed live on production systems over several years — and most of the risk sits in the sequencing rather than in the primitive. We build the cryptographic bill of materials, sequence the migration against confidentiality horizon, and prove the transition correct at each stage, rather than discovering in 2032 that the hybrid was only ever as strong as its classical half.</p>
+          <div class="meta">
+            <span><b>Output</b> &nbsp;the CBOM — itself a durable deliverable, and the cryptographic asset inventory a supervisor will ask for, with its coverage gaps listed — plus a sequenced risk-based migration plan and, at each stage, a proof the migration preserves the stated property or the specific downgrade sequence, key-policy gap or protocol state that breaks it</span>
+          </div>
+          <span class="mat">Migration programme &middot; verification is one workstream</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- family 2 ---- -->
+    <div class="fam">
+      <div class="famhead">
+        <h3>AI Security Solutions</h3>
+        <span class="count">Solutions 6&ndash;7 &middot; what an agent may do, and what it may say</span>
+      </div>
+      <p class="famlead"><b>Solution 6 bounds what an agent may <i>do</i></b> — its tool calls, its retrieval surface, the composition of its actions. That is an access-control problem, and it belongs to the CISO. <b>Solution 7 bounds what it may <i>say</i></b> — whether an assertion the model makes actually follows from the policy that governs it. That is a model risk problem, and it belongs to the second line. Neither subsumes the other: an agent can stay perfectly inside its action envelope and still tell a customer something its own policy contradicts — no tool misused, no boundary crossed, no detection fired, and the output still wrong in a way that carries liability.</p>
+
+      <div class="grid g2">
+        <div class="sol">
+          <span class="num">Solution 06</span>
+          <h4>AI and LLM guardrail verification</h4>
+          <p class="tagline">Verifying the boundary, not the model</p>
+          <p class="q">Does the mediation layer around this agent admit any permitted sequence of tool calls that leaves its action envelope — and does that layer actually cover every path by which a call can be made? <b>We do not establish that no natural-language input produces a harmful intention inside the model; nobody can.</b> We establish that the boundary around the model is complete, and that what it permits is safe.</p>
+          <div class="meta">
+            <span><b>Consumes</b> &nbsp;the agent's tool manifest, system-prompt constraints and data-access surface</span>
+            <span><b>Output</b> &nbsp;a result about the mediation layer — no permitted sequence escapes the envelope and every call path passes through the enforcement point, or the specific sequence that escapes or the path that bypasses mediation. Every deliverable states which parts of the envelope were modelled and which were not.</span>
+          </div>
+          <span class="mat edge">Unsettled at the edges &middot; limits stated per engagement</span>
+        </div>
+
+        <div class="sol">
+          <span class="num">Solution 07</span>
+          <h4>Neurosymbolic assurance</h4>
+          <p class="tagline">Does this answer follow from the policy we operate under?</p>
+          <p class="q">And if not, what assumption was silently supplied? LLM-assisted autoformalization drafts a candidate policy theory from your existing documents and a domain expert then ratifies it — <b>machine transcription, human meaning</b>. This is the operating model that follows from the one consistent finding in the literature: models are strong at filling in proofs against a specification, and weak at producing a correct and complete specification.</p>
+          <div class="meta">
+            <span><b>Output</b> &nbsp;per answer, a verdict, the derivation or the contradicting rule, and — where an answer is merely unsupported — the specific assumption that would make it follow. Retained per interaction, an immutable audit trail at decision granularity; in aggregate, a measured rate on your own corpus with the scope of the theory stated.</span>
+          </div>
+          <span class="mat edge">Unsettled at the edges &middot; limits stated per engagement</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- family 3 ---- -->
+    <div class="fam">
+      <div class="famhead">
+        <h3>Crypto Security Solutions</h3>
+        <span class="count">Solutions 8&ndash;9 &middot; where the defect is in the design</span>
+      </div>
+      <p class="famlead">Two solutions in which the failure mode is a property of the <i>design</i> rather than of the deployment, and in which the losses are public, countable and large. This is also where the founder's own research record sits, which is why these two carry a track record that the others cite precedent for.</p>
+
+      <div class="grid g2">
+        <div class="sol">
+          <span class="num">Solution 08</span>
+          <h4>Formal verification of smart contracts</h4>
+          <p class="tagline">Reachable states, not a test suite</p>
+          <p class="q">Does this contract admit a reachable state that breaks its invariants, its access control or its solvency? Functional correctness against a written specification; conservation-of-value, access-control and solvency invariants; arithmetic and reentrancy safety; storage-layout and upgrade-path safety across proxy patterns. Dubai's VARA Technology and Information Rulebook expects <i>&ldquo;independent third-party audits before deployment and formal verification where applicable&rdquo;</i> — as far as we are aware, the only place in the region where a regulator has named this method.</p>
+          <div class="meta">
+            <span><b>Output</b> &nbsp;machine-checked invariants with their bounds and assumptions stated, or the concrete transaction sequence that breaks them</span>
+          </div>
+          <span class="mat now">Deliverable now</span>
+        </div>
+
+        <div class="sol">
+          <span class="num">Solution 09</span>
+          <h4>Formal verification of distributed protocols and systems</h4>
+          <p class="tagline">Safety and liveness under an adversary</p>
+          <p class="q">Does this protocol admit an execution that breaks safety or liveness under the stated adversary model — Byzantine faults, asynchrony or partition? Agreement and validity for consensus and state-machine replication; atomicity and economic soundness of cross-chain and bridge designs. Verifying the protocol itself, not merely one implementation of it — and well beyond Web3, wherever a correctness argument depends on how nodes behave under failure.</p>
+          <div class="meta">
+            <span><b>Output</b> &nbsp;machine-checked inductive invariants with their fault model, adversary model and network assumptions stated explicitly, or the adversarial execution that breaks them</span>
+          </div>
+          <span class="mat now">Deliverable now</span>
+        </div>
       </div>
 
-      <div class="card wide">
-        <span class="idx">05</span>
-        <h3>Formal verification of smart contracts and distributed protocols</h3>
-        <p>Contracts and protocols fail in ways testing rarely reaches. A reentrancy path that opens only under one specific call ordering. A consensus protocol that survives every scenario an engineer thought to write, yet admits a Byzantine execution that forks the chain. A bridge whose guarantee holds only while a rational actor stays rational. These are not implementation bugs to be found by sampling — they are properties of the design, and they have to be settled by proof.</p>
-        <p><b style="color:var(--text);font-weight:500">For smart contracts:</b> functional correctness against a written specification; conservation-of-value, access-control and solvency invariants; arithmetic and reentrancy safety; storage-layout and upgrade-path safety across proxy patterns. Checked exhaustively over all reachable states rather than over a test suite.</p>
-        <p><b style="color:var(--text);font-weight:500">For distributed protocols:</b> safety and liveness of consensus and state-machine replication; agreement and validity under Byzantine faults, asynchrony and partition; atomicity and economic soundness of cross-chain and bridge designs. Established through machine-checked inductive invariants and model checking in TLA+, IVy and Dafny — verifying the protocol itself, not merely one implementation of it.</p>
-        <div class="note"><b>Track record.</b> &nbsp;The Moonshot BFT consensus protocol (DSN 2024) was verified exactly this way — its safety established by model checking and published at FMBC 2024. This is not an adjacent capability; it is where the founder's research sits.</div>
-        <div class="out"><b>Output</b> &nbsp;machine-checked invariants, or the adversarial execution that breaks them</div>
-      </div>
-
-      <div class="card wide">
-        <span class="idx">06</span>
-        <h3>AI guardrail verification</h3>
-        <p>An agent's permitted action envelope — tool calls, system-prompt constraints, data-access boundaries — encoded as logical constraints, then checked for whether any combination of input can drive it outside that envelope. Robustness assessment follows the methodology of <span class="mono" style="color:var(--gold-dim)">ISO/IEC&nbsp;24029-2</span>, the international standard for applying formal methods to neural-network robustness.</p>
-        <div class="out"><b>Output</b> &nbsp;proof the boundary holds, or the sequence that breaks it</div>
+      <div class="note">
+        <b>Track record.</b> &nbsp;The Moonshot BFT consensus protocol (DSN 2024) was verified exactly this way — its safety established by model checking and published at FMBC 2024. This is not an adjacent capability; it is where the founder's research sits. Cross-chain bridges remain a genuine white space: cumulative bridge losses exceed USD 2.8bn, roughly 40% of all Web3 losses to date.
       </div>
     </div>
   </div>
 </section>
 
+<!-- ============================ EVIDENCE ============================ -->
 <section id="evidence">
   <div class="wrap">
-    <div class="sec-label">The evidence layer</div>
-    <h2>A proof is only useful once it becomes evidence</h2>
-    <p class="sec-intro">A solver verdict is not, by itself, something a compliance function can file. Every engagement therefore delivers the same finding in three forms, written for the three people who need it.</p>
+    <div class="sec-label">One result, three registers</div>
+    <h2>A proof is useful on its own terms — the packaging is what lets the rest of the organisation act on it</h2>
+    <p class="sec-intro">A solver verdict is not, by itself, something a compliance function can file. Every engagement therefore delivers the same finding in three forms, written for the three people who need it. <b>The first register is the product. The second and third make it worth more than it cost.</b></p>
 
     <div class="grid g3">
       <div class="card">
-        <span class="idx">Governance</span>
-        <h3>A control-status assertion</h3>
-        <p>Owned, dated, and re-run on change — the line a board or steering committee reads, with a named owner and a verification cadence.</p>
+        <span class="idx">First line</span>
+        <h3>Engineering and security operations</h3>
+        <p>The property, its model and its assumptions, and either the proof or a reproducible attack path — with reproduction steps, affected data classification and blast radius, ready to hand to a remediation owner.</p>
       </div>
       <div class="card">
-        <span class="idx">Risk</span>
-        <h3>A register entry with a delta</h3>
-        <p>Likelihood moved from a qualitative estimate to either <em>not reachable under the modelled conditions</em> or <em>confirmed exploitable</em> — with the residual risk stated honestly.</p>
+        <span class="idx">Second line</span>
+        <h3>Risk</h3>
+        <p>Likelihood moved off a qualitative guess to either <em>not reachable under the modelled conditions</em> or <em>confirmed exploitable</em> — with residual risk and the model's limits stated rather than glossed.</p>
       </div>
       <div class="card">
-        <span class="idx">Compliance</span>
-        <h3>An artefact tied to a clause</h3>
-        <p>Mapped to the specific control it evidences, timestamped, and reproducible — built to slot into your existing audit, not to replace it.</p>
+        <span class="idx">Third line</span>
+        <h3>Internal audit and compliance</h3>
+        <p>A clause-mapped control assertion: objective, status, owner and re-verification date. Design effectiveness becomes operating effectiveness, it attaches to your existing GRC records, and assessors probe less.</p>
       </div>
     </div>
 
-    <p class="sec-intro" style="margin:34px 0 0">PrimusCredence does not issue certificates and is not an independent auditor. We produce the technical evidence your assessors, certification body and regulator rely upon — which is precisely why our work strengthens their opinion rather than competing with it.</p>
+    <div class="kicker">
+      <p>PrimusCredence does not issue certificates and is not an independent auditor. <b>We produce the technical evidence; your assessor keeps the opinion.</b> Which is precisely why our work strengthens theirs rather than competing with it — and why an audit firm or an MSSP is a channel rather than a rival.</p>
+      <span class="who">The boundary we hold to</span>
+    </div>
   </div>
 </section>
 
+<!-- ============================ ASSESSMENT ============================ -->
+<section id="assessment">
+  <div class="wrap">
+    <div class="sec-label">Where engagements start</div>
+    <h2>Milestone 1 — the Micro-Proof Assessment</h2>
+    <p class="sec-intro">The free gap assessment is the standard entry point for enterprise security sales in the GCC, and it is a poor fit here: forty hours of interviews ending in a maturity heat map produces the artefact every competitor produces, assesses control <i>design</i> rather than control <i>effectiveness</i>, and demonstrates nothing distinctive. We start instead with a rapid, tool-driven analysis of one narrow, high-risk slice — <b>a result about your own estate that you did not previously have</b>. We call it Milestone 1 rather than a trial because serious clients are buying a programme with a known first step; nothing about it obliges anyone to commission Milestone 2.</p>
+
+    <div class="offer">
+      <ol>
+        <li><b>You scope it narrowly</b> — one non-production account, one network segment, one contract, one protocol property, or one agent's tool surface. Read-only credentials are sufficient.</li>
+        <li><b>We model it and run the proofs</b> — days to a small number of weeks. No production change, no software agent installed on any host, no traffic generation, no scanning window — which is why this typically clears change advisory in one pass rather than three.</li>
+        <li><b>You receive the counter-example — or the clearance.</b> If a violation exists: the exact request, network path, call ordering or adversarial execution that reaches it, reproducible on your side. If none exists: a proof, with model assumptions and bounds stated.</li>
+        <li><b>You receive the control mapping</b> — the specific control the finding bears on, so it routes directly to whoever owns it and lands in the risk register rather than in a PDF nobody reopens.</li>
+        <li><b>You decide what happens next.</b> No retainer implied, nothing obliging you to continue.</li>
+      </ol>
+    </div>
+
+    <p class="sec-intro" style="margin:38px 0 0">Milestone 1 is offered as a choice of four scoped assessments, each bounded to the same effort and each producing the same class of deliverable. Pick whichever matches your most pressing question — and if you cannot choose, the answer is usually in your most recent audit finding.</p>
+
+    <div class="opts">
+      <div class="opt">
+        <span class="letter">Option A</span>
+        <h4>Privilege Escalation Path Review</h4>
+        <p>Can an external or low-privilege identity reach a privileged role, through any chain of grants?</p>
+        <dl>
+          <dt>We need</dt><dd>Read-only access to one complex non-production cloud environment</dd>
+          <dt>Evidences</dt><dd>Identity and access management, privileged access</dd>
+          <dt>Best when</dt><dd>The estate grew by accretion and nobody can answer &ldquo;who can become admin?&rdquo;</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <span class="letter">Option B</span>
+        <h4>Segmentation and Sovereignty Proof</h4>
+        <p>Can a packet from an untrusted zone reach a regulated data store, north-south or east-west?</p>
+        <dl>
+          <dt>We need</dt><dd>VPC, route table, security group, firewall rule base and peering configuration</dd>
+          <dt>Evidences</dt><dd>Network security, boundary protection, data localisation</dd>
+          <dt>Best when</dt><dd>A localisation or isolation claim is being asserted to a regulator or a tenant</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <span class="letter">Option C</span>
+        <h4>AI Agent Boundary Check</h4>
+        <p>Can any input sequence drive this agent into an unauthorised action?</p>
+        <dl>
+          <dt>We need</dt><dd>The agent's tool manifest, system-prompt constraints and data-access surface</dd>
+          <dt>Evidences</dt><dd>AI governance, authorisation for non-human identities</dd>
+          <dt>Best when</dt><dd>An agent is being moved into a regulated decision path</dd>
+        </dl>
+      </div>
+      <div class="opt">
+        <span class="letter">Option D</span>
+        <h4>SDK Misuse Sweep</h4>
+        <p>Does this repository use its cloud and crypto SDKs the way their contracts require?</p>
+        <dl>
+          <dt>We need</dt><dd>Read access to one repository, and the SDK versions it builds against</dd>
+          <dt>Evidences</dt><dd>Secure development lifecycle, application security</dd>
+          <dt>Best when</dt><dd>Infrastructure keeps passing audit and incidents keep originating in application code</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ REGULATORY ============================ -->
+<section id="regulatory">
+  <div class="wrap">
+    <div class="sec-label">Where a finding also lands</div>
+    <h2>A routing table, not a reason to commission the work</h2>
+    <p class="sec-intro">Nobody buys Satisfiability Modulo Theories. Buyers have two distinct concerns and the same piece of work answers both: <i>is this control actually effective</i>, which is the engineering and risk question, and <i>can I evidence that to someone who will ask</i>, which is the regulatory one. A consultancy that leads with the second sounds like a compliance vendor and gets priced like one. So the map below is not an argument that regulation is why the work is worth doing — it tells you which control a finding <b>also</b> speaks to, and therefore who else in the organisation should see it.</p>
+
+    <div class="scroller">
+      <table class="tbl">
+        <thead><tr><th style="width:230px">Framework</th><th>What it demands</th><th style="width:110px">Solutions</th></tr></thead>
+        <tbody>
+          <tr><td><b>DESC ISR</b> <span class="nums">Dubai</span></td><td>Identity and access management, third-party and supply-chain assurance, secure development</td><td class="nums">1 2 3</td></tr>
+          <tr><td><b>UAE IAS / NESA</b> <span class="nums">UAE federal</span></td><td>Tiered information assurance controls including network segmentation and isolation</td><td class="nums">2 4</td></tr>
+          <tr><td><b>UAE PDPL</b> <span class="nums">UAE</span></td><td>Personal data protection; data-localisation and cross-border transfer obligations</td><td class="nums">2 3 6</td></tr>
+          <tr><td><b>UAE AI Act (2026)</b> <span class="nums">UAE</span></td><td>Risk-tiered AI classification; monitoring and audit trails for high-risk systems; self-assessment obligations</td><td class="nums">6 7</td></tr>
+          <tr><td><b>VARA Technology &amp; Information Rulebook</b> <span class="nums">Dubai VASPs</span></td><td>Third-party audit before deployment and <i>formal verification where applicable</i></td><td class="nums">8</td></tr>
+          <tr><td><b>ADGM FSRA / DIFC</b> <span class="nums">Abu Dhabi / DIFC</span></td><td>Virtual asset and financial services technology governance; automated-processing safeguards</td><td class="nums">6 7 8</td></tr>
+          <tr><td><b>SAMA Cybersecurity Framework</b> <span class="nums">Saudi Arabia</span></td><td>Operations security, identity and privileged access management, data governance, secure SDLC</td><td class="nums">1 2 3 6</td></tr>
+          <tr><td><b>NCA ECC</b> <span class="nums">Saudi Arabia</span></td><td>Essential controls for critical national infrastructure — IAM, segmentation, vulnerability and application security</td><td class="nums">1 2 3 4</td></tr>
+          <tr><td><b>SDAIA AI guidance</b> <span class="nums">Saudi Arabia</span></td><td>AI audit and assurance obligations for high-risk systems</td><td class="nums">6 7</td></tr>
+          <tr><td><b>CBUAE</b> <span class="nums">UAE</span></td><td>Model risk management, AI governance, periodic access recertification for licensed institutions</td><td class="nums">1 6 7</td></tr>
+          <tr><td><b>EU AI Act, Art. 15</b> <span class="nums">extraterritorial</span></td><td>Accuracy, robustness and cybersecurity for high-risk AI</td><td class="nums">6 7 9</td></tr>
+          <tr><td><b>ISO/IEC 42001</b> &middot; <b>24029-2</b> &middot; <b>NIST AI RMF</b></td><td>AI management system controls; formal methods for neural-network robustness; AI risk measurement and governance</td><td class="nums">6 7</td></tr>
+          <tr><td><b>ISO/IEC 27001 Annex A</b> &middot; <b>27034</b></td><td>Access control, network security, secure development, cryptography and supplier controls; application security across the lifecycle</td><td class="nums">1 2 3 5</td></tr>
+          <tr><td><b>NIST CSF 2.0</b></td><td>Identify, Protect and Govern outcomes — entitlement inventory, boundary protection, and evidence that a control operates</td><td class="nums">1&ndash;5</td></tr>
+          <tr><td><b>FIPS 203/204/205</b> &middot; <b>SP 800-131A</b></td><td>Post-quantum algorithm standards and transition guidance</td><td class="nums">5</td></tr>
+          <tr><td><b>ISO 26262 (ASIL-D)</b> &middot; <b>DO-178C</b></td><td>Formal methods or rigorous static analysis mandated for safety-critical code</td><td class="nums">4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note" style="margin-top:26px">
+      <b>Two disciplines we hold to.</b> &nbsp;We produce evidence bearing on a control; we do not certify compliance — the interpretation of a control against a specific environment is the assessor's judgement, and we are careful not to appropriate it. And the regulatory case should never be the whole case: if the only articulable reason to commission a proof is that a regulator asked, the engagement is fragile. It ends when the deadline passes, it gets priced against audit fees rather than against risk reduction, and it invites the question of whether a cheaper attestation would have done. <b>The durable engagements are the ones where the client wanted to know the answer — and found that the answer also happened to file.</b>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SECTORS ============================ -->
 <section id="sectors">
   <div class="wrap">
     <div class="sec-label">Who we work with</div>
     <h2>Built for organisations that must prove it, not assert it</h2>
 
     <div class="sector">
-      <h3>Web3 smart contracts &amp; digital assets</h3>
+      <h3>Virtual asset platforms<span class="sols">Solutions 8 &middot; 9 &middot; 5</span></h3>
       <div>
-        <p>Token issuers, DeFi protocols, custody platforms and virtual-asset service providers — where a single contract defect is unrecoverable once deployed, and where the regulator has begun naming the technique directly. Dubai's VARA Technology and Information Rulebook expects <em>"independent third-party audits before deployment and formal verification where applicable"</em> as part of its smart-contract security standard.</p>
-        <div class="tags"><span class="tag">VARA</span><span class="tag">contract invariants</span><span class="tag">reentrancy</span><span class="tag">upgrade safety</span><span class="tag">solvency</span></div>
+        <p>Token issuers, DeFi protocols, custody platforms and exchanges under VARA and ADGM — where the security function is typically small, the threat model is permissionless, the loss is immediate and unrecoverable once deployed, and the regulator has already named the technique. The shortest path from first conversation to signed work, and the closest match to the founder's published record.</p>
+        <div class="tags"><span class="tag">VARA</span><span class="tag">contract invariants</span><span class="tag">reentrancy</span><span class="tag">upgrade safety</span><span class="tag">solvency</span><span class="tag">cross-chain</span></div>
       </div>
     </div>
 
     <div class="sector">
-      <h3>Distributed protocols &amp; consensus</h3>
+      <h3>Regional and sovereign cloud providers<span class="sols">Solutions 1 &middot; 2 &middot; 3 &middot; 4</span></h3>
       <div>
-        <p>Layer-1 and Layer-2 core teams, bridge and sequencer designers, validator networks — and distributed systems well beyond Web3, including replication layers and sovereign-cloud control planes. Wherever the correctness argument depends on how nodes behave under failure, asynchrony and adversarial conditions, testing cannot reach the property and a proof can.</p>
-        <div class="tags"><span class="tag">BFT consensus</span><span class="tag">safety &amp; liveness</span><span class="tag">TLA+</span><span class="tag">IVy</span><span class="tag">cross-chain</span></div>
+        <p>Providers competing against the hyperscalers for government, defence and BFSI workloads, who cannot match AWS's assurance story in a security questionnaire or a tenant's due-diligence review. We build the class of capability AWS embeds in Access Analyzer, on the same open solvers — as a service you can resell. Provable tenant isolation is a high-margin differentiator, not a cost line.</p>
+        <div class="tags"><span class="tag">tenant isolation</span><span class="tag">IAM semantics</span><span class="tag">multi-cloud</span><span class="tag">white-label</span></div>
       </div>
     </div>
 
     <div class="sector">
-      <h3>Cloud service providers</h3>
+      <h3>Sovereign AI platforms<span class="sols">Solutions 6 &middot; 7 &middot; 5</span></h3>
       <div>
-        <p>Tenant-isolation and access-control proofs you can hand to your own enterprise and government customers — turning an assurance question you currently answer with documentation into one you answer with evidence.</p>
-        <div class="tags"><span class="tag">tenant isolation</span><span class="tag">IAM semantics</span><span class="tag">multi-cloud</span></div>
+        <p>National AI clouds and government AI programmes carrying regulated workloads, where robustness and adversarial resilience must be demonstrated rather than asserted — and where training data has a decades-long confidentiality horizon that makes post-quantum sequencing urgent rather than theoretical. Model cards and LLM red-team reports are sampling exercises; they establish that a jailbreak was not found in the attempts made.</p>
+        <div class="tags"><span class="tag">UAE AI Act</span><span class="tag">EU AI Act Art. 15</span><span class="tag">ISO/IEC 42001</span><span class="tag">ISO/IEC 24029-2</span><span class="tag">NIST AI RMF</span></div>
       </div>
     </div>
 
     <div class="sector">
-      <h3>Sovereign AI cloud</h3>
+      <h3>Banks and financial institutions<span class="sols">Solutions 1 &middot; 2 &middot; 3 &middot; 6 &middot; 7</span></h3>
       <div>
-        <p>Technical assurance for AI platforms carrying national and regulated workloads, where accuracy, robustness and adversarial resilience must be demonstrated rather than asserted.</p>
-        <div class="tags"><span class="tag">EU AI Act Art. 15</span><span class="tag">ISO/IEC 42001</span><span class="tag">ISO/IEC 24029-2</span><span class="tag">NIST AI RMF</span></div>
+        <p>AI model inventories, robustness evidence, entitlement and privileged-access recertification, and proof that core banking data stores are unreachable from untrusted zones. The buying centre is unusually well formed here: a CISO, a head of model risk and an internal audit function who each need a different register of the same finding.</p>
+        <div class="tags"><span class="tag">CBUAE</span><span class="tag">DFSA</span><span class="tag">ADGM FSRA</span><span class="tag">SAMA</span><span class="tag">model risk</span></div>
       </div>
     </div>
 
     <div class="sector">
-      <h3>Banks &amp; financial institutions</h3>
+      <h3>Critical infrastructure, energy and government<span class="sols">Solutions 2 &middot; 4 &middot; 5</span></h3>
       <div>
-        <p>Evidence for AI model inventories, bias and robustness testing, and access-control review — under supervisory expectations that have begun to name AI governance and model risk explicitly.</p>
-        <div class="tags"><span class="tag">CBUAE</span><span class="tag">DFSA</span><span class="tag">ADGM FSRA</span><span class="tag">SAMA</span></div>
+        <p>IT/OT segmentation proofs, firmware and control-system verification, and supplier assurance evidence for equipment the operator cannot inspect — for entities operating under national information-assurance mandates.</p>
+        <div class="tags"><span class="tag">UAE IAS</span><span class="tag">DESC ISR</span><span class="tag">NCA ECC</span><span class="tag">IT/OT</span></div>
       </div>
     </div>
 
     <div class="sector">
-      <h3>Critical infrastructure &amp; government</h3>
+      <h3>Hardware, automotive, defence and aerospace<span class="sols">Solutions 4 &middot; 3</span></h3>
       <div>
-        <p>Network isolation proofs, firmware and control-system verification, and supplier assurance evidence for entities operating under national information-assurance mandates.</p>
-        <div class="tags"><span class="tag">UAE IAS</span><span class="tag">DESC ISR</span><span class="tag">NCA ECC</span><span class="tag">DIFC Reg. 10</span></div>
+        <p>HSM and semiconductor vendors, IoT and smart-metering suppliers, defence technology groups, autonomous vehicle and avionics developers — where formal methods are already a compliance requirement rather than a differentiator, and where a defect has no patch path.</p>
+        <div class="tags"><span class="tag">ISO 26262 ASIL-D</span><span class="tag">DO-178C</span><span class="tag">firmware</span><span class="tag">CVE reachability</span></div>
+      </div>
+    </div>
+
+    <div class="sector">
+      <h3>ISVs and platform vendors<span class="sols">Solution 3</span></h3>
+      <div>
+        <p>Software vendors whose product is integrated by third parties, and who carry the reputational and supply-chain consequence of an integrator using their SDK incorrectly. This is the Coastguard case: conformance checked as a certification gate before a partner ships, rather than discovered in the field afterwards. A shorter technical sale, because the buyer is an engineering or product-security leader rather than a compliance function.</p>
+        <div class="tags"><span class="tag">SDK conformance</span><span class="tag">type-state</span><span class="tag">supply chain</span><span class="tag">PR gate</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="assessment">
+<!-- ============================ PARTNERS ============================ -->
+<section id="partners">
   <div class="wrap">
-    <div class="sec-label">Where engagements start</div>
-    <h2>The Micro-Proof Assessment</h2>
-    <p class="sec-intro">A bounded, low-cost first engagement on one slice of your environment — a policy set, a network segment, a single contract, or one protocol property. It exists so you can judge the method on your own infrastructure rather than on a slide.</p>
+    <div class="sec-label">For providers and assessors</div>
+    <h2>What a provider can resell</h2>
+    <p class="sec-intro">We do not certify — so an audit firm or an MSSP is a channel, not a rival. White-labelling the toolchain moves a provider's offering up the value chain, from scanning, posture reporting and monitoring to <b>provable control effectiveness</b>.</p>
 
-    <div class="offer">
-      <ol>
-        <li><b>You scope it narrowly</b> — one non-production account, one network segment, one contract, or one protocol property. Read-only access is enough.</li>
-        <li><b>We model it and run the proofs</b> — days, not weeks, because the toolchain is built for this rather than assembled per engagement.</li>
-        <li><b>You receive the counter-example</b> — if one exists, the exact request, path, call ordering or adversarial execution that reaches the violation, reproducible on your side.</li>
-        <li><b>You receive the regulatory mapping</b> — the specific control the finding bears on, so it can go straight to whoever owns that control.</li>
-        <li><b>You decide what happens next.</b> No retainer is implied, and nothing obliges you to continue.</li>
-      </ol>
+    <div class="grid g3">
+      <div class="card">
+        <span class="idx">The commercial move</span>
+        <h3>Specialist capability inside bids you already win</h3>
+        <p>You keep the client relationship and the contract. We sit behind it as the verification capability you could not economically build, on an open-source stack with no licence to resell and no vendor lock to explain.</p>
+      </div>
+      <div class="card">
+        <span class="idx">Why it deploys easily</span>
+        <h3>Read-only, agentless, no scanning window</h3>
+        <p>No software agent on any host, no traffic generation, no production change. It clears change advisory in one pass rather than three — which is the difference between a deal that closes this quarter and one that does not.</p>
+      </div>
+      <div class="card">
+        <span class="idx">For assurance firms</span>
+        <h3>We produce the evidence, you keep the opinion</h3>
+        <p>Our artefacts strengthen your opinion and shorten your fieldwork. The boundary is explicit and we hold to it: interpretation of a control against a specific environment is the assessor's judgement, not ours.</p>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ============================ FOUNDER ============================ -->
 <section id="founder">
   <div class="wrap">
     <div class="sec-label">Founder</div>
@@ -419,9 +970,9 @@
       </div>
       <div>
         <h3>Dr. Raghavendra Ramesh</h3>
-        <div class="role">Founder &middot; PrimusCredence</div>
+        <div class="role">Founder &amp; CEO &middot; PrimusCredence</div>
 
-        <p>PrimusCredence was founded to bring automated reasoning — the discipline behind formally verified protocols, compilers and operating systems — to cloud, protocol and AI security across MENAT.</p>
+        <p>PrimusCredence was founded to bring automated reasoning — the discipline behind formally verified protocols, compilers and operating systems — to cloud, protocol and AI security across MENAT. What the hyperscalers built internally, regional cloud providers, sovereign AI platforms and digital-asset infrastructure can neither buy off a price list nor stand up in-house.</p>
 
         <p>Dr. Raghavendra holds a PhD and MSc (Engg) in Computer Science from the Indian Institute of Science, Bangalore, where he was a Microsoft PhD Fellow. His work spans program analysis, mathematical logic, automata theory, cryptography and fault-tolerant distributed systems.</p>
 
@@ -445,11 +996,12 @@
   </div>
 </section>
 
+<!-- ============================ CONTACT ============================ -->
 <section id="contact">
   <div class="wrap">
     <div class="sec-label">Contact</div>
     <h2>Email directly</h2>
-    <p class="lead">No forms, no sales sequence, no scheduling funnel. Write to me and you will get a reply from me personally, usually within a day.</p>
+    <p class="lead">No forms, no sales sequence, no scheduling funnel. Write to me and you will get a reply from me personally, usually within a day. If you would rather start from a specific question than a capability list, send the finding you cannot currently close.</p>
 
     <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra"></span>
 
@@ -511,6 +1063,7 @@
   Array.prototype.forEach.call(nodes, function(el){
     var k = el.getAttribute('data-mail');
     el.textContent = addr(k);
+    el.setAttribute('title', addr(k));
     el.addEventListener('click', function(){ open(k); });
     el.addEventListener('keydown', function(e){
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(k); }
