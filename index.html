@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PrimusCredence — Mathematical rigour to security, across cloud, AI and crypto</title>
-<meta name="description" content="PrimusCredence adds proof alongside testing. Nine solutions across cloud, AI and crypto security — access policies, network segmentation, SDK conformance, firmware, post-quantum migration, AI guardrails, smart contracts and distributed protocols — settled by automated reasoning over the whole input space, not a sample of it.">
-<meta property="og:title" content="PrimusCredence — proof alongside testing">
-<meta property="og:description" content="Testing shows you what your system does; proof shows you what it cannot do. Automated reasoning for cloud, AI and crypto security.">
+<title>PrimusCredence — Application security, decided. Proving who can reach what inside your app.</title>
+<meta name="description" content="Broken Access Control is #1 in the OWASP Top 10, and no product reads an application's own role model. PrimusCredence composes the app's roles and tokens with cloud IAM, the identity provider and the network into one graph, then decides who can reach what — over every possible request, not a sample.">
+<meta property="og:title" content="PrimusCredence — application security, decided not scanned">
+<meta property="og:description" content="Scanners tell you what they found. A proof tells you what cannot happen. Automated reasoning over application access policies, cloud IAM, identity and network — composed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://primuscredence.com/">
 <link rel="canonical" href="https://primuscredence.com/">
@@ -76,7 +76,7 @@
   .wordmark{ font-family:'Source Serif 4',serif; font-size:1.14rem; letter-spacing:0.045em; color:var(--text); font-weight:600; white-space:nowrap; }
   .wordmark span{ color:var(--gold); }
   nav.links{ display:flex; gap:25px; align-items:center; }
-  nav.links a{ font-size:13.5px; color:var(--text-dim); font-weight:400; letter-spacing:0.02em; }
+  nav.links a{ font-size:13.5px; color:var(--text-dim); font-weight:400; letter-spacing:0.02em; white-space:nowrap; }
   nav.links a:hover{ color:var(--gold-bright); }
   .mailbtn{
     font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--gold);
@@ -310,14 +310,13 @@
   <div class="bar">
     <div class="wordmark">Primus<span>Credence</span></div>
     <nav class="links">
-      <a href="#why">Why now</a>
-      <a href="#layer">What we add</a>
+      <a href="#risk">The risk</a>
+      <a href="#stack">The stack</a>
+      <a href="#ai">AI</a>
       <a href="#method">Method</a>
-      <a href="#solutions">Solutions</a>
-      <a href="#evidence">Evidence</a>
-      <a href="#assessment">Milestone 1</a>
+      <a href="#build">What we build</a>
+      <a href="#guarantee">Guarantee</a>
       <a href="#founder">Founder</a>
-      <a href="/solutions/">Deck</a>
     </nav>
     <span class="mailbtn" data-mail="r" role="button" tabindex="0" aria-label="Email the founder"></span>
   </div>
@@ -325,193 +324,214 @@
 
 <div class="hero">
   <div class="wrap">
-    <div class="eyebrow">Cloud &middot; AI &middot; Crypto security</div>
-    <h1>Mathematical rigour to security — <em>proof alongside testing</em>.</h1>
-    <p class="lead">Penetration tests, code audits and posture tooling sample a few hundred cases and infer the rest. They answer <i>we looked, and within the time available we did not find a way in</i> — a genuinely valuable result, and no longer sufficient on its own against an adversary that enumerates. PrimusCredence compiles your access policies, network topology, application code, firmware, smart contracts, protocols and agent guardrails into logic, then settles the question over the whole modelled space: either a proof that a violation cannot occur, or a concrete counter-example, every hop named, reproducible on your own estate.</p>
+    <div class="eyebrow">Application security &middot; access policies &middot; boundaries</div>
+    <h1>Who can reach what inside your application — <em>decided, not scanned</em>.</h1>
+    <p class="lead">Broken Access Control is first in the OWASP Top 10, and in OWASP's own test data every application examined carried some form of it. Scanners, pen tests and traffic monitoring all answer the same way: <i>we looked, and did not find a way in</i>. PrimusCredence compiles your application's own roles and tokens, the cloud role it runs under, the identity provider that admits its users and the network that carries its traffic into one logical model — then settles the question over every possible request. Either a proof that no request violates the property, or a concrete counter-example, every hop named, reproducible on your own estate.</p>
 
     <div class="proof">
-      <div class="head"><span class="dot"></span> policy verification &middot; sample output</div>
-<pre><span class="c">$ primus verify --policy s3-finance.json --property no-external-read</span>
+      <div class="head"><span class="dot"></span> app &rarr; cloud composition &middot; sample output</div>
+<pre><span class="c">$ primus verify --app strapi --property no-escalation-to-cloud</span>
 
-  <span class="k">&#8704; request</span> &middot; <span class="q">&#172;( principal &#8713; Org &#8743; action = s3:GetObject</span>
-                <span class="q">&#8743; resource = finance-data/* )</span>
+  <span class="k">&#8704; request</span> &middot; <span class="q">&#172;( app_role &#8800; super-admin &#8743; reaches(</span>
+                <span class="q">app_role, iam:role/cms-task ) )</span>
 
-  translating policy &#8594; SMT ..................... <span class="ok">ok</span>
-  solving over entire request space ............ <span class="ok">ok</span>
+  app roles &#8594; Cedar &#8594; SMT ..................... <span class="ok">ok</span>
+  IAM policies &#8594; SMT ......................... <span class="ok">ok</span>
+  composing bridge edges ...................... <span class="ok">ok</span>
 
   <span class="sat">SAT &#8212; counter-example found</span>
-    principal    arn:aws:iam::94xxxxxx:root
-    user-agent   "InternalApp/2.1"     <span class="c">(matches *InternalApp*)</span>
-    source-ip    203.0.113.9           <span class="c">(&#8713; 192.0.2.0/24)</span>
+    principal    app_role/editor
+    edge 1       editor &#8594; plugin::upload.settings   <span class="c">(Cedar: permit)</span>
+    edge 2       plugin runs in-process              <span class="c">(inherits task role)</span>
+    edge 3       iam:role/cms-task &#8594; s3:GetObject   <span class="c">(billing-exports/*)</span>
 
+  <span class="c">every policy on this path is individually valid.</span>
   <span class="c">1 violation proven reachable. evidence bundle written.</span></pre>
     </div>
   </div>
 </div>
 
-<!-- ============================ WHY NOW ============================ -->
-<section id="why">
+<!-- ============================ THE RISK ============================ -->
+<section id="risk">
   <div class="wrap">
-    <div class="sec-label">Why now</div>
-    <h2>The attacker's side of the equation was industrialised</h2>
-    <p class="sec-intro">The argument for formal verification used to be made on principle: proof is better than testing because proof is complete. That argument was true but commercially weak, because in practice the adversary was also incomplete. Both sides sampled. Through 2024&ndash;2026 that symmetry broke — not through a novel technique or a new ATT&amp;CK entry, but through a collapse in what it costs to try one.</p>
+    <div class="sec-label">The risk</div>
+    <h2>The category that causes the most breaches is the one nobody decides</h2>
+    <p class="sec-intro">Broken Access Control is <b>#1 in the OWASP Top 10 for 2025</b>; Security Misconfiguration is <b>#2</b>. Both are application-layer defects — what an app's own roles and settings permit, which the cloud beneath it never sees. Neither is exotic, and neither is being designed out.</p>
 
     <div class="statstrip">
       <div>
-        <b>4.5&times;</b>
-        <span>the revenue of AI-assisted scam operations versus their non-AI equivalents</span>
-        <i>Chainalysis, Jan 2026</i>
+        <b>#1</b><span>Broken Access Control, top of the OWASP Top 10</span><i>40 CWEs &middot; 1.8m+ occurrences</i>
       </div>
       <div>
-        <b>USD 3.52</b>
-        <span>average compute cost per LLM-agent exploit attempt against real one-day CVEs</span>
-        <i>Fang et al., arXiv 2404.08144</i>
+        <b>100%</b><span>of applications tested carried some form of it</span><i>OWASP Top 10:2025</i>
       </div>
       <div>
-        <b>87%</b>
-        <span>of a 15-CVE sample exploited by an LLM agent given only the public description</span>
-        <i>same study &middot; 0% for every non-GPT-4 agent tested</i>
+        <b>+116%</b><span>growth in object-level access reports over five years, while XSS flatlined</span><i>HackerOne</i>
       </div>
     </div>
 
-    <p class="sec-intro" style="margin:30px 0 0">The cost of attempting an exploit has fallen to roughly the price of a coffee, the success rate is non-trivial, and the return on an automated campaign is several times the manual equivalent. That changes how many times the existing techniques get tried, and therefore <b>how thin a control's coverage can afford to be</b>.</p>
+    <h2 style="margin-top:56px">And they live for years</h2>
+    <p class="sec-intro">Each of these was authenticated, well-formed traffic to an endpoint the caller was allowed to use. That is what this class of defect looks like from the outside — which is precisely why monitoring did not stop it.</p>
 
-    <figure class="chart">
-      <svg viewBox="0 0 680 232" role="img" aria-label="Annual crypto theft: 2021 3.2 billion, 2022 3.7 billion, 2023 1.7 billion, 2024 2.2 billion, 2025 3.4 billion US dollars">
-        <g stroke="rgba(201,162,39,0.18)" stroke-width="1">
-          <line x1="58" y1="200" x2="668" y2="200" stroke="rgba(201,162,39,0.35)"/>
-          <line x1="58" y1="155" x2="668" y2="155" stroke-dasharray="2 4"/>
-          <line x1="58" y1="110" x2="668" y2="110" stroke-dasharray="2 4"/>
-          <line x1="58" y1="65"  x2="668" y2="65"  stroke-dasharray="2 4"/>
-          <line x1="58" y1="20"  x2="668" y2="20"  stroke-dasharray="2 4"/>
-        </g>
-        <g font-size="12.2" fill="#6f6a5e" text-anchor="end" font-family="IBM Plex Mono, monospace">
-          <text x="50" y="204">0</text><text x="50" y="159">1</text><text x="50" y="114">2</text>
-          <text x="50" y="69">3</text><text x="50" y="24">4</text>
-        </g>
-        <text x="16" y="112" font-size="11" fill="#6f6a5e" font-family="IBM Plex Mono, monospace" letter-spacing="1.4" transform="rotate(-90 16 112)" text-anchor="middle">USD BN</text>
-        <g fill="#c9a227">
-          <path d="M85,200 L85,60 Q85,56 89,56 L151,56 Q155,56 155,60 L155,200 Z"/>
-          <path d="M205,200 L205,33 Q205,29 209,29 L271,29 Q275,29 275,33 L275,200 Z"/>
-          <path d="M325,200 L325,128 Q325,124 329,124 L391,124 Q395,124 395,128 L395,200 Z"/>
-          <path d="M445,200 L445,105 Q445,101 449,101 L511,101 Q515,101 515,105 L515,200 Z"/>
-          <path d="M565,200 L565,51 Q565,47 569,47 L631,47 Q635,47 635,51 L635,200 Z"/>
-        </g>
-        <g font-size="13.9" fill="#e3c46b" text-anchor="middle" font-weight="600" font-family="Source Serif 4, Georgia, serif">
-          <text x="120" y="48">3.2</text><text x="240" y="21">3.7</text><text x="360" y="116">1.7</text>
-          <text x="480" y="93">2.2</text><text x="600" y="39">3.4</text>
-        </g>
-        <g font-size="12.4" fill="#a29c8c" text-anchor="middle" font-family="IBM Plex Mono, monospace">
-          <text x="120" y="222">2021</text><text x="240" y="222">2022</text><text x="360" y="222">2023</text>
-          <text x="480" y="222">2024</text><text x="600" y="222">2025</text>
-        </g>
-      </svg>
-      <figcaption>Annual crypto theft, 2021&ndash;2025 — the sector with the best public loss data, because the losses are on-chain and therefore countable.
-        <span class="src">Chainalysis, on-chain stolen funds. 2022 restated from $3.8bn. Trackers measure different things — 2025 totals across Chainalysis, CertiK and Immunefi span roughly USD 0.68bn to 3.95bn and are not interchangeable. The 2025 figure is heavily driven by one event, the February 2025 Bybit theft of ~USD 1.46bn. Chainalysis describes its own figures as lower bounds that revise upward.</span>
-      </figcaption>
-    </figure>
-
-    <figure class="chart">
-      <svg viewBox="0 0 680 128" role="img" aria-label="2025 Web3 losses by cause: access control and operational security 53.9 percent, unclassified 33.2 percent, smart contract vulnerabilities 12.9 percent">
-        <g>
-          <rect x="58" y="30" width="322" height="38" fill="#3a3730"/>
-          <rect x="384" y="30" width="197" height="38" fill="#2a2823"/>
-          <rect x="585" y="30" width="83" height="38" fill="#c9a227"/>
-        </g>
-        <g font-size="13.6" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono, monospace">
-          <text x="219" y="54" fill="#a29c8c">53.9%</text><text x="482" y="54" fill="#6f6a5e">33.2%</text><text x="626" y="54" fill="#0a0a0c">12.9%</text>
-        </g>
-        <g font-size="12.6" font-family="IBM Plex Sans, sans-serif">
-          <text x="58" y="92" fill="#a29c8c">Access control &amp; operational security</text>
-          <text x="58" y="110" fill="#6f6a5e" font-size="11.6">Stolen keys, compromised signers, off-boarding gaps &mdash; USD 2.12bn</text>
-          <text x="384" y="92" fill="#6f6a5e">Unclassified</text>
-          <text x="585" y="92" fill="#e3c46b" font-weight="600">Smart contract</text>
-          <text x="585" y="110" fill="#6f6a5e" font-size="11.6">USD 512m</text>
-        </g>
-      </svg>
-      <figcaption>Where 2025 Web3 losses came from — and which slice formal verification actually addresses.
-        <span class="src">Hacken, 2025 Yearly Security Report (vendor-collected), total USD 3.95bn.</span>
-      </figcaption>
-    </figure>
+    <div class="scroller">
+      <table class="tbl">
+        <thead><tr><th>Incident</th><th>What failed</th><th class="nums">Exposure</th><th>Found by</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Telecom API</b></td>
+            <td>An access-control coding error on a dormant, internet-facing API — 9.5m records</td>
+            <td class="nums">~4 years latent</td>
+            <td>Not by monitoring</td>
+          </tr>
+          <tr>
+            <td><b>Mobile carrier</b></td>
+            <td>An API queried without authorisation — 37m accounts</td>
+            <td class="nums">~6 weeks</td>
+            <td>The operator, six weeks in</td>
+          </tr>
+          <tr>
+            <td><b>Financial services</b></td>
+            <td>A misconfigured component reaching an over-broad cloud role — 106m records</td>
+            <td class="nums">~4 months</td>
+            <td>An outside tipster</td>
+          </tr>
+          <tr>
+            <td><b>Partner portal</b></td>
+            <td>Auto-approved registration, then object enumeration — 49m records</td>
+            <td class="nums">~3 weeks</td>
+            <td>The data appearing for sale</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="kicker">
-      <p><b>Formal verification does not address the majority of 2025 dollars.</b> The majority walked out through key management and operational security — compromised signers, mismanaged multisig quorums, off-boarding failures, social engineering of privileged operators. No amount of contract verification prevents a signer whose key an attacker holds, and anyone claiming otherwise is overselling. What verification addresses is narrower and more defensible: <b>the class of failure that scales with protocol complexity rather than with operational discipline</b> — roughly 89% of 2025 DeFi-protocol losses, and the bridge exploits that were about 73% of DeFi losses in 2022.</p>
-      <span class="who">The honest scoping of the claim</span>
+      <p>A defect class present in <b>every tested application</b>, invisible to automated tooling on both sides of the contest, surviving for years once introduced — is not a remediation problem. It is a design-time problem, and it needs a design-time answer.</p>
     </div>
-
-    <h2 style="margin-top:56px">AI is also the new attack surface</h2>
-    <p class="sec-intro">An enterprise LLM agent with tool-calling permissions is, architecturally, a remote code execution primitive wrapped in natural language. It is a <b>non-human identity</b> holding long-lived credentials, calling internal APIs, crossing trust boundaries, and deciding what to do next based on text that may include attacker-controlled content. It is the highest-privilege, least-governed identity class most enterprises have ever deployed, and it typically sits outside whatever PAM regime governs their human administrators.</p>
-
-    <div class="grid g2">
-      <div class="card">
-        <span class="idx">OWASP LLM01</span>
-        <h3>Prompt injection, direct and indirect</h3>
-        <p>Instructions smuggled through retrieved documents, tool outputs or user data. Architecturally this is injection in the classical sense — control and data sharing a channel, exactly as in SQL injection, but with no parameterisation primitive available.</p>
-      </div>
-      <div class="card">
-        <span class="idx">ATT&amp;CK TA0004</span>
-        <h3>Confused-deputy escalation</h3>
-        <p>The agent holds broader standing privilege than the requesting user and can be manipulated into exercising it. Invisible to detection tuned on anomalous credentials, because the credential used is the correct one.</p>
-      </div>
-      <div class="card">
-        <span class="idx">OWASP LLM06</span>
-        <h3>Excessive agency and unsafe composition</h3>
-        <p>Individually permitted tool calls composing into an unsafe trajectory that no single-call authorisation check rejects. The agent's effective permissions are the transitive closure of its tool graph, not the union of its individual grants.</p>
-      </div>
-      <div class="card">
-        <span class="idx">Structural</span>
-        <h3>Boundary erosion via context</h3>
-        <p>Data-access limits enforced only by instructions in a system prompt, which is a request rather than an access control. A control the subject can argue with is not a control.</p>
-      </div>
-    </div>
-
-    <p class="sec-intro" style="margin:30px 0 0">Guardrails implemented as another model judging the first model's output are probabilistic mitigations of a probabilistic failure — detective controls with a tunable false-negative rate, not preventive ones. A regulator asking <i>&ldquo;can this agent ever disclose a customer's PII?&rdquo;</i> is asking a question a classifier's confidence score cannot answer. And alongside what an agent <b>does</b> sits a separate question: whether what it <b>says</b> actually follows from the policy the organisation operates under. That is an entailment failure rather than an access-control failure, it lands on the second line rather than the SOC, and it needs different machinery.</p>
   </div>
 </section>
 
-<!-- ============================ WHAT WE ADD ============================ -->
-<section id="layer">
+<!-- ============================ THE STACK ============================ -->
+<section id="stack">
   <div class="wrap">
-    <div class="sec-label">Positioning</div>
-    <h2>We add a layer to your stack — we do not replace it</h2>
-    <p class="sec-intro">The answer is not to abandon testing. Offensive testing, detection engineering and continuous monitoring find what models miss — configuration drift, shadow IT, undocumented components, insider misuse, human process failures, everything outside the formal model's boundary. In control-taxonomy terms they are <b>detective</b>; a proof is evidence that a <b>preventive</b> control actually prevents. Neither substitutes for the other, and any consultancy claiming otherwise is selling you a story.</p>
+    <div class="sec-label">Why it persists</div>
+    <h2>Every technique in common use either guesses the intended policy, or has a person hand-write it</h2>
+    <p class="sec-intro">This is not a criticism of any individual tool — each answers a different question, and answers it well. The point is narrower: <b>none of them holds a statement of who is supposed to be able to do what</b>, and none reads the application's own role configuration.</p>
 
-    <div class="layer">
-      <div>
-        <h3>What your stack answers today</h3>
-        <ul>
-          <li>Pen test &amp; red team</li>
-          <li>CSPM / CIEM</li>
-          <li>ASPM / SAST</li>
-          <li>Vulnerability management</li>
-          <li>SOC &middot; EDR &middot; SIEM</li>
-        </ul>
-        <q>We looked, and within the time available we did not find a way in.</q>
+    <div class="grid g3">
+      <div class="card">
+        <span class="idx">Static analysis</span>
+        <h3>SAST</h3>
+        <p>Flags a route with no recognisable authorisation decorator. It cannot know the intended policy, so a check that is <i>present but wrong</i> — inverted logic, the wrong role, the wrong object — reads as correct.</p>
+        <div class="out"><b>Blind to</b> · authorisation configured at runtime</div>
       </div>
-      <div class="mid">
-        <h3>What we add</h3>
-        <ul>
-          <li>Properties quantified over the entire modelled input space</li>
-          <li>UNSAT, or a counter-example with every hop named</li>
-          <li>Re-run on every change, in the pipeline</li>
-        </ul>
-        <q>No way it exists — over the whole modelled space.</q>
-        <p class="sub">A preventive control with evidence behind it.</p>
+      <div class="card">
+        <span class="idx">Dynamic testing</span>
+        <h3>DAST</h3>
+        <p>With several personas it will replay one user's requests as another and compare. Strong, and still a sample: it tests the endpoints someone crawled, against the data someone seeded, outside production.</p>
+        <div class="out"><b>Blind to</b> · endpoints never crawled</div>
       </div>
-      <div>
-        <h3>What stays with you</h3>
-        <ul>
-          <li>Configuration drift, shadow assets and anything outside the model</li>
-          <li>Insider misuse, and valid credentials used exactly as intended</li>
-          <li>Detection, response and the rest of the programme you already run</li>
-        </ul>
-        <p class="close">The two disciplines cover each other's blind spots — defence in depth applied to assurance itself.</p>
+      <div class="card">
+        <span class="idx">Dependencies</span>
+        <h3>SCA &amp; supply chain</h3>
+        <p>Finds known CVEs and known-bad packages. It cannot judge whether a legitimate plugin's <i>permissions</i> suit your policy, or whether a vulnerable feature is switched on in configuration.</p>
+        <div class="out"><b>Blind to</b> · plugin permission grants</div>
+      </div>
+      <div class="card">
+        <span class="idx">Cloud posture</span>
+        <h3>CSPM &amp; CNAPP</h3>
+        <p>Traces lineage from repository to running workload and ranks findings by cloud context. Its attack path reads <i>exposed workload &rarr; vulnerable package &rarr; IAM role</i>. It stops at that role.</p>
+        <div class="out"><b>Blind to</b> · the app's own role model</div>
+      </div>
+      <div class="card">
+        <span class="idx">Runtime</span>
+        <h3>WAF &amp; API monitoring</h3>
+        <p>Matches known attack shapes and baselines per-user behaviour. A broken-access request is well formed, authenticated, and aimed at an endpoint the caller may use — there is no payload to match.</p>
+        <div class="out"><b>Blind to</b> · the request that looks legitimate</div>
+      </div>
+      <div class="card">
+        <span class="idx">Human</span>
+        <h3>Penetration testing</h3>
+        <p>Finds more logic bugs than any other technique, and the bug-bounty growth in this category is human-found. But it is point-in-time, scoped, and testers <i>infer</i> intent rather than being told it.</p>
+        <div class="out"><b>Blind to</b> · tomorrow's role change</div>
       </div>
     </div>
 
+    <h2 style="margin-top:56px">Five blind spots they share</h2>
+    <p class="sec-intro">These are structural limits of the methods, not gaps that a better product release will close.</p>
+
+    <div class="scroller">
+      <table class="tbl">
+        <thead><tr><th class="nums">&nbsp;</th><th>Blind spot</th><th>Why it cannot be closed from inside the method</th></tr></thead>
+        <tbody>
+          <tr><td class="nums">B1</td><td><b>No statement of intended policy</b></td><td>Every tool substitutes a signature, a baseline, a schema or a tester's tick-box. None of those is intent.</td></tr>
+          <tr><td class="nums">B2</td><td><b>The app's own roles are invisible</b></td><td>A self-hosted application keeps role-to-resource grants in its own database and admin panel. Code, infrastructure and cloud scanners all read somewhere else.</td></tr>
+          <tr><td class="nums">B3</td><td><b>Nobody composes the layers</b></td><td>Cloud tools stop at the IAM role; application tools stop at the application. The path between them belongs to neither.</td></tr>
+          <tr><td class="nums">B4</td><td><b>Sampling, not deciding</b></td><td>Crawled endpoints, exercised paths, observed traffic, learned baselines — all describe what was seen, never what is possible.</td></tr>
+          <tr><td class="nums">B5</td><td><b>Detection after exposure</b></td><td>Out-of-band tooling cannot block; correlation runs after the events; credential findings require the credentials to be used first.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="kicker">
-      <p><b>Testing shows you what your system does; proof shows you what it cannot do.</b> Against an adversary that enumerates, a mature programme needs both — and most organisations currently have only the first.</p>
-      <span class="who">The thesis in one line</span>
+      <p>A monitor sees <b>what happened</b>. Not what could. An access-control defect is a reachable bad state whether or not anyone has reached it yet — and the dormant endpoint that generates no traffic generates no finding either.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ WHAT AI CHANGED ============================ -->
+<section id="ai">
+  <div class="wrap">
+    <div class="sec-label">What AI changed</div>
+    <h2>More dangerous, more numerous, and still invisible to automation</h2>
+    <p class="sec-intro">The interesting finding is not that attackers have AI. It is that the entire AI wave — offensive and defensive — is washing over this specific defect class without touching it.</p>
+
+    <div class="layer">
+      <div>
+        <h3>One &middot; attackers automated it</h3>
+        <ul>
+          <li>In a state-sponsored campaign disclosed in late 2025, AI performed <b>80&ndash;90% of the tactical work</b> across roughly thirty targets</li>
+          <li>Reconnaissance, credential access and lateral movement <i>are</i> authorisation problems</li>
+          <li>That operating model has since spread to every class of actor</li>
+        </ul>
+        <p class="close">What changed was the economics of the attack, not the techniques.</p>
+      </div>
+      <div>
+        <h3>Two &middot; AI writes the apps</h3>
+        <ul>
+          <li>AI-generated code security has <b>stalled at a 56% pass rate</b> across two years and a hundred models</li>
+          <li>Models now handle the mechanical classes well — SQL injection, cryptography</li>
+          <li>Authorisation is not even in the benchmark, because it cannot be checked from a file</li>
+        </ul>
+        <p class="close">When three leading agents each built full applications, broken access control was the most universal flaw in every one.</p>
+      </div>
+      <div class="mid">
+        <h3>Three &middot; and AI cannot find it</h3>
+        <ul>
+          <li><b>0%</b> — the strongest model's success rate on authorisation logic spread across multiple files</li>
+          <li><b>0%</b> — the same, on framework middleware, which is where real authorisation lives</li>
+          <li><b>88%</b> of what it did report was false</li>
+        </ul>
+        <q>A model can spot a missing check where one obviously belongs. It cannot decide whether a distributed authorisation scheme is correct.</q>
+      </div>
+    </div>
+
+    <div class="statstrip">
+      <div>
+        <b>&minus;7 days</b><span>mean time-to-exploit in 2025 — exploitation now begins, on average, before a patch exists</span><i>Mandiant M-Trends 2026</i>
+      </div>
+      <div>
+        <b>$2.77</b><span>average cost to turn a published advisory into a verified working exploit, automatically</span><i>CVE-GENIE, 51% of 841 CVEs</i>
+      </div>
+      <div>
+        <b>109 : 1</b><span>machine identities per human — 42% privileged, while 88% of organisations still define &ldquo;privileged user&rdquo; as human only</span><i>Identity Security Landscape</i>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:26px"><b>The agent problem is this problem.</b> An AI agent's effective permissions are the transitive closure of its tool graph, not the union of its individual grants — the same composition question, arriving in a new form. AWS's own answer secures agent permissions with Cedar: the same analysable language, and the same symbolic analysis, that our method applies to the application layer.</div>
+
+    <div class="kicker">
+      <p>A scanner knows cross-site scripting when an alert box pops. It cannot know whether <b>user 7 was supposed to read order 1002</b> — because that fact is not in the code, the traffic or the response. It is a business intention, and until it is written down in a form a machine can check, no amount of model capability will find it.</p>
     </div>
   </div>
 </section>
@@ -520,416 +540,233 @@
 <section id="method">
   <div class="wrap">
     <div class="sec-label">The method</div>
-    <h2>What automated reasoning actually does</h2>
-    <p class="sec-intro">We translate an artefact your estate already contains — an IAM policy set, a network topology, a contract, a protocol, a firmware build, an agent's tool manifest — into a precise logical model, state the security property as a formula, and ask a solver whether any assignment of variables violates it. The answer is one of exactly two things, and both are useful.</p>
-
-    <div class="grid g2">
-      <div class="card">
-        <span class="idx" style="color:var(--unsat)">UNSAT</span>
-        <h3>No such assignment exists</h3>
-        <p>Not &ldquo;none was found.&rdquo; None exists, over the entire space, under the stated model. An adversary that enumerates finds what exists; if nothing exists within the modelled space, enumeration there finds nothing — and that is precisely what a proof establishes and a test cannot.</p>
-      </div>
-      <div class="card">
-        <span class="idx" style="color:var(--sat)">SAT + witness</span>
-        <h3>Here is the exact violation</h3>
-        <p>The request, network path, call ordering or input sequence that produces it — an attack path with a named entry condition, reproducible on your own infrastructure and ready to hand to the remediation owner. Not a severity score. The path.</p>
-      </div>
-    </div>
-
-    <div class="note" style="margin-top:22px">
-      <b>Note the qualifier, because it is doing real work:</b> <i>within the modelled space.</i> Everything outside the model — the asset nobody inventoried, the stack that drifted from its IaC template, the third party with a VPN account — remains exactly where vulnerability management, EDR, SIEM detections, threat hunting and red-teaming earn their keep. A proof is relative to a model and a specification, and every deliverable we issue states both.
-    </div>
-
-    <h2 style="margin-top:56px">This is already industrial practice</h2>
-    <p class="sec-intro">Formal verification stayed confined to microkernels, compilers and avionics for thirty years for a good reason: it was extraordinarily expensive. seL4's ~8,700 lines of C required on the order of 200,000 lines of Isabelle/HOL and about 20 person-years. What changed is that SMT solvers replaced interactive proof for large classes of problem — for the work below, most of the effort is not theorem-proving, it is <b>faithful modelling</b>. Most defenders already consume the result without knowing it.</p>
-
-    <div class="scroller">
-      <table class="tbl">
-        <thead><tr><th style="width:150px">Organisation</th><th>What is deployed</th></tr></thead>
-        <tbody>
-          <tr><td><b>AWS</b></td><td>Zelkova (IAM Access Analyzer, S3 Block Public Access); Tiros (VPC reachability); RAPID for cloud API-usage checking, shipped externally as CodeGuru; Coastguard, gating third-party device integrations for Prime Video; s2n TLS verification; Kani in production CI for Firecracker and s2n-quic; TLA+ across S3, DynamoDB and EBS; ~330,000 lines of Isabelle/HOL for the Nitro isolation engine; Automated Reasoning checks in Bedrock Guardrails</td></tr>
-          <tr><td><b>Microsoft</b></td><td>SLAM / Static Driver Verifier shipped in the Windows Driver Kit; Z3 (ACM SIGPLAN Software Award 2015); Dafny; Project Everest and F*, whose HACL* verified cryptography ships in Firefox NSS, the Linux kernel, WireGuard and mbedTLS</td></tr>
-          <tr><td><b>Meta</b></td><td>Infer, running at commit scale with a reported ~80% fix rate and diff-time analysis returning in about 15 minutes</td></tr>
-          <tr><td><b>Google</b></td><td>AlphaProof and Baldur; Big Sleep for LLM-driven vulnerability discovery</td></tr>
-          <tr><td><b>Intel</b></td><td>Formal verification of floating-point algorithms after the 1994 FDIV defect — a USD 475 million charge, and the canonical example of a defect with no patch path</td></tr>
-          <tr><td><b>Airbus</b></td><td>Astr&eacute;e on A380 flight-control code since 2003, proving absence of run-time errors; CompCert qualifiable under DO-178C / DO-330 / DO-333</td></tr>
-          <tr><td><b>Defence</b></td><td>seL4 on Boeing's Unmanned Little Bird under DARPA HACMS — a professional red team with six weeks and privileged access inside a non-critical partition could not break out or disrupt the flight mission</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p class="sec-intro" style="margin:30px 0 0">One caveat we offer unprompted, because sophisticated buyers will find it anyway: AWS's own account of its correctness practices describes a <b>portfolio</b> — formal methods alongside property-based testing, deterministic simulation and lightweight formal methods — not proof everywhere. That is the correct model, and it is the one we recommend.</p>
-
-    <h2 style="margin-top:56px">The toolchain</h2>
-    <p class="sec-intro">Every component is open source and licensed for commercial use, which also means <b>no proprietary agent is introduced into your estate and no telemetry leaves it</b>. The defensible asset is not the solver — it is the translation layer from real-world cloud, protocol and AI artefacts into faithful logical models.</p>
-
-    <div class="scroller">
-      <table class="tbl">
-        <thead><tr><th style="width:180px">Layer</th><th style="width:220px">Tooling</th><th>Where it sits in the security stack</th></tr></thead>
-        <tbody>
-          <tr><td><b>SMT solving</b></td><td class="nums">Z3, CVC5</td><td>Decision engine under entitlement and guardrail analysis</td></tr>
-          <tr><td><b>Datalog / reachability</b></td><td class="nums">Souffl&eacute;, Batfish</td><td>Segmentation and exposure analysis</td></tr>
-          <tr><td><b>Protocol / distributed systems</b></td><td class="nums">TLA+, IVy, Dafny</td><td>Design-phase threat modelling for protocols</td></tr>
-          <tr><td><b>Low-level code</b></td><td class="nums">CBMC, Kani</td><td>Firmware assurance and CVE reachability triage</td></tr>
-          <tr><td><b>Interactive proof</b></td><td class="nums">Isabelle/HOL</td><td>Hypervisor and tenant-isolation assurance</td></tr>
-          <tr><td><b>Authorization runtime</b></td><td class="nums">Cedar + Symbolic Compiler</td><td>Policy-as-code enforcement point</td></tr>
-          <tr><td><b>Static analysis / type-state</b></td><td class="nums">Soot (IFDS/IDE), CodeQL, Infer</td><td>AppSec — SAST and taint analysis at the PR gate</td></tr>
-          <tr><td><b>Policy theories</b></td><td class="nums">Z3, CVC5, Lean, Dafny</td><td>AI assurance and model risk evidence</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ SOLUTIONS ============================ -->
-<section id="solutions">
-  <div class="wrap">
-    <div class="sec-label">Solutions</div>
-    <h2>Nine solutions, three families</h2>
-    <p class="sec-intro">The families are not a filing convenience. Each has a different buyer, a different regulatory hook and a different sales cycle. The nine are also not uniformly mature, and we do not present them as though they were — each carries its honest state below.</p>
-
-    <!-- ---- family 1 ---- -->
-    <div class="fam">
-      <div class="famhead">
-        <h3>Cybersecurity Solutions</h3>
-        <span class="count">Solutions 1&ndash;5 &middot; the infrastructure you already run</span>
-      </div>
-      <p class="famlead">The entitlements that grant access, the network that carries the data, the code that calls the platform, the firmware underneath it, and the cryptography that will shortly have to be replaced. Each consumes something you already have rather than requiring a new agent, sensor or platform — and each answers a question your existing controls are structurally unable to answer, because they evaluate a snapshot against a rule catalogue rather than quantifying over the input space.</p>
-
-      <div class="grid g2">
-        <div class="sol">
-          <span class="num">Solution 01</span>
-          <h4>Cloud access-policy and entitlement verification</h4>
-          <p class="tagline">Entitlement questions decided, not scored</p>
-          <p class="q">Can any principal, in any request context, reach this resource from outside the trust boundary — and does the modelled entitlement graph admit a path from a low-privilege identity to a privileged one? <b>Under the shared responsibility model your platform may be fully compliant while your tenants' entitlements are not, and the breach will still be yours to explain.</b></p>
-          <div class="meta">
-            <span><b>Consumes</b> &nbsp;IAM, resource and bucket policies</span>
-            <span><b>Output</b> &nbsp;proof over all requests, or the violating request and the escalation path it opens — with affected principals, data classification and blast radius</span>
-          </div>
-          <span class="mat eng">Mature substrate &middot; translation engineering</span>
-        </div>
-
-        <div class="sol">
-          <span class="num">Solution 02</span>
-          <h4>Network reachability and segmentation proofs</h4>
-          <p class="tagline">Sovereignty is a reachability question</p>
-          <p class="q">Does any path exist from the public internet to this subnet, and does east-west microsegmentation actually hold? <b>Data-localisation law asks whether regulated data <i>can</i> leave the jurisdiction</b> — packet capture and DLP telemetry cannot answer that; they report what left yesterday. Settled statically, without a probe packet in production.</p>
-          <div class="meta">
-            <span><b>Consumes</b> &nbsp;VPCs, route tables, security groups, firewall rules, peering</span>
-            <span><b>Output</b> &nbsp;proof no path exists, or the exact path hop by hop, with the permitting rule and its owner at each hop</span>
-          </div>
-          <span class="mat eng">Mature substrate &middot; translation engineering</span>
-        </div>
-
-        <div class="sol">
-          <span class="num">Solution 03</span>
-          <h4>API-usage conformance</h4>
-          <p class="tagline">Type-state and taint analysis at the PR gate</p>
-          <p class="q">Does this code use the cloud, credential and cryptographic SDKs the way their contracts require? <b>Your entitlement proof says the bucket cannot be read from outside the account. Your own code then reads it with a paginated call it never drains, and renders the result without sanitising it.</b> Both statements are true at once, and the second one is the breach.</p>
-          <div class="meta">
-            <span><b>Consumes</b> &nbsp;one repository, and the SDK versions it builds against</span>
-            <span><b>Output</b> &nbsp;the call site, the inter-procedural taint trace, the pattern violated, its CWE class and the corrected sequence — plus an explicit statement of which patterns were checked, because the coverage claim is bounded by the library</span>
-          </div>
-          <span class="mat eng">Mature substrate &middot; translation engineering</span>
-        </div>
-
-        <div class="sol">
-          <span class="num">Solution 04</span>
-          <h4>Hypervisor, firmware and CVE-reachability assurance</h4>
-          <p class="tagline">Is this week's CVE actually reachable on our build?</p>
-          <p class="q">Can tenant isolation or memory safety be violated below the guest? Bounded model checking for firmware, bootloaders and hypervisor isolation layers — where a defect cannot be patched after shipment, and where ISO 26262 ASIL-D and DO-178C already make the method a requirement rather than a differentiator.</p>
-          <div class="meta">
-            <span><b>Consumes</b> &nbsp;firmware and hypervisor source or build artefacts</span>
-            <span><b>Output</b> &nbsp;bounded proof of memory safety and tenant isolation with the bound stated explicitly, or a failing execution trace; for triage, a per-CVE reachability verdict that drops straight into VEX and the vulnerability register</span>
-          </div>
-          <span class="mat edge">Unsettled at the edges &middot; limits stated per engagement</span>
-        </div>
-
-        <div class="sol wide" style="grid-column:1/-1">
-          <span class="num">Solution 05</span>
-          <h4>Post-quantum cryptography migration</h4>
-          <p class="tagline">A crypto-agility programme, not an algorithm swap</p>
-          <p class="q">Where is every cryptographic asset, in what order does it move, and does security hold at every stage of the transition? <b>Post-quantum migration is being sold as an algorithm swap. It is not.</b> It is an asset-inventory problem, a protocol change, a key-management change and a state-machine change, executed live on production systems over several years — and most of the risk sits in the sequencing rather than in the primitive. We build the cryptographic bill of materials, sequence the migration against confidentiality horizon, and prove the transition correct at each stage, rather than discovering in 2032 that the hybrid was only ever as strong as its classical half.</p>
-          <div class="meta">
-            <span><b>Output</b> &nbsp;the CBOM — itself a durable deliverable, and the cryptographic asset inventory a supervisor will ask for, with its coverage gaps listed — plus a sequenced risk-based migration plan and, at each stage, a proof the migration preserves the stated property or the specific downgrade sequence, key-policy gap or protocol state that breaks it</span>
-          </div>
-          <span class="mat">Migration programme &middot; verification is one workstream</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ---- family 2 ---- -->
-    <div class="fam">
-      <div class="famhead">
-        <h3>AI Security Solutions</h3>
-        <span class="count">Solutions 6&ndash;7 &middot; what an agent may do, and what it may say</span>
-      </div>
-      <p class="famlead"><b>Solution 6 bounds what an agent may <i>do</i></b> — its tool calls, its retrieval surface, the composition of its actions. That is an access-control problem, and it belongs to the CISO. <b>Solution 7 bounds what it may <i>say</i></b> — whether an assertion the model makes actually follows from the policy that governs it. That is a model risk problem, and it belongs to the second line. Neither subsumes the other: an agent can stay perfectly inside its action envelope and still tell a customer something its own policy contradicts — no tool misused, no boundary crossed, no detection fired, and the output still wrong in a way that carries liability.</p>
-
-      <div class="grid g2">
-        <div class="sol">
-          <span class="num">Solution 06</span>
-          <h4>AI and LLM guardrail verification</h4>
-          <p class="tagline">Verifying the boundary, not the model</p>
-          <p class="q">Does the mediation layer around this agent admit any permitted sequence of tool calls that leaves its action envelope — and does that layer actually cover every path by which a call can be made? <b>We do not establish that no natural-language input produces a harmful intention inside the model; nobody can.</b> We establish that the boundary around the model is complete, and that what it permits is safe.</p>
-          <div class="meta">
-            <span><b>Consumes</b> &nbsp;the agent's tool manifest, system-prompt constraints and data-access surface</span>
-            <span><b>Output</b> &nbsp;a result about the mediation layer — no permitted sequence escapes the envelope and every call path passes through the enforcement point, or the specific sequence that escapes or the path that bypasses mediation. Every deliverable states which parts of the envelope were modelled and which were not.</span>
-          </div>
-          <span class="mat edge">Unsettled at the edges &middot; limits stated per engagement</span>
-        </div>
-
-        <div class="sol">
-          <span class="num">Solution 07</span>
-          <h4>Neurosymbolic assurance</h4>
-          <p class="tagline">Does this answer follow from the policy we operate under?</p>
-          <p class="q">And if not, what assumption was silently supplied? LLM-assisted autoformalization drafts a candidate policy theory from your existing documents and a domain expert then ratifies it — <b>machine transcription, human meaning</b>. This is the operating model that follows from the one consistent finding in the literature: models are strong at filling in proofs against a specification, and weak at producing a correct and complete specification.</p>
-          <div class="meta">
-            <span><b>Output</b> &nbsp;per answer, a verdict, the derivation or the contradicting rule, and — where an answer is merely unsupported — the specific assumption that would make it follow. Retained per interaction, an immutable audit trail at decision granularity; in aggregate, a measured rate on your own corpus with the scope of the theory stated.</span>
-          </div>
-          <span class="mat edge">Unsettled at the edges &middot; limits stated per engagement</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ---- family 3 ---- -->
-    <div class="fam">
-      <div class="famhead">
-        <h3>Crypto Security Solutions</h3>
-        <span class="count">Solutions 8&ndash;9 &middot; where the defect is in the design</span>
-      </div>
-      <p class="famlead">Two solutions in which the failure mode is a property of the <i>design</i> rather than of the deployment, and in which the losses are public, countable and large. This is also where the founder's own research record sits, which is why these two carry a track record that the others cite precedent for.</p>
-
-      <div class="grid g2">
-        <div class="sol">
-          <span class="num">Solution 08</span>
-          <h4>Formal verification of smart contracts</h4>
-          <p class="tagline">Reachable states, not a test suite</p>
-          <p class="q">Does this contract admit a reachable state that breaks its invariants, its access control or its solvency? Functional correctness against a written specification; conservation-of-value, access-control and solvency invariants; arithmetic and reentrancy safety; storage-layout and upgrade-path safety across proxy patterns. Dubai's VARA Technology and Information Rulebook expects <i>&ldquo;independent third-party audits before deployment and formal verification where applicable&rdquo;</i> — as far as we are aware, the only place in the region where a regulator has named this method.</p>
-          <div class="meta">
-            <span><b>Output</b> &nbsp;machine-checked invariants with their bounds and assumptions stated, or the concrete transaction sequence that breaks them</span>
-          </div>
-          <span class="mat now">Deliverable now</span>
-        </div>
-
-        <div class="sol">
-          <span class="num">Solution 09</span>
-          <h4>Formal verification of distributed protocols and systems</h4>
-          <p class="tagline">Safety and liveness under an adversary</p>
-          <p class="q">Does this protocol admit an execution that breaks safety or liveness under the stated adversary model — Byzantine faults, asynchrony or partition? Agreement and validity for consensus and state-machine replication; atomicity and economic soundness of cross-chain and bridge designs. Verifying the protocol itself, not merely one implementation of it — and well beyond Web3, wherever a correctness argument depends on how nodes behave under failure.</p>
-          <div class="meta">
-            <span><b>Output</b> &nbsp;machine-checked inductive invariants with their fault model, adversary model and network assumptions stated explicitly, or the adversarial execution that breaks them</span>
-          </div>
-          <span class="mat now">Deliverable now</span>
-        </div>
-      </div>
-
-      <div class="note">
-        <b>Track record.</b> &nbsp;The Moonshot BFT consensus protocol (DSN 2024) was verified exactly this way — its safety established by model checking and published at FMBC 2024. This is not an adjacent capability; it is where the founder's research sits. Cross-chain bridges remain a genuine white space: cumulative bridge losses exceed USD 2.8bn, roughly 40% of all Web3 losses to date.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ EVIDENCE ============================ -->
-<section id="evidence">
-  <div class="wrap">
-    <div class="sec-label">One result, three registers</div>
-    <h2>A proof is useful on its own terms — the packaging is what lets the rest of the organisation act on it</h2>
-    <p class="sec-intro">A solver verdict is not, by itself, something a compliance function can file. Every engagement therefore delivers the same finding in three forms, written for the three people who need it. <b>The first register is the product. The second and third make it worth more than it cost.</b></p>
+    <h2>This is not an unproven technique. It runs at cloud scale today.</h2>
+    <p class="sec-intro">Automated reasoning compiles a policy into logic and decides a property over <b>every possible request</b>, rather than sampling. Three systems, all published, all in production, all from AWS.</p>
 
     <div class="grid g3">
       <div class="card">
-        <span class="idx">First line</span>
-        <h3>Engineering and security operations</h3>
-        <p>The property, its model and its assumptions, and either the proof or a reproducible attack path — with reproduction steps, affected data classification and blast radius, ready to hand to a remediation owner.</p>
+        <span class="idx">FMCAD 2018</span>
+        <h3>Zelkova</h3>
+        <p>Compiles an access policy to SMT and decides a property over every request context — principal, action, resource and condition keys. Behind IAM Access Analyzer and S3 Block Public Access.</p>
+        <div class="out"><b>Scale</b> · ~1 billion solver queries a day</div>
       </div>
       <div class="card">
-        <span class="idx">Second line</span>
-        <h3>Risk</h3>
-        <p>Likelihood moved off a qualitative guess to either <em>not reachable under the modelled conditions</em> or <em>confirmed exploitable</em> — with residual risk and the model's limits stated rather than glossed.</p>
+        <span class="idx">OOPSLA 2024</span>
+        <h3>Cedar &amp; its symbolic compiler</h3>
+        <p>An authorisation language built to be analysed. Proves a policy set always allows, always denies, is equivalent to or implied by another — and returns a counter-example when it does not.</p>
+        <div class="out"><b>Sound and complete</b> · proved in Lean · Apache 2.0 · CNCF</div>
       </div>
       <div class="card">
-        <span class="idx">Third line</span>
-        <h3>Internal audit and compliance</h3>
-        <p>A clause-mapped control assertion: objective, status, owner and re-verification date. Design effectiveness becomes operating effectiveness, it attaches to your existing GRC records, and assessors probe less.</p>
+        <span class="idx">CAV 2019</span>
+        <h3>Tiros</h3>
+        <p>Decides whether a network path exists between two points, from the configuration alone, without sending a packet. Behind VPC Reachability Analyzer and Network Access Analyzer.</p>
+        <div class="out"><b>Used for</b> · PCI DSS segmentation evidence</div>
       </div>
     </div>
 
+    <h2 style="margin-top:56px">&hellip;and every one of them stops at the cloud layer</h2>
+    <p class="sec-intro">Each answers a fixed question chosen in advance by the provider. That is not an oversight — a cloud provider verifies what it owns. The application's roles belong to the customer, the identity provider to a third party, and nobody's remit covers the seam.</p>
+
+    <div class="scroller">
+      <table class="tbl">
+        <thead><tr><th>The question</th><th class="nums">Answered today</th><th>By what</th></tr></thead>
+        <tbody>
+          <tr><td>Is this storage bucket reachable from outside the organisation?</td><td class="nums" style="color:var(--unsat)">Yes</td><td>Zelkova, in the request path</td></tr>
+          <tr><td>Does a network path exist from the internet to this subnet?</td><td class="nums" style="color:var(--unsat)">Yes</td><td>Tiros</td></tr>
+          <tr><td>Can I state a rule specific to <i>my</i> application's cloud footprint?</td><td class="nums" style="color:var(--gold)">Partly</td><td>Three fixed check types, as pipeline calls</td></tr>
+          <tr><td><b>What can the application's own roles, tokens and public users do?</b></td><td class="nums" style="color:var(--sat)">No</td><td>Not cloud configuration at all</td></tr>
+          <tr><td><b>Can someone reach the app's cloud role <i>through</i> the app?</b></td><td class="nums" style="color:var(--sat)">No</td><td>Cloud tools stop at the role</td></tr>
+          <tr><td><b>What does a combination across all four layers allow?</b></td><td class="nums" style="color:var(--sat)">No</td><td>Each engine decides its own layer alone</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="kicker">
-      <p>PrimusCredence does not issue certificates and is not an independent auditor. <b>We produce the technical evidence; your assessor keeps the opinion.</b> Which is precisely why our work strengthens theirs rather than competing with it — and why an audit firm or an MSSP is a channel rather than a rival.</p>
-      <span class="who">The boundary we hold to</span>
+      <p>The industry proved that access policies can be <b>decided rather than scanned</b>, then stopped one layer short of where the risk actually lives. The languages and the solvers are open and free for commercial use. What is missing is the translation and composition layer — and that is what we build.</p>
     </div>
   </div>
 </section>
 
-<!-- ============================ ASSESSMENT ============================ -->
-<section id="assessment">
+<!-- ============================ WHAT WE BUILD ============================ -->
+<section id="build">
   <div class="wrap">
-    <div class="sec-label">Where engagements start</div>
-    <h2>Milestone 1 — the Micro-Proof Assessment</h2>
-    <p class="sec-intro">The free gap assessment is the standard entry point for enterprise security sales in the GCC, and it is a poor fit here: forty hours of interviews ending in a maturity heat map produces the artefact every competitor produces, assesses control <i>design</i> rather than control <i>effectiveness</i>, and demonstrates nothing distinctive. We start instead with a rapid, tool-driven analysis of one narrow, high-risk slice — <b>a result about your own estate that you did not previously have</b>. We call it Milestone 1 rather than a trial because serious clients are buying a programme with a known first step; nothing about it obliges anyone to commission Milestone 2.</p>
+    <div class="sec-label">What we build</div>
+    <h2>One graph, four layers</h2>
+    <p class="sec-intro">We treat the estate as a single graph. Each layer contributes edges, and each edge is decided by the engine that owns that layer. A <b>property</b> is a question about the graph, written in your own vocabulary before any analysis runs — so nobody can say the goalposts moved.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="idx">Layer 1 &middot; the layer no product reads</span>
+        <h3>Application authorisation</h3>
+        <p>The app's own roles, API tokens and public access, exported read-only and translated into Cedar, then decided by its symbolic compiler. For the first time the application's permissions become an analysable object.</p>
+        <div class="out"><b>Engine</b> · our translator + Cedar SymCC</div>
+      </div>
+      <div class="card">
+        <span class="idx">Layer 2</span>
+        <h3>Cloud IAM</h3>
+        <p>Identity, resource and organisation policies, permission boundaries and session context — after everything that can narrow a grant has been applied.</p>
+        <div class="out"><b>Engine</b> · our IAM&rarr;SMT encoding, Zelkova as oracle</div>
+      </div>
+      <div class="card">
+        <span class="idx">Layer 3 &middot; the core of the product</span>
+        <h3>Bridges</h3>
+        <p>Where holding a permission in one layer effectively confers one in another — a plugin inheriting the app's cloud role, an identity-provider group mapping into both. Our catalogue, and the defensible part of the engine.</p>
+        <div class="out"><b>Engine</b> · graph search, confirmed per path</div>
+      </div>
+      <div class="card">
+        <span class="idx">Layer 4</span>
+        <h3>Network</h3>
+        <p>Whether the principal can actually reach the endpoint where a permission is exercised. A trust edge only matters if the path to exercise it exists.</p>
+        <div class="out"><b>Engine</b> · Tiros, via Network Access Analyzer</div>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card" style="border-color:rgba(127,176,138,0.28)">
+        <span class="idx" style="color:var(--unsat)">Verdict A</span>
+        <h3 style="color:var(--unsat)">Proof</h3>
+        <p>No request violates the property — over the whole modelled space, under a stated model. Not &ldquo;none was found&rdquo;.</p>
+      </div>
+      <div class="card" style="border-color:rgba(217,131,106,0.28)">
+        <span class="idx" style="color:var(--sat)">Verdict B</span>
+        <h3 style="color:var(--sat)">Counter-example</h3>
+        <p>The exact request or path that breaks it, with one checkable witness per edge, confirmed by a single combined query before it is reported.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:56px">What this finds that nothing else does</h2>
+
+    <div class="grid g3">
+      <div class="card">
+        <span class="idx">01</span>
+        <h3>Through the plugin</h3>
+        <p>Every plugin runs in the application's process holding the application's <i>entire</i> cloud role — there is no per-plugin cloud identity. A non-administrative user who can reach a plugin action can reach the cloud.</p>
+        <div class="out"><b>Why nobody sees it</b> · no cloud tool reads the plugin's actions; no app tool reads the cloud role</div>
+      </div>
+      <div class="card">
+        <span class="idx">02</span>
+        <h3>Exploitable only by configuration</h3>
+        <p>A 2026 critical CMS vulnerability leaked an administrator's password-reset token to unauthenticated callers. Whether an installation was exploitable depended on which roles had public read on certain content types.</p>
+        <div class="out"><b>Why nobody sees it</b> · that setting lives in the admin panel</div>
+      </div>
+      <div class="card">
+        <span class="idx">03</span>
+        <h3>A trust condition that admits anyone</h3>
+        <p>One missing condition in a CI trust policy lets <i>any</i> repository assume a deployment role. One research team found 500+ such roles across 275 accounts.</p>
+        <div class="out"><b>Why nobody sees it</b> · each policy is individually valid</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:26px"><b>We integrate rather than replace.</b> Results publish as SARIF, which GitHub, GitLab and application-security posture tools already consume; as AWS Security Hub findings, which flow on to your SIEM; and as replayable test cases for your existing dynamic-testing tools — so a counter-example proved in policy is confirmed live in the running app. The policy checks run in CI next to Checkov and Semgrep.</div>
+  </div>
+</section>
+
+<!-- ============================ WHY NOW ============================ -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-label">Why now</div>
+    <h2>The method was always right. Until recently it was not affordable.</h2>
+    <p class="sec-intro">Formal verification has been an <b>expert-driven, costly and tedious exercise</b>: somebody with formal-methods training has to model the system and write the specification by hand. That cost is the whole reason it stayed with the hyperscalers and the safety-critical industries, however much everyone else wanted the assurance.</p>
+
+    <div class="layer">
+      <div>
+        <h3>Then</h3>
+        <ul>
+          <li>Weeks of specialist time to model one system</li>
+          <li>A scarce skill, priced accordingly</li>
+          <li>Economic only where failure is unaffordable</li>
+        </ul>
+        <p class="close">Wanted widely. Adopted narrowly.</p>
+      </div>
+      <div class="mid">
+        <h3>Now</h3>
+        <ul>
+          <li>A model reads policies, role exports and configuration at machine speed</li>
+          <li>It proposes structure the expert reviews, corrects and rewrites</li>
+          <li>The expensive step collapses; the expert judgement stays</li>
+        </ul>
+        <q>The method is finally affordable at the same moment the problem became unavoidable.</q>
+      </div>
+      <div>
+        <h3>The division of labour</h3>
+        <ul>
+          <li><b>The expert</b> drafts and ratifies every specification</li>
+          <li><b>The model</b> assists, and never delivers a verdict</li>
+          <li><b>The solver</b> decides — it is the ground truth</li>
+        </ul>
+        <p class="close">Hallucination is bounded by construction, not by tuning.</p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:26px"><b>Why this is the defensible use of AI in security.</b> The dominant industry pattern asks a model for a security verdict and then manages its false positives — and the measured evidence above is that models score near zero on exactly this problem. Our architecture never lets the model deliver a verdict: a decision procedure with published semantics returns the answer, and the AI only reduces the human cost of reaching it. AWS validates the same pattern in its own products, pairing AI-assisted authoring with an SMT validation step.</div>
+  </div>
+</section>
+
+<!-- ============================ GUARANTEE ============================ -->
+<section id="guarantee">
+  <div class="wrap">
+    <div class="sec-label">The guarantee</div>
+    <h2>Stated precisely, with its conditions — and its limits</h2>
+
+    <div class="kicker" style="margin-top:0">
+      <p>If the analysis reports a property as holding, then <b>for every request expressible in the modelled fragment, against the configuration exported at time T</b>, the property holds. If it reports a violation, it returns a concrete counter-example.</p>
+      <span class="who">The proof depends on three things: the encoder matches the service semantics, the solver is correct, and the export is complete</span>
+    </div>
+
+    <div class="grid g2" style="margin-top:28px">
+      <div class="card">
+        <span class="idx" style="color:var(--unsat)">What holds</span>
+        <h3>We will say</h3>
+        <p>&ldquo;For this property, over these layers, as configured at 14:00 today, no request exists that violates it. Here is the proof artefact, and here is how to re-run it.&rdquo;</p>
+        <p>And: &ldquo;Here is a request that violates it, step by step — each step checkable against the engine that produced it.&rdquo;</p>
+      </div>
+      <div class="card">
+        <span class="idx" style="color:var(--sat)">What does not</span>
+        <h3>We will never say</h3>
+        <p>&ldquo;Your application is secure.&rdquo; &ldquo;We replace your WAF.&rdquo; &ldquo;No escalation is possible.&rdquo;</p>
+        <p>A proof about a policy does not show the <i>code</i> calls it. It does not address stolen keys, injection or memory-safety bugs. Where the root cause is code or key custody, our contribution is to bound the blast radius — after a compromise, the graph states exactly what the foothold can and cannot reach.</p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:26px"><b>Preventive and detective are complementary.</b> A proof does not replace testing, detection or monitoring. Everything outside the model — the asset nobody inventoried, the stack that drifted from its template, the third party with a VPN account — is exactly where your existing tooling earns its place. We name the boundary of the model in every report.</div>
+  </div>
+</section>
+
+<!-- ============================ ENGAGE ============================ -->
+<section id="engage">
+  <div class="wrap">
+    <div class="sec-label">How to engage</div>
+    <h2>Five milestones, each independently useful, all on one engine</h2>
+    <p class="sec-intro">AWS first; a second cloud provider arrives as a module. Sell any subset, in any order — every milestone reuses the same encoder, the same solver and the same report generator.</p>
 
     <div class="offer">
       <ol>
-        <li><b>You scope it narrowly</b> — one non-production cloud account or subscription. Read-only credentials are sufficient.</li>
-        <li><b>We model it and run the proofs</b> — days to a small number of weeks. No production change, no software agent installed on any host, no traffic generation, no scanning window — which is why this typically clears change advisory in one pass rather than three.</li>
-        <li><b>You receive the counter-example — or the clearance.</b> If a violation exists: the exact request, network path, call ordering or adversarial execution that reaches it, reproducible on your side. If none exists: a proof, with model assumptions and bounds stated.</li>
-        <li><b>You receive the control mapping</b> — the specific control the finding bears on, so it routes directly to whoever owns it and lands in the risk register rather than in a PDF nobody reopens.</li>
-        <li><b>You decide what happens next.</b> No retainer implied, nothing obliging you to continue.</li>
+        <li><b>M0 &middot; Prototype and proof of value.</b> We build a deliberately realistic lab. Market tools assess it; we fix everything they report until every tool reports clean and the output is timestamped. Our analysis then still returns a real, exploitable defect with a counter-example. That delta is the entire proposition, shown rather than argued.</li>
+        <li><b>M1 &middot; The app as a cloud principal.</b> Rules specific to your application, stated over the cloud permissions it holds, and proved on every pull request rather than once a year.</li>
+        <li><b>M2 &middot; The app's own permissions.</b> Roles, API tokens and public access translated to Cedar and decided by its symbolic compiler — the layer no product on the market reads.</li>
+        <li><b>M3 &middot; Paths through the app.</b> Plugins become principals with declared manifests; the bridge edges from app role to cloud role are decided. Nobody detects this today.</li>
+        <li><b>M4 &middot; Boundaries, as modules.</b> Account and organisation, identity provider, network, data residency, and a second cloud — each adding its edges to the same graph.</li>
       </ol>
     </div>
 
-    <p class="sec-intro" style="margin:38px 0 0">Milestone 1 is a single scoped assessment: the <b>Privilege Escalation Path Review</b>. It is the question almost every estate that grew by accretion cannot answer, it is the one whose answer a board, an auditor and an engineer all recognise on sight, and it is bounded tightly enough to run read-only against one non-production environment.</p>
-
     <div class="opts">
       <div class="opt">
-        <span class="letter">Milestone 1</span>
-        <h4>Privilege Escalation Path Review</h4>
-        <p>Can an external or low-privilege identity reach a privileged role, through any chain of grants? We enumerate the transitive closure of the permission graph &mdash; role assumption, policy attachment, trust relationships, service-linked paths &mdash; rather than sampling it, and return either the exact chain or a proof that none exists within the stated model.</p>
+        <span class="letter">Start here</span>
+        <h4>One property, one narrow slice, read-only access</h4>
+        <p>Weeks, not months. No agent deployed, rules of engagement agreed up front, and a deliverable that is either a counter-example reproducible on your own systems or a proof that the property holds. No retainer implied, and nothing obliging you to continue.</p>
         <dl>
-          <dt>We need</dt><dd>Read-only access to one complex non-production cloud environment</dd>
-          <dt>Evidences</dt><dd>Identity and access management, privileged access</dd>
-          <dt>Best when</dt><dd>The estate grew by accretion and nobody can answer &ldquo;who can become admin?&rdquo;</dd>
+          <dt>Access</dt><dd>Read-only configuration export — policies and role definitions, never your data</dd>
+          <dt>Deliverable</dt><dd>The property as agreed, the verdict, the evidence bundle, and the named boundary of the model</dd>
         </dl>
       </div>
     </div>
   </div>
 </section>
-
-<!-- ============================ REGULATORY ============================ -->
-<section id="regulatory">
-  <div class="wrap">
-    <div class="sec-label">Where a finding also lands</div>
-    <h2>A routing table, not a reason to commission the work</h2>
-    <p class="sec-intro">Nobody buys Satisfiability Modulo Theories. Buyers have two distinct concerns and the same piece of work answers both: <i>is this control actually effective</i>, which is the engineering and risk question, and <i>can I evidence that to someone who will ask</i>, which is the regulatory one. A consultancy that leads with the second sounds like a compliance vendor and gets priced like one. So the map below is not an argument that regulation is why the work is worth doing — it tells you which control a finding <b>also</b> speaks to, and therefore who else in the organisation should see it.</p>
-
-    <div class="scroller">
-      <table class="tbl">
-        <thead><tr><th style="width:230px">Framework</th><th>What it demands</th><th style="width:110px">Solutions</th></tr></thead>
-        <tbody>
-          <tr><td><b>DESC ISR</b> <span class="nums">Dubai</span></td><td>Identity and access management, third-party and supply-chain assurance, secure development</td><td class="nums">1 2 3</td></tr>
-          <tr><td><b>UAE IAS / NESA</b> <span class="nums">UAE federal</span></td><td>Tiered information assurance controls including network segmentation and isolation</td><td class="nums">2 4</td></tr>
-          <tr><td><b>UAE PDPL</b> <span class="nums">UAE</span></td><td>Personal data protection; data-localisation and cross-border transfer obligations</td><td class="nums">2 3 6</td></tr>
-          <tr><td><b>UAE AI Act (2026)</b> <span class="nums">UAE</span></td><td>Risk-tiered AI classification; monitoring and audit trails for high-risk systems; self-assessment obligations</td><td class="nums">6 7</td></tr>
-          <tr><td><b>VARA Technology &amp; Information Rulebook</b> <span class="nums">Dubai VASPs</span></td><td>Third-party audit before deployment and <i>formal verification where applicable</i></td><td class="nums">8</td></tr>
-          <tr><td><b>ADGM FSRA / DIFC</b> <span class="nums">Abu Dhabi / DIFC</span></td><td>Virtual asset and financial services technology governance; automated-processing safeguards</td><td class="nums">6 7 8</td></tr>
-          <tr><td><b>SAMA Cybersecurity Framework</b> <span class="nums">Saudi Arabia</span></td><td>Operations security, identity and privileged access management, data governance, secure SDLC</td><td class="nums">1 2 3 6</td></tr>
-          <tr><td><b>NCA ECC</b> <span class="nums">Saudi Arabia</span></td><td>Essential controls for critical national infrastructure — IAM, segmentation, vulnerability and application security</td><td class="nums">1 2 3 4</td></tr>
-          <tr><td><b>SDAIA AI guidance</b> <span class="nums">Saudi Arabia</span></td><td>AI audit and assurance obligations for high-risk systems</td><td class="nums">6 7</td></tr>
-          <tr><td><b>CBUAE</b> <span class="nums">UAE</span></td><td>Model risk management, AI governance, periodic access recertification for licensed institutions</td><td class="nums">1 6 7</td></tr>
-          <tr><td><b>EU AI Act, Art. 15</b> <span class="nums">extraterritorial</span></td><td>Accuracy, robustness and cybersecurity for high-risk AI</td><td class="nums">6 7 9</td></tr>
-          <tr><td><b>ISO/IEC 42001</b> &middot; <b>24029-2</b> &middot; <b>NIST AI RMF</b></td><td>AI management system controls; formal methods for neural-network robustness; AI risk measurement and governance</td><td class="nums">6 7</td></tr>
-          <tr><td><b>ISO/IEC 27001 Annex A</b> &middot; <b>27034</b></td><td>Access control, network security, secure development, cryptography and supplier controls; application security across the lifecycle</td><td class="nums">1 2 3 5</td></tr>
-          <tr><td><b>NIST CSF 2.0</b></td><td>Identify, Protect and Govern outcomes — entitlement inventory, boundary protection, and evidence that a control operates</td><td class="nums">1&ndash;5</td></tr>
-          <tr><td><b>FIPS 203/204/205</b> &middot; <b>SP 800-131A</b></td><td>Post-quantum algorithm standards and transition guidance</td><td class="nums">5</td></tr>
-          <tr><td><b>ISO 26262 (ASIL-D)</b> &middot; <b>DO-178C</b></td><td>Formal methods or rigorous static analysis mandated for safety-critical code</td><td class="nums">4</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="note" style="margin-top:26px">
-      <b>Two disciplines we hold to.</b> &nbsp;We produce evidence bearing on a control; we do not certify compliance — the interpretation of a control against a specific environment is the assessor's judgement, and we are careful not to appropriate it. And the regulatory case should never be the whole case: if the only articulable reason to commission a proof is that a regulator asked, the engagement is fragile. It ends when the deadline passes, it gets priced against audit fees rather than against risk reduction, and it invites the question of whether a cheaper attestation would have done. <b>The durable engagements are the ones where the client wanted to know the answer — and found that the answer also happened to file.</b>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ SECTORS ============================ -->
-<section id="sectors">
-  <div class="wrap">
-    <div class="sec-label">Who we work with</div>
-    <h2>Built for organisations that must prove it, not assert it</h2>
-
-    <div class="sector">
-      <h3>Virtual asset platforms<span class="sols">Solutions 8 &middot; 9 &middot; 5</span></h3>
-      <div>
-        <p>Token issuers, DeFi protocols, custody platforms and exchanges under VARA and ADGM — where the security function is typically small, the threat model is permissionless, the loss is immediate and unrecoverable once deployed, and the regulator has already named the technique. The shortest path from first conversation to signed work, and the closest match to the founder's published record.</p>
-        <div class="tags"><span class="tag">VARA</span><span class="tag">contract invariants</span><span class="tag">reentrancy</span><span class="tag">upgrade safety</span><span class="tag">solvency</span><span class="tag">cross-chain</span></div>
-      </div>
-    </div>
-
-    <div class="sector">
-      <h3>Regional and sovereign cloud providers<span class="sols">Solutions 1 &middot; 2 &middot; 3 &middot; 4</span></h3>
-      <div>
-        <p>Providers competing against the hyperscalers for government, defence and BFSI workloads, who cannot match AWS's assurance story in a security questionnaire or a tenant's due-diligence review. We build the class of capability AWS embeds in Access Analyzer, on the same open solvers — as a service you can resell. Provable tenant isolation is a high-margin differentiator, not a cost line.</p>
-        <div class="tags"><span class="tag">tenant isolation</span><span class="tag">IAM semantics</span><span class="tag">multi-cloud</span><span class="tag">white-label</span></div>
-      </div>
-    </div>
-
-    <div class="sector">
-      <h3>Sovereign AI platforms<span class="sols">Solutions 6 &middot; 7 &middot; 5</span></h3>
-      <div>
-        <p>National AI clouds and government AI programmes carrying regulated workloads, where robustness and adversarial resilience must be demonstrated rather than asserted — and where training data has a decades-long confidentiality horizon that makes post-quantum sequencing urgent rather than theoretical. Model cards and LLM red-team reports are sampling exercises; they establish that a jailbreak was not found in the attempts made.</p>
-        <div class="tags"><span class="tag">UAE AI Act</span><span class="tag">EU AI Act Art. 15</span><span class="tag">ISO/IEC 42001</span><span class="tag">ISO/IEC 24029-2</span><span class="tag">NIST AI RMF</span></div>
-      </div>
-    </div>
-
-    <div class="sector">
-      <h3>Banks and financial institutions<span class="sols">Solutions 1 &middot; 2 &middot; 3 &middot; 6 &middot; 7</span></h3>
-      <div>
-        <p>AI model inventories, robustness evidence, entitlement and privileged-access recertification, and proof that core banking data stores are unreachable from untrusted zones. The buying centre is unusually well formed here: a CISO, a head of model risk and an internal audit function who each need a different register of the same finding.</p>
-        <div class="tags"><span class="tag">CBUAE</span><span class="tag">DFSA</span><span class="tag">ADGM FSRA</span><span class="tag">SAMA</span><span class="tag">model risk</span></div>
-      </div>
-    </div>
-
-    <div class="sector">
-      <h3>Critical infrastructure, energy and government<span class="sols">Solutions 2 &middot; 4 &middot; 5</span></h3>
-      <div>
-        <p>IT/OT segmentation proofs, firmware and control-system verification, and supplier assurance evidence for equipment the operator cannot inspect — for entities operating under national information-assurance mandates.</p>
-        <div class="tags"><span class="tag">UAE IAS</span><span class="tag">DESC ISR</span><span class="tag">NCA ECC</span><span class="tag">IT/OT</span></div>
-      </div>
-    </div>
-
-    <div class="sector">
-      <h3>Hardware, automotive, defence and aerospace<span class="sols">Solutions 4 &middot; 3</span></h3>
-      <div>
-        <p>HSM and semiconductor vendors, IoT and smart-metering suppliers, defence technology groups, autonomous vehicle and avionics developers — where formal methods are already a compliance requirement rather than a differentiator, and where a defect has no patch path.</p>
-        <div class="tags"><span class="tag">ISO 26262 ASIL-D</span><span class="tag">DO-178C</span><span class="tag">firmware</span><span class="tag">CVE reachability</span></div>
-      </div>
-    </div>
-
-    <div class="sector">
-      <h3>ISVs and platform vendors<span class="sols">Solution 3</span></h3>
-      <div>
-        <p>Software vendors whose product is integrated by third parties, and who carry the reputational and supply-chain consequence of an integrator using their SDK incorrectly. This is the Coastguard case: conformance checked as a certification gate before a partner ships, rather than discovered in the field afterwards. A shorter technical sale, because the buyer is an engineering or product-security leader rather than a compliance function.</p>
-        <div class="tags"><span class="tag">SDK conformance</span><span class="tag">type-state</span><span class="tag">supply chain</span><span class="tag">PR gate</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ PARTNERS ============================ -->
-<section id="partners">
-  <div class="wrap">
-    <div class="sec-label">For providers and assessors</div>
-    <h2>What a provider can resell</h2>
-    <p class="sec-intro">We do not certify — so an audit firm or an MSSP is a channel, not a rival. White-labelling the toolchain moves a provider's offering up the value chain, from scanning, posture reporting and monitoring to <b>provable control effectiveness</b>.</p>
-
-    <div class="grid g3">
-      <div class="card">
-        <span class="idx">The commercial move</span>
-        <h3>Specialist capability inside bids you already win</h3>
-        <p>You keep the client relationship and the contract. We sit behind it as the verification capability you could not economically build, on an open-source stack with no licence to resell and no vendor lock to explain.</p>
-      </div>
-      <div class="card">
-        <span class="idx">Why it deploys easily</span>
-        <h3>Read-only, agentless, no scanning window</h3>
-        <p>No software agent on any host, no traffic generation, no production change. It clears change advisory in one pass rather than three — which is the difference between a deal that closes this quarter and one that does not.</p>
-      </div>
-      <div class="card">
-        <span class="idx">For assurance firms</span>
-        <h3>We produce the evidence, you keep the opinion</h3>
-        <p>Our artefacts strengthen your opinion and shorten your fieldwork. The boundary is explicit and we hold to it: interpretation of a control against a specific environment is the assessor's judgement, not ours.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============================ FOUNDER ============================ -->
 <section id="founder">
   <div class="wrap">
     <div class="sec-label">Founder</div>
-    <h2>Twenty-two years of program analysis, cryptography and formal verification</h2>
+    <h2>Twenty-two years of program analysis and formal verification &mdash; including the access-control reasoning this is built on</h2>
 
     <div class="founder">
       <div>
@@ -941,11 +778,11 @@
         <h3>Dr. Raghavendra Ramesh</h3>
         <div class="role">Founder &amp; CEO &middot; PrimusCredence</div>
 
-        <p>PrimusCredence was founded to bring automated reasoning — the discipline behind formally verified protocols, compilers and operating systems — to cloud, protocol and AI security across MENAT. What the hyperscalers built internally, regional cloud providers, sovereign AI platforms and digital-asset infrastructure can neither buy off a price list nor stand up in-house.</p>
+        <p>PrimusCredence was founded to take automated reasoning — the discipline behind formally verified protocols, compilers and operating systems — to the layer of application security where it has never been applied. What the hyperscalers built internally for their own cloud, the organisations running applications on top of it can neither buy off a price list nor stand up in-house.</p>
 
         <p>Dr. Raghavendra holds a PhD and MSc (Engg) in Computer Science from the Indian Institute of Science, Bangalore, where he was a Microsoft PhD Fellow. His work spans program analysis, mathematical logic, automata theory, cryptography and fault-tolerant distributed systems.</p>
 
-        <p>At <b>Oracle Labs</b> he built static-analysis engines for vulnerability detection — information-flow type systems, scalable context-sensitive points-to analysis, and static detection of cursor leaks and second-order SQL injection, implemented in C++ within the Parfait/LLVM framework. At <b>ConsenSys R&amp;D</b> he designed and published atomic cross-chain transaction protocols, contributing to the Atomic Crosschain Technology prototype on Hyperledger Besu. As <b>Vice President of Research &amp; Development at Supra</b> he co-built a blockchain R&amp;D division from the ground up, co-invented the Moonshot BFT consensus protocol (DSN 2024) and led its formal safety verification by model checking (FMBC 2024), co-designed the HyperNova and HyperLoop cross-chain architectures, and co-invented parallel execution and optimal sharding for deconstructed state-machine replication (VLDB 2025).</p>
+        <p>At <b>Oracle Labs</b> he built static-analysis engines for vulnerability detection — information-flow type systems, scalable context-sensitive points-to analysis, and static detection of cursor leaks and second-order SQL injection, implemented in C++ within the Parfait/LLVM framework. Six granted US patents came out of that work, including one that combines information-flow analysis with <b>access-control reasoning</b> to detect privilege violations before software ships — the direct ancestor of what PrimusCredence now does across layers. At <b>ConsenSys R&amp;D</b> he designed and published atomic cross-chain transaction protocols, contributing to the Atomic Crosschain Technology prototype on Hyperledger Besu. As <b>Vice President of Research &amp; Development at Supra</b> he co-built a blockchain R&amp;D division from the ground up, co-invented the Moonshot BFT consensus protocol (DSN 2024) and led its formal safety verification by model checking (FMBC 2024), co-designed the HyperNova and HyperLoop cross-chain architectures, and co-invented parallel execution and optimal sharding for deconstructed state-machine replication (VLDB 2025).</p>
 
         <p>He works in Dafny, TLA+, Datalog, IVy, F#, C, C++ and Java.</p>
         <div class="idline">Person of Indian Origin &nbsp;|&nbsp; Australian Citizen &nbsp;|&nbsp; Dubai Resident</div>
