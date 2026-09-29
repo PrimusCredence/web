@@ -326,7 +326,7 @@
   <div class="wrap">
     <div class="eyebrow">Application security &middot; access policies &middot; boundaries</div>
     <h1>Who can reach what inside your application — <em>decided, not scanned</em>.</h1>
-    <p class="lead">Broken Access Control is first in the OWASP Top 10, and in OWASP's own test data every application examined carried some form of it. Scanners, pen tests and traffic monitoring all answer the same way: <i>we looked, and did not find a way in</i>. PrimusCredence compiles your application's own roles and tokens, the cloud role it runs under, the identity provider that admits its users and the network that carries its traffic into one logical model — then settles the question over every possible request. Either a proof that no request violates the property, or a concrete counter-example, every hop named, reproducible on your own estate.</p>
+    <p class="lead">Broken Access Control is first in the OWASP Top 10, and in OWASP's own test data every application examined carried some form of it. Scanners, pen tests and traffic monitoring all answer the same way: <i>we looked, and did not find a way in</i>. PrimusCredence compiles your application's own roles and tokens, the cloud role or host account it runs under, the identity provider that admits its users and the network that carries its traffic into one logical model — then settles the question over every possible request. It works the same whether the app runs in the cloud or on your own servers: the roles that cause Broken Access Control live in the app, not in the cloud beneath it. Either a proof that no request violates the property, or a concrete counter-example, every hop named, reproducible on your own estate.</p>
 
     <div class="proof">
       <div class="head"><span class="dot"></span> app &rarr; cloud composition &middot; sample output</div>
@@ -592,7 +592,7 @@
   <div class="wrap">
     <div class="sec-label">What we build</div>
     <h2>One graph, four layers</h2>
-    <p class="sec-intro">We treat the estate as a single graph. Each layer contributes edges, and each edge is decided by the engine that owns that layer. A <b>property</b> is a question about the graph, written in your own vocabulary before any analysis runs — so nobody can say the goalposts moved.</p>
+    <p class="sec-intro">We treat the estate as a single graph. Each layer contributes edges, and each edge is decided by the engine that owns that layer. A <b>property</b> is a question about the graph, written in your own vocabulary before any analysis runs — so nobody can say the goalposts moved. <b>Layer 1 is hosting-independent</b> — it reads the app's own configuration — so it applies unchanged to an on-prem or self-hosted application; the cloud layers simply re-express against the host's own accounts and network when there is no cloud.</p>
 
     <div class="grid g2">
       <div class="card">
@@ -603,8 +603,8 @@
       </div>
       <div class="card">
         <span class="idx">Layer 2</span>
-        <h3>Cloud IAM</h3>
-        <p>Identity, resource and organisation policies, permission boundaries and session context — after everything that can narrow a grant has been applied.</p>
+        <h3>Cloud IAM <span style="font-weight:400;opacity:0.7">— or host account</span></h3>
+        <p>Identity, resource and organisation policies, permission boundaries and session context — after everything that can narrow a grant has been applied. On an on-prem app this layer is instead the host service account, database credentials and secrets store the app runs under.</p>
         <div class="out"><b>Engine</b> · our IAM&rarr;SMT encoding, Zelkova as oracle</div>
       </div>
       <div class="card">
