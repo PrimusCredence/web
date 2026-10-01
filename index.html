@@ -3,882 +3,319 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PrimusCredence — Application security, decided. Proving who can reach what inside your app.</title>
-<meta name="description" content="Broken Access Control is #1 in the OWASP Top 10, and no product reads an application's own role model. PrimusCredence composes the app's roles and tokens with cloud IAM, the identity provider and the network into one graph, then decides who can reach what — over every possible request, not a sample.">
+<title>PrimusCredence — Application security, decided.</title>
+<meta name="description" content="The cloud base is proven. The application on top of it is not. PrimusCredence proves who can reach what inside your application — over every request, not a sample — across its own access control, its API and library use, and its post-quantum binding.">
 <meta property="og:title" content="PrimusCredence — application security, decided not scanned">
-<meta property="og:description" content="Scanners tell you what they found. A proof tells you what cannot happen. Automated reasoning over application access policies, cloud IAM, identity and network — composed.">
+<meta property="og:description" content="Scanners tell you what they found. A proof tells you what cannot happen. Provable security for applications.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://primuscredence.com/">
 <link rel="canonical" href="https://primuscredence.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230a0a0c'/><text y='66' x='50' text-anchor='middle' font-size='40' font-family='Georgia,serif' font-weight='700' fill='%23c9a227'>PC</text></svg>">
 <style>
   :root{
-    --bg:#0a0a0c;
-    --bg-raised:#101014;
-    --bg-panel:#0d0d11;
-    --gold:#c9a227;
-    --gold-bright:#e3c46b;
-    --gold-dim:#8c7526;
-    --rule:rgba(201,162,39,0.20);
-    --rule-soft:rgba(201,162,39,0.10);
-    --text:#e8e3d6;
-    --text-dim:#a29c8c;
-    --text-faint:#6f6a5e;
-    --sat:#d9836a;
-    --unsat:#7fb08a;
-    --maxw:1120px;
-    color-scheme: dark;
+    --bg:#0a0a0c; --raised:#101014; --panel:#0d0d11;
+    --gold:#c9a227; --gold-bright:#e3c46b; --gold-dim:#8c7526;
+    --rule:rgba(201,162,39,0.18); --rule-soft:rgba(201,162,39,0.09);
+    --hair:rgba(232,227,214,0.08);
+    --text:#e8e3d6; --dim:#a29c8c; --faint:#6f6a5e;
+    --cyb:#7ba3d9; --green:#7fb08a; --pink:#d98bb0;
+    --maxw:1060px;
+    color-scheme:dark;
   }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{
     margin:0; background:var(--bg); color:var(--text);
-    font-family:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
-    font-size:16.5px; line-height:1.7; font-weight:300;
-    -webkit-font-smoothing:antialiased;
-    position:relative;
+    font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+    font-size:17px; line-height:1.65; font-weight:300;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
   }
-  h1,h2,h3,h4{ font-family:'Source Serif 4', Georgia, serif; font-weight:600; margin:0; text-wrap:balance; color:var(--text); }
-  a{ color:var(--gold-bright); text-decoration:none; }
-  a:hover{ color:#f0d792; }
-  a:focus-visible, [role="button"]:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; border-radius:2px; }
-  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
-  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+  h1,h2,h3{font-family:'Source Serif 4',Georgia,serif; font-weight:600; margin:0; text-wrap:balance; letter-spacing:-.01em}
+  a{color:var(--gold-bright); text-decoration:none}
+  a:hover{color:#f0d792}
+  :focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:3px}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); font-weight:500}
+  em{color:var(--gold-bright); font-style:italic}
 
-  /* ---------- ambient logic symbols ---------- */
-  #logicfield{
-    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
-  }
+  /* ambient logic field — very subtle */
+  #logicfield{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
   #logicfield span{
-    position:absolute; bottom:-12vh;
-    font-family:'Source Serif 4', Georgia, serif;
+    position:absolute; bottom:-12vh; font-family:'Source Serif 4',Georgia,serif;
     color:var(--gold-bright); line-height:1; user-select:none;
-    text-shadow:0 0 18px rgba(227,196,107,0.18);
-    will-change:transform, opacity;
-    animation-name:drift; animation-timing-function:linear; animation-iteration-count:infinite;
+    text-shadow:0 0 18px rgba(227,196,107,.14); will-change:transform,opacity;
+    animation:rise linear infinite;
   }
-  @keyframes drift{
-    0%   { transform:translate3d(0, 0, 0) rotate(0deg); }
-    100% { transform:translate3d(var(--sway), -118vh, 0) rotate(var(--spin)); }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0) rotate(0); opacity:0}
+    12%{opacity:var(--o,.1)} 88%{opacity:var(--o,.1)}
+    100%{transform:translateY(-124vh) translateX(var(--sway,0)) rotate(var(--spin,0)); opacity:0}
   }
-  header, .hero, section, footer{ position:relative; z-index:1; }
+  @media (prefers-reduced-motion:reduce){ #logicfield{display:none} }
+  main,header,footer{position:relative; z-index:1}
 
-  /* ---------- header ---------- */
-  header{
-    position:sticky; top:0; z-index:40;
-    background:rgba(10,10,12,0.88); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--rule-soft);
-  }
-  .bar{ display:flex; align-items:center; justify-content:space-between; gap:24px; padding:16px 28px; max-width:var(--maxw); margin:0 auto; }
-  .wordmark{ font-family:'Source Serif 4',serif; font-size:1.14rem; letter-spacing:0.045em; color:var(--text); font-weight:600; white-space:nowrap; }
-  .wordmark span{ color:var(--gold); }
-  nav.links{ display:flex; gap:25px; align-items:center; }
-  nav.links a{ font-size:13.5px; color:var(--text-dim); font-weight:400; letter-spacing:0.02em; white-space:nowrap; }
-  nav.links a:hover{ color:var(--gold-bright); }
-  .mailbtn{
-    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--gold);
-    border:1px solid var(--rule); padding:8px 14px; border-radius:3px; white-space:nowrap;
-    cursor:pointer; user-select:none; -webkit-user-select:none;
-    transition:background .2s, color .2s, border-color .2s;
-  }
-  .mailbtn:hover{ background:rgba(201,162,39,0.10); color:var(--gold-bright); border-color:var(--gold-dim); }
-  @media(max-width:1040px){ nav.links{display:none;} }
-  /* below ~620px the full address no longer fits beside the wordmark, so the
-     header button falls back to a short label; the address itself stays in
-     the contact section and in the button's title attribute. */
-  @media(max-width:620px){
-    .bar .mailbtn{ font-size:0; padding:8px 13px; }
-    .bar .mailbtn::before{ content:"Email"; font-size:12.5px; letter-spacing:0.06em; }
-  }
+  /* top bar */
+  .bar{position:sticky; top:0; z-index:40; backdrop-filter:blur(10px);
+    background:rgba(10,10,12,.72); border-bottom:1px solid var(--hair)}
+  .bar .wrap{display:flex; align-items:center; justify-content:space-between; height:62px}
+  .brand{font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; letter-spacing:-.01em}
+  .brand .c{color:var(--gold)}
+  .bar nav{display:flex; gap:26px; align-items:center}
+  .bar nav a{color:var(--dim); font-size:13.5px; letter-spacing:.02em}
+  .bar nav a:hover{color:var(--text)}
+  .btn{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--gold-bright); border:1px solid var(--rule); border-radius:4px;
+    padding:9px 16px; cursor:pointer; transition:.2s; user-select:none}
+  .btn:hover{background:rgba(201,162,39,.10); border-color:var(--gold-dim)}
+  @media(max-width:680px){ .bar nav a:not(.btn){display:none} }
 
-  /* ---------- hero ---------- */
-  .hero{ padding:92px 0 64px; overflow:hidden; }
-  .hero::before{
-    content:""; position:absolute; top:-230px; left:50%; transform:translateX(-50%);
-    width:940px; height:580px; pointer-events:none; z-index:-1;
-    background:radial-gradient(ellipse at center, rgba(201,162,39,0.13), rgba(201,162,39,0.04) 45%, transparent 70%);
-  }
-  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:22px; }
-  .hero h1{ font-size:clamp(2.1rem, 4.6vw, 3.25rem); line-height:1.12; letter-spacing:-0.015em; max-width:21ch; margin-bottom:22px; }
-  .hero h1 em{ font-style:normal; color:var(--gold); }
-  .hero p.lead{ font-size:1.08rem; color:var(--text-dim); max-width:64ch; margin:0 0 34px; font-weight:300; }
+  /* hero */
+  .hero{padding:120px 0 96px}
+  .hero h1{font-size:clamp(38px,6vw,72px); line-height:1.04}
+  .hero .lead{margin-top:28px; max-width:620px; font-size:clamp(17px,2.4vw,21px); color:var(--dim)}
+  .hero .cta{margin-top:44px; display:flex; gap:18px; flex-wrap:wrap; align-items:center}
+  .cta .ghost{font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; color:var(--dim); border-bottom:1px solid var(--rule-soft); padding-bottom:3px}
+  .cta .ghost:hover{color:var(--gold-bright)}
 
-  .proof{
-    border:1px solid var(--rule); border-radius:6px; background:var(--bg-panel);
-    font-family:'IBM Plex Mono',monospace; font-size:12.6px; line-height:1.85;
-    overflow-x:auto; box-shadow:0 24px 60px rgba(0,0,0,0.6);
-  }
-  .proof .head{ display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid var(--rule-soft); color:var(--text-faint); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; }
-  .dot{ width:8px; height:8px; border-radius:50%; background:var(--gold-dim); opacity:0.55; }
-  .proof pre{ margin:0; padding:18px 20px 20px; color:var(--text-dim); white-space:pre; }
-  .proof .k{ color:var(--gold); }
-  .proof .q{ color:var(--gold-bright); }
-  .proof .sat{ color:var(--sat); font-weight:500; }
-  .proof .ok{ color:var(--unsat); }
-  .proof .c{ color:var(--text-faint); }
+  /* section rhythm */
+  section{padding:84px 0}
+  .sechead{display:flex; align-items:baseline; gap:18px; margin-bottom:46px; flex-wrap:wrap}
+  .sechead h2{font-size:clamp(26px,3.4vw,34px)}
+  .divider{height:1px; background:var(--hair)}
 
-  /* ---------- sections ---------- */
-  section{ padding:78px 0; border-top:1px solid var(--rule-soft); }
-  .sec-label{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:14px; }
-  section h2{ font-size:clamp(1.5rem,2.9vw,2.05rem); line-height:1.2; margin-bottom:16px; max-width:28ch; }
-  .sec-intro{ color:var(--text-dim); max-width:68ch; margin:0 0 38px; }
-  .sec-intro b{ color:var(--text); font-weight:500; }
+  /* ---- the stack ---- */
+  .stack{display:flex; flex-direction:column; gap:10px; max-width:720px}
+  .layer{border:1px solid var(--hair); border-radius:12px; padding:18px 22px; background:var(--raised); position:relative}
+  .layer .lt{font-family:'Source Serif 4',serif; font-weight:600; font-size:19px; display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .layer .ls{font-size:14px; color:var(--faint); margin-top:4px}
+  .layer.app{border-left:4px solid var(--cyb)}
+  .layer.cloud{border-left:4px solid var(--green)}
+  .layer.seam{border-left:4px solid var(--gold); background:#121017}
+  .layer.seam .lt{font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold)}
+  .seamitems{display:flex; gap:22px; flex-wrap:wrap; margin-top:6px; font-size:14px; color:var(--dim)}
+  .seamitems i{font-style:normal; display:inline-flex; gap:7px; align-items:center}
+  .dot{width:7px; height:7px; border-radius:50%; display:inline-block}
+  .tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:999px}
+  .tag.ok{color:var(--green); border:1px solid rgba(127,176,138,.35)}
+  .tag.no{color:var(--gold-bright); border:1px solid var(--rule)}
+  .stackgrid{display:grid; grid-template-columns:1fr .7fr; gap:48px; align-items:center}
+  .stacknote .big{font-family:'Source Serif 4',serif; font-style:italic; font-size:clamp(22px,3vw,30px); line-height:1.3}
+  .stacknote .small{margin-top:18px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--gold)}
+  @media(max-width:860px){ .stackgrid{grid-template-columns:1fr; gap:30px} }
 
-  .grid{ display:grid; gap:18px; }
-  .g2{ grid-template-columns:repeat(2,1fr); }
-  .g3{ grid-template-columns:repeat(3,1fr); }
-  @media(max-width:860px){ .g2,.g3{ grid-template-columns:1fr; } }
+  /* ---- solutions ---- */
+  .sols{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .sol{border:1px solid var(--hair); border-left:3px solid var(--cyb); border-radius:12px; background:var(--raised);
+    padding:26px 28px; display:flex; gap:20px; align-items:flex-start; transition:.2s}
+  .sol:hover{border-color:var(--rule); transform:translateY(-2px)}
+  .sol .n{flex:0 0 auto; width:40px; height:40px; border-radius:50%; border:1px solid var(--rule);
+    color:var(--gold-bright); font-family:'IBM Plex Mono',monospace; font-size:17px; display:grid; place-items:center}
+  .sol h3{font-size:21px}
+  .sol p{margin:6px 0 0; font-size:14.5px; color:var(--dim)}
+  @media(max-width:680px){ .sols{grid-template-columns:1fr} }
 
-  .card{
-    border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised);
-    padding:24px 24px 26px; transition:border-color .2s, transform .2s;
-  }
-  .card:hover{ border-color:var(--rule); transform:translateY(-2px); }
-  .card .idx{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); letter-spacing:0.16em; display:block; margin-bottom:11px; }
-  .card h3{ font-size:1.09rem; margin-bottom:9px; color:var(--gold-bright); }
-  .card p{ margin:0; font-size:14.6px; color:var(--text-dim); line-height:1.68; }
-  .card p + p{ margin-top:11px; }
-  .card .out{ margin-top:15px; padding-top:13px; border-top:1px solid var(--rule-soft); font-family:'IBM Plex Mono',monospace; font-size:11.6px; color:var(--text-faint); }
-  .card .out b{ color:var(--gold-dim); font-weight:500; }
-  .card.wide{ grid-column:1/-1; }
-  .note{ margin-top:14px; padding:12px 15px; border-left:2px solid var(--rule); background:rgba(201,162,39,0.04); border-radius:0 3px 3px 0; font-size:13.8px; color:var(--text-dim); }
-  .note b{ color:var(--gold-dim); font-weight:500; }
+  /* ---- proof contrast ---- */
+  .proof{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:8px}
+  .pcard{border:1px solid var(--hair); border-radius:12px; background:var(--raised); padding:26px 28px}
+  .pcard .k{font-family:'IBM Plex Mono',monospace; font-size:15px; letter-spacing:.04em}
+  .pcard.u .k{color:var(--green)} .pcard.s .k{color:var(--gold-bright)}
+  .pcard p{margin:10px 0 0; font-size:15px; color:var(--dim)}
+  .proofline{font-family:'Source Serif 4',serif; font-style:italic; font-size:clamp(20px,2.8vw,28px); max-width:760px; line-height:1.35}
+  @media(max-width:680px){ .proof{grid-template-columns:1fr} }
 
-  /* ---------- stat strip ---------- */
-  .statstrip{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin:30px 0 0; border:1px solid var(--rule-soft); border-radius:6px; overflow:hidden; background:var(--bg-raised); }
-  .statstrip > div{ padding:20px 22px; border-right:1px solid var(--rule-soft); }
-  .statstrip > div:last-child{ border-right:none; }
-  .statstrip b{ display:block; font-family:'Source Serif 4',serif; font-size:1.75rem; color:var(--gold); font-weight:600; line-height:1.1; margin-bottom:6px; }
-  .statstrip span{ font-size:13.4px; color:var(--text-dim); line-height:1.55; display:block; }
-  .statstrip i{ display:block; font-family:'IBM Plex Mono',monospace; font-style:normal; font-size:10.8px; color:var(--text-faint); letter-spacing:0.04em; margin-top:7px; }
-  @media(max-width:760px){ .statstrip{ grid-template-columns:1fr; } .statstrip > div{ border-right:none; border-bottom:1px solid var(--rule-soft); } .statstrip > div:last-child{ border-bottom:none; } }
+  /* ---- founder ---- */
+  .founder{display:grid; grid-template-columns:200px 1fr; gap:44px; align-items:center}
+  .portrait{width:200px; height:200px; border-radius:12px; overflow:hidden; border:1px solid var(--rule); background:var(--raised)}
+  .portrait img{width:100%; height:100%; object-fit:cover; filter:grayscale(.2) contrast(1.04) brightness(.92) sepia(.1)}
+  .founder h3{font-size:26px}
+  .founder .role{color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.12em; text-transform:uppercase; margin-top:8px}
+  .founder p{margin-top:16px; max-width:560px; color:var(--dim)}
+  .founder .track{margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--faint)}
+  @media(max-width:680px){ .founder{grid-template-columns:1fr; gap:24px} }
 
-  /* ---------- figures ---------- */
-  figure.chart{ margin:34px 0 0; padding:26px 26px 20px; border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); }
-  figure.chart svg{ width:100%; height:auto; display:block; }
-  figure.chart figcaption{ margin-top:16px; padding-top:13px; border-top:1px solid var(--rule-soft); font-size:13.2px; color:var(--text-dim); }
-  figure.chart figcaption .src{ display:block; margin-top:5px; font-family:'IBM Plex Mono',monospace; font-size:10.8px; color:var(--text-faint); line-height:1.6; }
+  /* ---- contact ---- */
+  .contact{text-align:center; padding:96px 0}
+  .contact h2{font-size:clamp(26px,4vw,40px)}
+  .contact .maillarge{display:inline-block; margin-top:34px; font-family:'IBM Plex Mono',monospace; font-size:clamp(15px,2.4vw,20px);
+    color:var(--gold-bright); border:1px solid var(--rule); border-radius:6px; padding:16px 30px; cursor:pointer; transition:.2s; user-select:none}
+  .contact .maillarge:hover{background:rgba(201,162,39,.12); border-color:var(--gold-dim)}
+  .contact .altmail{margin-top:22px; font-family:'IBM Plex Mono',monospace; font-size:12.8px; color:var(--faint)}
+  .contact .altmail .lnk{color:var(--dim); cursor:pointer} .contact .altmail .lnk:hover{color:var(--gold-bright)}
 
-  /* ---------- the layer table ---------- */
-  .layer{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  @media(max-width:860px){ .layer{ grid-template-columns:1fr; } }
-  .layer > div{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:22px 22px 24px; }
-  .layer > div.mid{ border-color:var(--rule); background:linear-gradient(165deg, rgba(201,162,39,0.075), rgba(201,162,39,0.02) 55%, transparent); }
-  .layer h3{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); font-weight:500; margin-bottom:15px; }
-  .layer ul{ margin:0 0 15px; padding:0; list-style:none; }
-  .layer li{ font-size:14.2px; color:var(--text-dim); padding:5px 0 5px 17px; position:relative; line-height:1.55; }
-  .layer li::before{ content:"·"; position:absolute; left:3px; color:var(--gold-dim); }
-  .layer q{ display:block; font-family:'Source Serif 4',serif; font-size:15.6px; color:var(--text); line-height:1.5; font-style:italic; padding-top:14px; border-top:1px solid var(--rule-soft); }
-  .layer .mid q{ color:var(--gold-bright); font-style:normal; }
-  .layer p.close{ margin:0; font-family:'Source Serif 4',serif; font-size:15.6px; color:var(--text); line-height:1.5; font-style:italic; padding-top:14px; border-top:1px solid var(--rule-soft); }
-  .layer p.sub{ margin:10px 0 0; font-size:13.4px; color:var(--text-faint); }
-
-  /* ---------- tables ---------- */
-  .tbl{ width:100%; border-collapse:collapse; font-size:14.2px; }
-  .tbl th{ text-align:left; font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); font-weight:500; padding:0 14px 11px 0; border-bottom:1px solid var(--rule); vertical-align:bottom; }
-  .tbl td{ padding:13px 14px 13px 0; border-bottom:1px solid var(--rule-soft); color:var(--text-dim); vertical-align:top; line-height:1.6; }
-  .tbl td b{ color:var(--text); font-weight:500; }
-  .tbl tr:last-child td{ border-bottom:none; }
-  .tbl .nums{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold-dim); white-space:nowrap; letter-spacing:0.06em; }
-  .scroller{ overflow-x:auto; }
-  .scroller .tbl{ min-width:600px; }
-
-  /* ---------- solution families ---------- */
-  .fam{ margin-bottom:46px; }
-  .fam:last-child{ margin-bottom:0; }
-  .famhead{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; padding-bottom:12px; margin-bottom:8px; border-bottom:1px solid var(--rule); }
-  .famhead h3{ font-size:1.32rem; color:var(--text); }
-  .famhead .count{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); }
-  .fam > p.famlead{ font-size:14.8px; color:var(--text-dim); margin:0 0 22px; max-width:74ch; }
-  .fam > p.famlead b{ color:var(--text); font-weight:500; }
-
-  .sol{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:22px 24px 24px; transition:border-color .2s, transform .2s; }
-  .sol:hover{ border-color:var(--rule); transform:translateY(-2px); }
-  .sol .num{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); letter-spacing:0.16em; }
-  .sol h4{ font-size:1.05rem; color:var(--gold-bright); margin:7px 0 4px; line-height:1.3; }
-  .sol .tagline{ font-family:'Source Serif 4',serif; font-style:italic; font-size:14px; color:var(--text-faint); margin:0 0 12px; }
-  .sol .q{ font-size:14.4px; color:var(--text-dim); margin:0; line-height:1.66; }
-  .sol .q b{ color:var(--text); font-weight:500; }
-  .sol .meta{ margin-top:15px; padding-top:13px; border-top:1px solid var(--rule-soft); font-family:'IBM Plex Mono',monospace; font-size:11.4px; color:var(--text-faint); line-height:1.75; }
-  .sol .meta b{ color:var(--gold-dim); font-weight:500; }
-  .sol .meta span{ display:block; }
-
-  .mat{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:2px 8px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--text-faint); margin-top:12px; }
-  .mat.now{ color:var(--unsat); border-color:rgba(127,176,138,0.3); }
-  .mat.eng{ color:var(--gold); border-color:var(--rule); }
-  .mat.edge{ color:var(--sat); border-color:rgba(217,131,106,0.3); }
-
-  /* ---------- kicker pull-quote ---------- */
-  .kicker{ margin:38px 0 0; padding:24px 28px; border-left:3px solid var(--gold-dim); background:linear-gradient(90deg, rgba(201,162,39,0.06), transparent 70%); }
-  .kicker p{ margin:0; font-family:'Source Serif 4',serif; font-size:1.16rem; line-height:1.55; color:var(--text); }
-  .kicker p b{ color:var(--gold-bright); font-weight:600; }
-  .kicker .who{ display:block; margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-faint); }
-
-  /* sectors */
-  .sector{ display:grid; grid-template-columns:210px 1fr; gap:26px; padding:22px 0; border-bottom:1px solid var(--rule-soft); align-items:start; }
-  .sector:last-child{ border-bottom:none; }
-  .sector h3{ font-size:1.05rem; color:var(--gold-bright); margin:0; }
-  .sector .sols{ display:block; font-family:'IBM Plex Mono',monospace; font-size:10.8px; color:var(--text-faint); letter-spacing:0.1em; margin-top:5px; }
-  .sector p{ margin:0 0 9px; font-size:14.8px; color:var(--text-dim); }
-  .tags{ display:flex; flex-wrap:wrap; gap:7px; }
-  .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-dim); border:1px solid var(--rule-soft); padding:3px 9px; border-radius:2px; letter-spacing:0.04em; }
-  @media(max-width:760px){ .sector{ grid-template-columns:1fr; gap:10px; } }
-
-  /* assessment */
-  .offer{ border:1px solid var(--rule); border-radius:8px; background:linear-gradient(160deg, rgba(201,162,39,0.06), rgba(201,162,39,0.015) 60%, transparent); padding:36px 34px; }
-  .offer ol{ margin:0; padding:0; list-style:none; counter-reset:step; display:grid; gap:15px; }
-  .offer ol li{ counter-increment:step; padding-left:40px; position:relative; color:var(--text-dim); font-size:15px; }
-  .offer ol li::before{
-    content:counter(step,decimal-leading-zero); position:absolute; left:0; top:1px;
-    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--gold); letter-spacing:0.08em;
-    border:1px solid var(--rule); border-radius:3px; padding:1px 6px;
-  }
-  .offer ol li b{ color:var(--text); font-weight:500; }
-
-  .opts{ display:grid; grid-template-columns:1fr; gap:16px; margin-top:22px; }
-  .opt{ border:1px solid var(--rule-soft); border-radius:6px; background:var(--bg-raised); padding:20px 20px 22px; }
-  .opt .letter{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); }
-  .opt h4{ font-size:0.99rem; color:var(--gold-bright); margin:8px 0 10px; line-height:1.34; }
-  .opt p{ margin:0; font-size:13.8px; color:var(--text-dim); line-height:1.6; }
-  .opt dl{ margin:14px 0 0; padding-top:12px; border-top:1px solid var(--rule-soft); }
-  .opt dt{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-faint); margin-top:9px; }
-  .opt dt:first-child{ margin-top:0; }
-  .opt dd{ margin:3px 0 0; font-size:13px; color:var(--text-dim); line-height:1.55; }
-
-  /* founder */
-  .founder{ display:grid; grid-template-columns:236px 1fr; gap:44px; align-items:start; }
-  @media(max-width:800px){ .founder{ grid-template-columns:1fr; gap:26px; } }
-  .portrait{ position:relative; width:236px; max-width:100%; aspect-ratio:1; border-radius:8px; overflow:hidden; border:1px solid var(--rule); background:var(--bg-raised); box-shadow:0 18px 44px rgba(0,0,0,0.5); }
-  .portrait img{ width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(0.22) contrast(1.04) brightness(0.9) sepia(0.12); }
-  /* vignette so the light studio backdrop sits into the dark page rather than on top of it */
-  .portrait::after{
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background:
-      radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(10,10,12,0.55) 88%),
-      linear-gradient(to bottom, rgba(10,10,12,0.18), transparent 34%, rgba(10,10,12,0.42));
-    box-shadow:inset 0 0 34px 12px rgba(10,10,12,0.6);
-  }
-  .founder h3{ font-size:1.32rem; margin-bottom:4px; }
-  .founder .role{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:20px; }
-  .founder p{ font-size:15.4px; color:var(--text-dim); margin:0 0 14px; max-width:68ch; }
-  .founder p b{ color:var(--text); font-weight:500; }
-  .idline{ font-family:'IBM Plex Mono',monospace; font-size:12.4px; color:var(--gold-dim); letter-spacing:0.04em; margin-top:4px; }
-  .stats{ display:flex; flex-wrap:wrap; gap:0; margin:24px 0 0; border:1px solid var(--rule-soft); border-radius:6px; overflow:hidden; }
-  .stat{ flex:1 1 150px; padding:16px 18px; border-right:1px solid var(--rule-soft); }
-  .stat:last-child{ border-right:none; }
-  .stat b{ display:block; font-family:'Source Serif 4',serif; font-size:1.5rem; color:var(--gold); font-weight:600; line-height:1.1; }
-  .stat span{ font-family:'IBM Plex Mono',monospace; font-size:10.8px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faint); }
-
-  /* contact */
-  #contact{ text-align:center; }
-  #contact h2{ margin:0 auto 16px; max-width:20ch; }
-  #contact p.lead{ color:var(--text-dim); max-width:54ch; margin:0 auto 34px; }
-  .maillarge{
-    display:inline-block; font-family:'IBM Plex Mono',monospace;
-    font-size:clamp(0.98rem,2.7vw,1.5rem); color:var(--gold);
-    border:1px solid var(--rule); border-radius:5px; padding:19px 34px;
-    background:linear-gradient(160deg, rgba(201,162,39,0.08), transparent);
-    cursor:pointer; user-select:none; -webkit-user-select:none;
-    transition:background .2s, border-color .2s, color .2s;
-  }
-  .maillarge:hover{ background:rgba(201,162,39,0.14); border-color:var(--gold-dim); color:var(--gold-bright); }
-  .altmail{ margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:12.6px; color:var(--text-faint); user-select:none; -webkit-user-select:none; }
-  .altmail .lnk{ color:var(--text-dim); cursor:pointer; }
-  .altmail .lnk:hover{ color:var(--gold-bright); }
-
-  footer{ border-top:1px solid var(--rule-soft); padding:34px 0 46px; }
-  footer .wrap{ display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center; }
-  footer p{ margin:0; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--text-faint); letter-spacing:0.04em; }
-  footer .fw{ font-family:'Source Serif 4',serif; font-size:0.98rem; letter-spacing:0.04em; color:var(--text-dim); }
-  footer .fw span{ color:var(--gold-dim); }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ animation:none !important; transition:none !important; }
-    html{ scroll-behavior:auto; }
-    #logicfield{ display:none; }
-  }
+  footer{border-top:1px solid var(--hair); padding:30px 0}
+  footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+  footer p{margin:0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--faint); letter-spacing:.03em}
 </style>
 </head>
 <body>
-
 <div id="logicfield" aria-hidden="true"></div>
 
-<header>
-  <div class="bar">
-    <div class="wordmark">Primus<span>Credence</span></div>
-    <nav class="links">
-      <a href="#risk">The risk</a>
+<header class="bar">
+  <div class="wrap">
+    <span class="brand">Primus<span class="c">Credence</span></span>
+    <nav>
       <a href="#stack">The stack</a>
-      <a href="#ai">AI</a>
-      <a href="#method">Method</a>
-      <a href="#build">What we build</a>
-      <a href="#guarantee">Guarantee</a>
-      <a href="#founder">Founder</a>
+      <a href="#solutions">Solutions</a>
+      <a href="solutions/">The deck</a>
+      <span class="btn" data-mail="r" role="button" tabindex="0" aria-label="Email the founder">Email</span>
     </nav>
-    <span class="mailbtn" data-mail="r" role="button" tabindex="0" aria-label="Email the founder"></span>
   </div>
 </header>
 
-<div class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Application security &middot; access policies &middot; boundaries</div>
-    <h1>Who can reach what inside your application — <em>decided, not scanned</em>.</h1>
-    <p class="lead">Broken Access Control is first in the OWASP Top 10, and in OWASP's own test data every application examined carried some form of it. Scanners, pen tests and traffic monitoring all answer the same way: <i>we looked, and did not find a way in</i>. PrimusCredence compiles your application's own roles and tokens, the cloud role or host account it runs under, the identity provider that admits its users and the network that carries its traffic into one logical model — then settles the question over every possible request. It works the same whether the app runs in the cloud or on your own servers: the roles that cause Broken Access Control live in the app, not in the cloud beneath it. Either a proof that no request violates the property, or a concrete counter-example, every hop named, reproducible on your own estate.</p>
-
-    <div class="proof">
-      <div class="head"><span class="dot"></span> app &rarr; cloud composition &middot; sample output</div>
-<pre><span class="c">$ primus verify --app strapi --property no-escalation-to-cloud</span>
-
-  <span class="k">&#8704; request</span> &middot; <span class="q">&#172;( app_role &#8800; super-admin &#8743; reaches(</span>
-                <span class="q">app_role, iam:role/cms-task ) )</span>
-
-  app roles &#8594; Cedar &#8594; SMT ..................... <span class="ok">ok</span>
-  IAM policies &#8594; SMT ......................... <span class="ok">ok</span>
-  composing bridge edges ...................... <span class="ok">ok</span>
-
-  <span class="sat">SAT &#8212; counter-example found</span>
-    principal    app_role/editor
-    edge 1       editor &#8594; plugin::upload.settings   <span class="c">(Cedar: permit)</span>
-    edge 2       plugin runs in-process              <span class="c">(inherits task role)</span>
-    edge 3       iam:role/cms-task &#8594; s3:GetObject   <span class="c">(billing-exports/*)</span>
-
-  <span class="c">every policy on this path is individually valid.</span>
-  <span class="c">1 violation proven reachable. evidence bundle written.</span></pre>
-    </div>
-  </div>
-</div>
-
-<!-- ============================ THE RISK ============================ -->
-<section id="risk">
-  <div class="wrap">
-    <div class="sec-label">The risk</div>
-    <h2>The category that causes the most breaches is the one nobody decides</h2>
-    <p class="sec-intro">Broken Access Control is <b>#1 in the OWASP Top 10 for 2025</b>; Security Misconfiguration is <b>#2</b>. Both are application-layer defects — what an app's own roles and settings permit, which the cloud beneath it never sees. Neither is exotic, and neither is being designed out.</p>
-
-    <div class="statstrip">
-      <div>
-        <b>#1</b><span>Broken Access Control, top of the OWASP Top 10</span><i>40 CWEs &middot; 1.8m+ occurrences</i>
-      </div>
-      <div>
-        <b>100%</b><span>of applications tested carried some form of it</span><i>OWASP Top 10:2025</i>
-      </div>
-      <div>
-        <b>+116%</b><span>growth in object-level access reports over five years, while XSS flatlined</span><i>HackerOne</i>
+<main>
+  <!-- hero -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Provable security for applications</div>
+      <h1 style="margin-top:22px">Who can reach what inside your application — <em>decided, not scanned.</em></h1>
+      <p class="lead">The cloud base is already proven. The application on top of it is not. We decide who can reach what — over <em>every</em> request, not a sample — and return a proof, or the exact request that breaks it.</p>
+      <div class="cta">
+        <span class="btn" data-mail="r" role="button" tabindex="0" style="padding:13px 22px; font-size:13px" aria-label="Email the founder">Start a micro-proof</span>
+        <a class="ghost" href="solutions/">See the deck →</a>
       </div>
     </div>
+  </section>
 
-    <h2 style="margin-top:56px">And they live for years</h2>
-    <p class="sec-intro">Each of these was authenticated, well-formed traffic to an endpoint the caller was allowed to use. That is what this class of defect looks like from the outside — which is precisely why monitoring did not stop it.</p>
+  <div class="wrap"><div class="divider"></div></div>
 
-    <div class="scroller">
-      <table class="tbl">
-        <thead><tr><th>Incident</th><th>What failed</th><th class="nums">Exposure</th><th>Found by</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><b>Telecom API</b></td>
-            <td>An access-control coding error on a dormant, internet-facing API — 9.5m records</td>
-            <td class="nums">~4 years latent</td>
-            <td>Not by monitoring</td>
-          </tr>
-          <tr>
-            <td><b>Mobile carrier</b></td>
-            <td>An API queried without authorisation — 37m accounts</td>
-            <td class="nums">~6 weeks</td>
-            <td>The operator, six weeks in</td>
-          </tr>
-          <tr>
-            <td><b>Financial services</b></td>
-            <td>A misconfigured component reaching an over-broad cloud role — 106m records</td>
-            <td class="nums">~4 months</td>
-            <td>An outside tipster</td>
-          </tr>
-          <tr>
-            <td><b>Partner portal</b></td>
-            <td>Auto-approved registration, then object enumeration — 49m records</td>
-            <td class="nums">~3 weeks</td>
-            <td>The data appearing for sale</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="kicker">
-      <p>A defect class present in <b>every tested application</b>, invisible to automated tooling on both sides of the contest, surviving for years once introduced — is not a remediation problem. It is a design-time problem, and it needs a design-time answer.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ THE STACK ============================ -->
-<section id="stack">
-  <div class="wrap">
-    <div class="sec-label">Why it persists</div>
-    <h2>Every technique in common use either guesses the intended policy, or has a person hand-write it</h2>
-    <p class="sec-intro">This is not a criticism of any individual tool — each answers a different question, and answers it well. The point is narrower: <b>none of them holds a statement of who is supposed to be able to do what</b>, and none reads the application's own role configuration.</p>
-
-    <div class="grid g3">
-      <div class="card">
-        <span class="idx">Static analysis</span>
-        <h3>SAST</h3>
-        <p>Flags a route with no recognisable authorisation decorator. It cannot know the intended policy, so a check that is <i>present but wrong</i> — inverted logic, the wrong role, the wrong object — reads as correct.</p>
-        <div class="out"><b>Blind to</b> · authorisation configured at runtime</div>
-      </div>
-      <div class="card">
-        <span class="idx">Dynamic testing</span>
-        <h3>DAST</h3>
-        <p>With several personas it will replay one user's requests as another and compare. Strong, and still a sample: it tests the endpoints someone crawled, against the data someone seeded, outside production.</p>
-        <div class="out"><b>Blind to</b> · endpoints never crawled</div>
-      </div>
-      <div class="card">
-        <span class="idx">Dependencies</span>
-        <h3>SCA &amp; supply chain</h3>
-        <p>Finds known CVEs and known-bad packages. It cannot judge whether a legitimate plugin's <i>permissions</i> suit your policy, or whether a vulnerable feature is switched on in configuration.</p>
-        <div class="out"><b>Blind to</b> · plugin permission grants</div>
-      </div>
-      <div class="card">
-        <span class="idx">Cloud posture</span>
-        <h3>CSPM &amp; CNAPP</h3>
-        <p>Traces lineage from repository to running workload and ranks findings by cloud context. Its attack path reads <i>exposed workload &rarr; vulnerable package &rarr; IAM role</i>. It stops at that role.</p>
-        <div class="out"><b>Blind to</b> · the app's own role model</div>
-      </div>
-      <div class="card">
-        <span class="idx">Runtime</span>
-        <h3>WAF &amp; API monitoring</h3>
-        <p>Matches known attack shapes and baselines per-user behaviour. A broken-access request is well formed, authenticated, and aimed at an endpoint the caller may use — there is no payload to match.</p>
-        <div class="out"><b>Blind to</b> · the request that looks legitimate</div>
-      </div>
-      <div class="card">
-        <span class="idx">Human</span>
-        <h3>Penetration testing</h3>
-        <p>Finds more logic bugs than any other technique, and the bug-bounty growth in this category is human-found. But it is point-in-time, scoped, and testers <i>infer</i> intent rather than being told it.</p>
-        <div class="out"><b>Blind to</b> · tomorrow's role change</div>
-      </div>
-    </div>
-
-    <h2 style="margin-top:56px">Five blind spots they share</h2>
-    <p class="sec-intro">These are structural limits of the methods, not gaps that a better product release will close.</p>
-
-    <div class="scroller">
-      <table class="tbl">
-        <thead><tr><th class="nums">&nbsp;</th><th>Blind spot</th><th>Why it cannot be closed from inside the method</th></tr></thead>
-        <tbody>
-          <tr><td class="nums">B1</td><td><b>No statement of intended policy</b></td><td>Every tool substitutes a signature, a baseline, a schema or a tester's tick-box. None of those is intent.</td></tr>
-          <tr><td class="nums">B2</td><td><b>The app's own roles are invisible</b></td><td>A self-hosted application keeps role-to-resource grants in its own database and admin panel. Code, infrastructure and cloud scanners all read somewhere else.</td></tr>
-          <tr><td class="nums">B3</td><td><b>Nobody composes the layers</b></td><td>Cloud tools stop at the IAM role; application tools stop at the application. The path between them belongs to neither.</td></tr>
-          <tr><td class="nums">B4</td><td><b>Sampling, not deciding</b></td><td>Crawled endpoints, exercised paths, observed traffic, learned baselines — all describe what was seen, never what is possible.</td></tr>
-          <tr><td class="nums">B5</td><td><b>Detection after exposure</b></td><td>Out-of-band tooling cannot block; correlation runs after the events; credential findings require the credentials to be used first.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="kicker">
-      <p>A monitor sees <b>what happened</b>. Not what could. An access-control defect is a reachable bad state whether or not anyone has reached it yet — and the dormant endpoint that generates no traffic generates no finding either.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ WHAT AI CHANGED ============================ -->
-<section id="ai">
-  <div class="wrap">
-    <div class="sec-label">What AI changed</div>
-    <h2>More dangerous, more numerous, and still invisible to automation</h2>
-    <p class="sec-intro">The interesting finding is not that attackers have AI. It is that the entire AI wave — offensive and defensive — is washing over this specific defect class without touching it.</p>
-
-    <div class="layer">
-      <div>
-        <h3>One &middot; attackers automated it</h3>
-        <ul>
-          <li>In a state-sponsored campaign disclosed in late 2025, AI performed <b>80&ndash;90% of the tactical work</b> across roughly thirty targets</li>
-          <li>Reconnaissance, credential access and lateral movement <i>are</i> authorisation problems</li>
-          <li>That operating model has since spread to every class of actor</li>
-        </ul>
-        <p class="close">What changed was the economics of the attack, not the techniques.</p>
-      </div>
-      <div>
-        <h3>Two &middot; AI writes the apps</h3>
-        <ul>
-          <li>AI-generated code security has <b>stalled at a 56% pass rate</b> across two years and a hundred models</li>
-          <li>Models now handle the mechanical classes well — SQL injection, cryptography</li>
-          <li>Authorisation is not even in the benchmark, because it cannot be checked from a file</li>
-        </ul>
-        <p class="close">When three leading agents each built full applications, broken access control was the most universal flaw in every one.</p>
-      </div>
-      <div class="mid">
-        <h3>Three &middot; and AI cannot find it</h3>
-        <ul>
-          <li><b>0%</b> — the strongest model's success rate on authorisation logic spread across multiple files</li>
-          <li><b>0%</b> — the same, on framework middleware, which is where real authorisation lives</li>
-          <li><b>88%</b> of what it did report was false</li>
-        </ul>
-        <q>A model can spot a missing check where one obviously belongs. It cannot decide whether a distributed authorisation scheme is correct.</q>
-      </div>
-    </div>
-
-    <div class="statstrip">
-      <div>
-        <b>&minus;7 days</b><span>mean time-to-exploit in 2025 — exploitation now begins, on average, before a patch exists</span><i>Mandiant M-Trends 2026</i>
-      </div>
-      <div>
-        <b>$2.77</b><span>average cost to turn a published advisory into a verified working exploit, automatically</span><i>CVE-GENIE, 51% of 841 CVEs</i>
-      </div>
-      <div>
-        <b>109 : 1</b><span>machine identities per human — 42% privileged, while 88% of organisations still define &ldquo;privileged user&rdquo; as human only</span><i>Identity Security Landscape</i>
-      </div>
-    </div>
-
-    <div class="note" style="margin-top:26px"><b>The agent problem is this problem.</b> An AI agent's effective permissions are the transitive closure of its tool graph, not the union of its individual grants — the same composition question, arriving in a new form. AWS's own answer secures agent permissions with Cedar: the same analysable language, and the same symbolic analysis, that our method applies to the application layer.</div>
-
-    <div class="kicker">
-      <p>A scanner knows cross-site scripting when an alert box pops. It cannot know whether <b>user 7 was supposed to read order 1002</b> — because that fact is not in the code, the traffic or the response. It is a business intention, and until it is written down in a form a machine can check, no amount of model capability will find it.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ METHOD ============================ -->
-<section id="method">
-  <div class="wrap">
-    <div class="sec-label">The method</div>
-    <h2>This is not an unproven technique. It runs at cloud scale today.</h2>
-    <p class="sec-intro">Automated reasoning compiles a policy into logic and decides a property over <b>every possible request</b>, rather than sampling. Three systems, all published, all in production, all from AWS.</p>
-
-    <div class="grid g3">
-      <div class="card">
-        <span class="idx">FMCAD 2018</span>
-        <h3>Zelkova</h3>
-        <p>Compiles an access policy to SMT and decides a property over every request context — principal, action, resource and condition keys. Behind IAM Access Analyzer and S3 Block Public Access.</p>
-        <div class="out"><b>Scale</b> · ~1 billion solver queries a day</div>
-      </div>
-      <div class="card">
-        <span class="idx">OOPSLA 2024</span>
-        <h3>Cedar &amp; its symbolic compiler</h3>
-        <p>An authorisation language built to be analysed. Proves a policy set always allows, always denies, is equivalent to or implied by another — and returns a counter-example when it does not.</p>
-        <div class="out"><b>Sound and complete</b> · proved in Lean · Apache 2.0 · CNCF</div>
-      </div>
-      <div class="card">
-        <span class="idx">CAV 2019</span>
-        <h3>Tiros</h3>
-        <p>Decides whether a network path exists between two points, from the configuration alone, without sending a packet. Behind VPC Reachability Analyzer and Network Access Analyzer.</p>
-        <div class="out"><b>Used for</b> · PCI DSS segmentation evidence</div>
-      </div>
-    </div>
-
-    <h2 style="margin-top:56px">&hellip;and every one of them stops at the cloud layer</h2>
-    <p class="sec-intro">Each answers a fixed question chosen in advance by the provider. That is not an oversight — a cloud provider verifies what it owns. The application's roles belong to the customer, the identity provider to a third party, and nobody's remit covers the seam.</p>
-
-    <div class="scroller">
-      <table class="tbl">
-        <thead><tr><th>The question</th><th class="nums">Answered today</th><th>By what</th></tr></thead>
-        <tbody>
-          <tr><td>Is this storage bucket reachable from outside the organisation?</td><td class="nums" style="color:var(--unsat)">Yes</td><td>Zelkova, in the request path</td></tr>
-          <tr><td>Does a network path exist from the internet to this subnet?</td><td class="nums" style="color:var(--unsat)">Yes</td><td>Tiros</td></tr>
-          <tr><td>Can I state a rule specific to <i>my</i> application's cloud footprint?</td><td class="nums" style="color:var(--gold)">Partly</td><td>Three fixed check types, as pipeline calls</td></tr>
-          <tr><td><b>What can the application's own roles, tokens and public users do?</b></td><td class="nums" style="color:var(--sat)">No</td><td>Not cloud configuration at all</td></tr>
-          <tr><td><b>Can someone reach the app's cloud role <i>through</i> the app?</b></td><td class="nums" style="color:var(--sat)">No</td><td>Cloud tools stop at the role</td></tr>
-          <tr><td><b>What does a combination across all four layers allow?</b></td><td class="nums" style="color:var(--sat)">No</td><td>Each engine decides its own layer alone</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="kicker">
-      <p>The industry proved that access policies can be <b>decided rather than scanned</b>, then stopped one layer short of where the risk actually lives. The languages and the solvers are open and free for commercial use. What is missing is the translation and composition layer — and that is what we build.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ WHAT WE BUILD ============================ -->
-<section id="build">
-  <div class="wrap">
-    <div class="sec-label">What we build</div>
-    <h2>One graph, four layers</h2>
-    <p class="sec-intro">We treat the estate as a single graph. Each layer contributes edges, and each edge is decided by the engine that owns that layer. A <b>property</b> is a question about the graph, written in your own vocabulary before any analysis runs — so nobody can say the goalposts moved. <b>Layer 1 is hosting-independent</b> — it reads the app's own configuration — so it applies unchanged to an on-prem or self-hosted application; the cloud layers simply re-express against the host's own accounts and network when there is no cloud.</p>
-
-    <div class="grid g2">
-      <div class="card">
-        <span class="idx">Layer 1 &middot; the layer no product reads</span>
-        <h3>Application authorisation</h3>
-        <p>The app's own roles, API tokens and public access, exported read-only and translated into Cedar, then decided by its symbolic compiler. For the first time the application's permissions become an analysable object.</p>
-        <div class="out"><b>Engine</b> · our translator + Cedar SymCC</div>
-      </div>
-      <div class="card">
-        <span class="idx">Layer 2</span>
-        <h3>Cloud IAM <span style="font-weight:400;opacity:0.7">— or host account</span></h3>
-        <p>Identity, resource and organisation policies, permission boundaries and session context — after everything that can narrow a grant has been applied. On an on-prem app this layer is instead the host service account, database credentials and secrets store the app runs under.</p>
-        <div class="out"><b>Engine</b> · our IAM&rarr;SMT encoding, Zelkova as oracle</div>
-      </div>
-      <div class="card">
-        <span class="idx">Layer 3 &middot; the core of the product</span>
-        <h3>Bridges</h3>
-        <p>Where holding a permission in one layer effectively confers one in another — a plugin inheriting the app's cloud role, an identity-provider group mapping into both. Our catalogue, and the defensible part of the engine.</p>
-        <div class="out"><b>Engine</b> · graph search, confirmed per path</div>
-      </div>
-      <div class="card">
-        <span class="idx">Layer 4</span>
-        <h3>Network</h3>
-        <p>Whether the principal can actually reach the endpoint where a permission is exercised. A trust edge only matters if the path to exercise it exists.</p>
-        <div class="out"><b>Engine</b> · Tiros, via Network Access Analyzer</div>
-      </div>
-    </div>
-
-    <div class="grid g2" style="margin-top:18px">
-      <div class="card" style="border-color:rgba(127,176,138,0.28)">
-        <span class="idx" style="color:var(--unsat)">Verdict A</span>
-        <h3 style="color:var(--unsat)">Proof</h3>
-        <p>No request violates the property — over the whole modelled space, under a stated model. Not &ldquo;none was found&rdquo;.</p>
-      </div>
-      <div class="card" style="border-color:rgba(217,131,106,0.28)">
-        <span class="idx" style="color:var(--sat)">Verdict B</span>
-        <h3 style="color:var(--sat)">Counter-example</h3>
-        <p>The exact request or path that breaks it, with one checkable witness per edge, confirmed by a single combined query before it is reported.</p>
-      </div>
-    </div>
-
-    <h2 style="margin-top:56px">What this finds that nothing else does</h2>
-
-    <div class="grid g3">
-      <div class="card">
-        <span class="idx">01</span>
-        <h3>Through the plugin</h3>
-        <p>Every plugin runs in the application's process holding the application's <i>entire</i> cloud role — there is no per-plugin cloud identity. A non-administrative user who can reach a plugin action can reach the cloud.</p>
-        <div class="out"><b>Why nobody sees it</b> · no cloud tool reads the plugin's actions; no app tool reads the cloud role</div>
-      </div>
-      <div class="card">
-        <span class="idx">02</span>
-        <h3>Exploitable only by configuration</h3>
-        <p>A 2026 critical CMS vulnerability leaked an administrator's password-reset token to unauthenticated callers. Whether an installation was exploitable depended on which roles had public read on certain content types.</p>
-        <div class="out"><b>Why nobody sees it</b> · that setting lives in the admin panel</div>
-      </div>
-      <div class="card">
-        <span class="idx">03</span>
-        <h3>A trust condition that admits anyone</h3>
-        <p>One missing condition in a CI trust policy lets <i>any</i> repository assume a deployment role. One research team found 500+ such roles across 275 accounts.</p>
-        <div class="out"><b>Why nobody sees it</b> · each policy is individually valid</div>
-      </div>
-    </div>
-
-    <div class="note" style="margin-top:26px"><b>We integrate rather than replace.</b> Results publish as SARIF, which GitHub, GitLab and application-security posture tools already consume; as AWS Security Hub findings, which flow on to your SIEM; and as replayable test cases for your existing dynamic-testing tools — so a counter-example proved in policy is confirmed live in the running app. The policy checks run in CI next to Checkov and Semgrep.</div>
-  </div>
-</section>
-
-<!-- ============================ WHY NOW ============================ -->
-<section id="why">
-  <div class="wrap">
-    <div class="sec-label">Why now</div>
-    <h2>The method was always right. Until recently it was not affordable.</h2>
-    <p class="sec-intro">Formal verification has been an <b>expert-driven, costly and tedious exercise</b>: somebody with formal-methods training has to model the system and write the specification by hand. That cost is the whole reason it stayed with the hyperscalers and the safety-critical industries, however much everyone else wanted the assurance.</p>
-
-    <div class="layer">
-      <div>
-        <h3>Then</h3>
-        <ul>
-          <li>Weeks of specialist time to model one system</li>
-          <li>A scarce skill, priced accordingly</li>
-          <li>Economic only where failure is unaffordable</li>
-        </ul>
-        <p class="close">Wanted widely. Adopted narrowly.</p>
-      </div>
-      <div class="mid">
-        <h3>Now</h3>
-        <ul>
-          <li>A model reads policies, role exports and configuration at machine speed</li>
-          <li>It proposes structure the expert reviews, corrects and rewrites</li>
-          <li>The expensive step collapses; the expert judgement stays</li>
-        </ul>
-        <q>The method is finally affordable at the same moment the problem became unavoidable.</q>
-      </div>
-      <div>
-        <h3>The division of labour</h3>
-        <ul>
-          <li><b>The expert</b> drafts and ratifies every specification</li>
-          <li><b>The model</b> assists, and never delivers a verdict</li>
-          <li><b>The solver</b> decides — it is the ground truth</li>
-        </ul>
-        <p class="close">Hallucination is bounded by construction, not by tuning.</p>
-      </div>
-    </div>
-
-    <div class="note" style="margin-top:26px"><b>Why this is the defensible use of AI in security.</b> The dominant industry pattern asks a model for a security verdict and then manages its false positives — and the measured evidence above is that models score near zero on exactly this problem. Our architecture never lets the model deliver a verdict: a decision procedure with published semantics returns the answer, and the AI only reduces the human cost of reaching it. AWS validates the same pattern in its own products, pairing AI-assisted authoring with an SMT validation step.</div>
-  </div>
-</section>
-
-<!-- ============================ GUARANTEE ============================ -->
-<section id="guarantee">
-  <div class="wrap">
-    <div class="sec-label">The guarantee</div>
-    <h2>Stated precisely, with its conditions — and its limits</h2>
-
-    <div class="kicker" style="margin-top:0">
-      <p>If the analysis reports a property as holding, then <b>for every request expressible in the modelled fragment, against the configuration exported at time T</b>, the property holds. If it reports a violation, it returns a concrete counter-example.</p>
-      <span class="who">The proof depends on three things: the encoder matches the service semantics, the solver is correct, and the export is complete</span>
-    </div>
-
-    <div class="grid g2" style="margin-top:28px">
-      <div class="card">
-        <span class="idx" style="color:var(--unsat)">What holds</span>
-        <h3>We will say</h3>
-        <p>&ldquo;For this property, over these layers, as configured at 14:00 today, no request exists that violates it. Here is the proof artefact, and here is how to re-run it.&rdquo;</p>
-        <p>And: &ldquo;Here is a request that violates it, step by step — each step checkable against the engine that produced it.&rdquo;</p>
-      </div>
-      <div class="card">
-        <span class="idx" style="color:var(--sat)">What does not</span>
-        <h3>We will never say</h3>
-        <p>&ldquo;Your application is secure.&rdquo; &ldquo;We replace your WAF.&rdquo; &ldquo;No escalation is possible.&rdquo;</p>
-        <p>A proof about a policy does not show the <i>code</i> calls it. It does not address stolen keys, injection or memory-safety bugs. Where the root cause is code or key custody, our contribution is to bound the blast radius — after a compromise, the graph states exactly what the foothold can and cannot reach.</p>
-      </div>
-    </div>
-
-    <div class="note" style="margin-top:26px"><b>Preventive and detective are complementary.</b> A proof does not replace testing, detection or monitoring. Everything outside the model — the asset nobody inventoried, the stack that drifted from its template, the third party with a VPN account — is exactly where your existing tooling earns its place. We name the boundary of the model in every report.</div>
-  </div>
-</section>
-
-<!-- ============================ ENGAGE ============================ -->
-<section id="engage">
-  <div class="wrap">
-    <div class="sec-label">How to engage</div>
-    <h2>Five milestones, each independently useful, all on one engine</h2>
-    <p class="sec-intro">AWS first; a second cloud provider arrives as a module. Sell any subset, in any order — every milestone reuses the same encoder, the same solver and the same report generator.</p>
-
-    <div class="offer">
-      <ol>
-        <li><b>M0 &middot; Prototype and proof of value.</b> We build a deliberately realistic lab. Market tools assess it; we fix everything they report until every tool reports clean and the output is timestamped. Our analysis then still returns a real, exploitable defect with a counter-example. That delta is the entire proposition, shown rather than argued.</li>
-        <li><b>M1 &middot; The app as a cloud principal.</b> Rules specific to your application, stated over the cloud permissions it holds, and proved on every pull request rather than once a year.</li>
-        <li><b>M2 &middot; The app's own permissions.</b> Roles, API tokens and public access translated to Cedar and decided by its symbolic compiler — the layer no product on the market reads.</li>
-        <li><b>M3 &middot; Paths through the app.</b> Plugins become principals with declared manifests; the bridge edges from app role to cloud role are decided. Nobody detects this today.</li>
-        <li><b>M4 &middot; Boundaries, as modules.</b> Account and organisation, identity provider, network, data residency, and a second cloud — each adding its edges to the same graph.</li>
-      </ol>
-    </div>
-
-    <div class="opts">
-      <div class="opt">
-        <span class="letter">Start here</span>
-        <h4>One property, one narrow slice, read-only access</h4>
-        <p>Weeks, not months. No agent deployed, rules of engagement agreed up front, and a deliverable that is either a counter-example reproducible on your own systems or a proof that the property holds. No retainer implied, and nothing obliging you to continue.</p>
-        <dl>
-          <dt>Access</dt><dd>Read-only configuration export — policies and role definitions, never your data</dd>
-          <dt>Deliverable</dt><dd>The property as agreed, the verdict, the evidence bundle, and the named boundary of the model</dd>
-        </dl>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- ============================ FOUNDER ============================ -->
-<section id="founder">
-  <div class="wrap">
-    <div class="sec-label">Founder</div>
-    <h2>Twenty-two years of program analysis and formal verification &mdash; including the access-control reasoning this is built on</h2>
-
-    <div class="founder">
-      <div>
-        <div class="portrait">
-          <img src="assets/raghavendra.jpeg" alt="Dr. Raghavendra Ramesh">
+  <!-- the stack -->
+  <section id="stack">
+    <div class="wrap">
+      <div class="sechead"><span class="eyebrow">Where the risk lives</span>
+        <h2>The base is proven. The app, and the seams, are not.</h2></div>
+      <div class="stackgrid">
+        <div class="stack">
+          <div class="layer plugins"><div class="lt">Plugins &amp; extensions</div><div class="ls">run inside the app — inherit its privilege</div></div>
+          <div class="layer app"><div class="lt">Application <span class="tag no">unproven</span></div><div class="ls">its own roles, tokens &amp; config — OWASP #1 &amp; #2</div></div>
+          <div class="layer seam"><div class="lt">The seam</div>
+            <div class="seamitems">
+              <i><span class="dot" style="background:var(--cyb)"></span>access control via APIs</i>
+              <i><span class="dot" style="background:var(--cyb)"></span>SDK &amp; library use</i>
+              <i><span class="dot" style="background:var(--pink)"></span>PQC binding</i>
+            </div>
+          </div>
+          <div class="layer cloud"><div class="lt">Cloud &amp; infrastructure <span class="tag ok">proven ✓</span></div><div class="ls">VMs · databases · queues · storage · IAM · network</div></div>
+        </div>
+        <div class="stacknote">
+          <div class="big">The hyperscalers formally proved the cloud base. The application above it was never proved — and the seams between quietly undo it.</div>
+          <div class="small">→ that gap is exactly what we prove</div>
         </div>
       </div>
-      <div>
-        <h3>Dr. Raghavendra Ramesh</h3>
-        <div class="role">Founder &amp; CEO &middot; PrimusCredence</div>
+    </div>
+  </section>
 
-        <p>PrimusCredence was founded to take automated reasoning — the discipline behind formally verified protocols, compilers and operating systems — to the layer of application security where it has never been applied. What the hyperscalers built internally for their own cloud, the organisations running applications on top of it can neither buy off a price list nor stand up in-house.</p>
+  <div class="wrap"><div class="divider"></div></div>
 
-        <p>Dr. Raghavendra holds a PhD and MSc (Engg) in Computer Science from the Indian Institute of Science, Bangalore, where he was a Microsoft PhD Fellow. His work spans program analysis, mathematical logic, automata theory, cryptography and fault-tolerant distributed systems.</p>
-
-        <p>At <b>Oracle Labs</b> he built static-analysis engines for vulnerability detection — information-flow type systems, scalable context-sensitive points-to analysis, and static detection of cursor leaks and second-order SQL injection, implemented in C++ within the Parfait/LLVM framework. Six granted US patents came out of that work, including one that combines information-flow analysis with <b>access-control reasoning</b> to detect privilege violations before software ships — the direct ancestor of what PrimusCredence now does across layers. At <b>ConsenSys R&amp;D</b> he designed and published atomic cross-chain transaction protocols, contributing to the Atomic Crosschain Technology prototype on Hyperledger Besu. As <b>Vice President of Research &amp; Development at Supra</b> he co-built a blockchain R&amp;D division from the ground up, co-invented the Moonshot BFT consensus protocol (DSN 2024) and led its formal safety verification by model checking (FMBC 2024), co-designed the HyperNova and HyperLoop cross-chain architectures, and co-invented parallel execution and optimal sharding for deconstructed state-machine replication (VLDB 2025).</p>
-
-        <p>He works in Dafny, TLA+, Datalog, IVy, F#, C, C++ and Java.</p>
-        <div class="idline">Person of Indian Origin &nbsp;|&nbsp; Australian Citizen &nbsp;|&nbsp; Dubai Resident</div>
-
-        <div class="stats">
-          <div class="stat"><b>22+</b><span>Years</span></div>
-          <div class="stat"><b>6</b><span>US patents</span></div>
-          <div class="stat"><b>16+</b><span>Publications</span></div>
-          <div class="stat"><b>PhD</b><span>IISc Bangalore</span></div>
-        </div>
-
-        <p style="margin-top:22px; font-size:14.6px;">Full publication list, patents and research whitepapers:
-          <a href="https://raghavendra80.github.io" class="mono" style="font-size:13.6px">raghavendra80.github.io</a>
-        </p>
+  <!-- solutions -->
+  <section id="solutions">
+    <div class="wrap">
+      <div class="sechead"><span class="eyebrow">One method — four solutions</span>
+        <h2>One engine. One evidence layer. Four questions nothing else answers.</h2></div>
+      <div class="sols">
+        <div class="sol"><div class="n">1</div><div><h3>App entitlement proofs</h3><p>What can each role, token and public user reach — and can any reach what it must not?</p></div></div>
+        <div class="sol"><div class="n">2</div><div><h3>App→cloud escalation</h3><p>Can a user reach the app's cloud role — its secrets and keys — through a plugin?</p></div></div>
+        <div class="sol"><div class="n">3</div><div><h3>App &amp; API conformance</h3><p>Does our code use the cloud, credential and crypto SDKs the way their contracts require?</p></div></div>
+        <div class="sol"><div class="n">4</div><div><h3>Post-quantum migration</h3><p>On a quantum-safe cloud, does the app still authenticate the right party, every session?</p></div></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============================ CONTACT ============================ -->
-<section id="contact">
-  <div class="wrap">
-    <div class="sec-label">Contact</div>
-    <h2>Email directly</h2>
-    <p class="lead">No forms, no sales sequence, no scheduling funnel. Write to me and you will get a reply from me personally, usually within a day. If you would rather start from a specific question than a capability list, send the finding you cannot currently close.</p>
+  <div class="wrap"><div class="divider"></div></div>
 
-    <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra"></span>
+  <!-- proof -->
+  <section id="proof">
+    <div class="wrap">
+      <div class="sechead"><span class="eyebrow">Why a proof</span>
+        <h2>Scanners sample. A proof decides over every request.</h2></div>
+      <div class="proof">
+        <div class="pcard u"><div class="k">UNSAT</div><p>No violating state exists — over the whole modelled space. Not “none was found.”</p></div>
+        <div class="pcard s"><div class="k">SAT + witness</div><p>The exact request, path or call ordering that breaks it — reproducible on your estate.</p></div>
+      </div>
+      <p class="proofline" style="margin-top:34px">A preventive control, with evidence behind it — beside your testing and your SOC. We add to your stack; we don’t replace it.</p>
+    </div>
+  </section>
 
-    <div class="altmail">General and administrative &middot; <span class="lnk" data-mail="i" role="button" tabindex="0" aria-label="Email the general enquiries address"></span></div>
-  </div>
-</section>
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- founder -->
+  <section id="founder">
+    <div class="wrap">
+      <div class="founder">
+        <div class="portrait"><img src="assets/raghavendra.jpeg" alt="Dr. Raghavendra Ramesh"></div>
+        <div>
+          <h3>Dr. Raghavendra Ramesh</h3>
+          <div class="role">Founder &amp; CEO</div>
+          <p>Twenty-two years applying mathematical methods to the security and correctness of real systems — a PhD from IISc Bangalore in model checking, a decade of security static analysis at Oracle Labs, and consensus verification at ConsenSys and Supra.</p>
+          <div class="track">Static analysis · theorem proving · model checking &nbsp;·&nbsp; Dafny · TLA+ · IVy · Lean · Isabelle</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- contact -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>Let us prove one property on your estate.</h2>
+      <p class="lead" style="margin:18px auto 0; max-width:560px; color:var(--dim)">One narrow, high-risk slice. Read-only, no agent, weeks not months — and a counter-example on your own systems, or a proof.</p>
+      <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra"></span>
+      <div class="altmail">General enquiries · <span class="lnk" data-mail="i" role="button" tabindex="0" aria-label="Email the general enquiries address"></span></div>
+    </div>
+  </section>
+</main>
 
 <footer>
   <div class="wrap">
-    <div>
-      <div class="fw">Primus<span>Credence</span></div>
-      <p style="margin-top:6px">United Arab Emirates</p>
-    </div>
-    <p>&copy; 2026 PrimusCredence</p>
+    <p>PrimusCredence · UAE</p>
+    <p>primuscredence.com</p>
   </div>
 </footer>
 
 <script>
 (function(){
-  /* ---------- ambient logic symbols ---------- */
+  /* subtle ambient logic field */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce) {
-    var glyphs = ['⊢','⊨','∀','∃','∧','∨','¬','⇒','⇔',
-                  '≡','⊥','⊤','□','◇','∈','∉','⊆','∅',
-                  'λ','⊕','∴','∎','⊑','≅','≠','⊂'];
+    var glyphs = ['⊢','⊨','∀','∃','∧','∨','¬','⇒','⇔','≡','⊥','⊤','□','◇','∈','⊆','λ','⊕','∴','∎'];
     var field = document.getElementById('logicfield');
-    var N = 30, frag = document.createDocumentFragment();
-    for (var i = 0; i < N; i++) {
-      var s = document.createElement('span');
-      s.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
-      var size = 15 + Math.random()*46;            /* 15–61px */
-      var dur  = 42 + Math.random()*52;            /* 42–94s  */
-      /* larger glyphs cover more area, so dim them slightly — keeps body copy readable */
-      var sizeFactor = 1 - ((size - 15) / 46) * 0.38;
-      s.style.left = (Math.random()*100).toFixed(2) + '%';
-      s.style.fontSize = size.toFixed(1) + 'px';
-      s.style.opacity = ((0.16 + Math.random()*0.19) * sizeFactor).toFixed(3);
-      s.style.setProperty('--sway', ((Math.random()*140) - 70).toFixed(0) + 'px');
-      s.style.setProperty('--spin', ((Math.random()*90) - 45).toFixed(0) + 'deg');
-      s.style.animationDuration = dur.toFixed(1) + 's';
-      s.style.animationDelay = (-Math.random()*dur).toFixed(1) + 's';
+    var N = 16, frag = document.createDocumentFragment();
+    for (var i=0;i<N;i++){
+      var s=document.createElement('span');
+      s.textContent=glyphs[Math.floor(Math.random()*glyphs.length)];
+      var size=16+Math.random()*40, dur=52+Math.random()*48;
+      var o=(0.05+Math.random()*0.07)*(1-((size-16)/40)*0.4);
+      s.style.left=(Math.random()*100).toFixed(2)+'%';
+      s.style.fontSize=size.toFixed(1)+'px';
+      s.style.setProperty('--o',o.toFixed(3));
+      s.style.setProperty('--sway',((Math.random()*120)-60).toFixed(0)+'px');
+      s.style.setProperty('--spin',((Math.random()*80)-40).toFixed(0)+'deg');
+      s.style.animationDuration=dur.toFixed(1)+'s';
+      s.style.animationDelay=(-Math.random()*dur).toFixed(1)+'s';
       frag.appendChild(s);
     }
     field.appendChild(frag);
   }
 
-  /* ---------- email: assembled at runtime, not selectable ---------- */
-  var D = ['primuscredence', 'com'].join('.');
-  var BOX = { r: 'raghavendra', i: 'info' };
-  var SUBJ = { r: 'Micro-Proof Assessment — enquiry', i: 'Enquiry — PrimusCredence' };
-
-  function addr(k){ return BOX[k] + String.fromCharCode(64) + D; }
-
-  function open(k){
-    window.location.href = 'mailto:' + addr(k) + '?subject=' + encodeURIComponent(SUBJ[k]);
-  }
-
-  var nodes = document.querySelectorAll('[data-mail]');
-  Array.prototype.forEach.call(nodes, function(el){
-    var k = el.getAttribute('data-mail');
-    el.textContent = addr(k);
+  /* email: assembled at runtime, not selectable */
+  var D=['primuscredence','com'].join('.');
+  var BOX={r:'raghavendra', i:'info'};
+  var SUBJ={r:'Micro-Proof Assessment — enquiry', i:'Enquiry — PrimusCredence'};
+  var LABEL={}; /* keep button labels that already have text */
+  function addr(k){ return BOX[k]+String.fromCharCode(64)+D; }
+  function openMail(k){ window.location.href='mailto:'+addr(k)+'?subject='+encodeURIComponent(SUBJ[k]); }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-mail]'), function(el){
+    var k=el.getAttribute('data-mail');
+    if(!el.textContent.trim()){ el.textContent=addr(k); }   /* fill only empty nodes; labelled buttons keep their text */
     el.setAttribute('title', addr(k));
-    el.addEventListener('click', function(){ open(k); });
-    el.addEventListener('keydown', function(e){
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(k); }
-    });
+    el.addEventListener('click', function(){ openMail(k); });
+    el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openMail(k); } });
     el.addEventListener('copy', function(e){ e.preventDefault(); });
     el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   });
 })();
 </script>
-
 </body>
 </html>
