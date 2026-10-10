@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PrimusCredence — Application security, decided.</title>
-<meta name="description" content="The cloud base is proven. The application on top of it is not. PrimusCredence proves who can reach what inside your application — over every request, not a sample — across its own access control, its network isolation, and its API and library use.">
+<meta name="description" content="The cloud base is proven. The application on top of it is not. PrimusCredence proves who can reach what inside your application — over every request, not a sample — across its own access control, its network isolation, and where its regulated data can go.">
 <meta property="og:title" content="PrimusCredence — application security, decided not scanned">
 <meta property="og:description" content="Scanners tell you what they found. A proof tells you what cannot happen. Provable security for applications.">
 <meta property="og:type" content="website">
@@ -116,6 +116,7 @@
     color:var(--gold-bright); font-family:'IBM Plex Mono',monospace; font-size:17px; display:grid; place-items:center}
   .sol h3{font-size:21px}
   .sol p{margin:6px 0 0; font-size:14.5px; color:var(--dim)}
+  .sol p.what{font-size:16px; font-weight:600; color:var(--cyb)}
   .sol .area{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyb); margin-bottom:6px}
   @media(max-width:960px){ .sols{grid-template-columns:1fr} }
 
@@ -195,7 +196,7 @@
           <div class="layer seam"><div class="lt">The seam</div>
             <div class="seamitems">
               <i><span class="dot" style="background:var(--cyb)"></span>access control via APIs</i>
-              <i><span class="dot" style="background:var(--cyb)"></span>SDK &amp; library use</i>
+              <i><span class="dot" style="background:var(--cyb)"></span>data paths &amp; copies</i>
               <i><span class="dot" style="background:var(--cyb)"></span>network paths between zones</i>
             </div>
           </div>
@@ -217,9 +218,9 @@
       <div class="sechead"><span class="eyebrow">One method — three services</span>
         <h2>One engine. One evidence layer. Three questions nothing else answers.</h2></div>
       <div class="sols">
-        <div class="sol"><div class="n">1</div><div><div class="area">Access control</div><h3>App entitlement proofs</h3><p>What can each role, token and public user reach — and can any reach what it must not?</p></div></div>
-        <div class="sol"><div class="n">2</div><div><div class="area">Network isolation</div><h3>Network reachability &amp; segmentation</h3><p>Does any path reach a protected subnet from an untrusted zone — and does east-west segmentation actually hold?</p></div></div>
-        <div class="sol"><div class="n">3</div><div><div class="area">API protocols</div><h3>App &amp; API conformance</h3><p>Does our code use the cloud, credential and crypto SDKs the way their contracts require?</p></div></div>
+        <div class="sol"><div class="n">1</div><div><div class="area">Access control</div><h3>App entitlement proofs</h3><p class="what">Who may do what.</p><p>What can each role, token and public user reach — and can any reach what it must not?</p></div></div>
+        <div class="sol"><div class="n">2</div><div><div class="area">Network isolation</div><h3>Network reachability &amp; segmentation</h3><p class="what">What traffic can reach where.</p><p>Does any path reach a protected subnet from an untrusted zone — and does east-west segmentation actually hold?</p></div></div>
+        <div class="sol"><div class="n">3</div><div><div class="area">Data residency</div><h3>Data residency &amp; sovereignty proofs</h3><p class="what">Where regulated data can go.</p><p>Can regulated data leave the country or the organisation — through a backup, a replica, a cache or a key — or could anyone make it leave?</p></div></div>
       </div>
     </div>
   </section>
