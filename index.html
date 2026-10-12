@@ -99,6 +99,11 @@
   .seamitems{display:flex; gap:22px; flex-wrap:wrap; margin-top:6px; font-size:14px; color:var(--dim)}
   .seamitems i{font-style:normal; display:inline-flex; gap:7px; align-items:center}
   .dot{width:7px; height:7px; border-radius:50%; display:inline-block}
+  /* service number badges: tie each layer of the stack to the service that proves it */
+  .num{flex:0 0 auto; width:20px; height:20px; border-radius:50%; display:inline-grid; place-items:center;
+       font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; color:#0b0d12; background:var(--cyb)}
+  .layer .lt .num{margin-left:auto}
+  .layer .lt{display:flex; align-items:center; gap:10px}
   .tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:999px}
   .tag.ok{color:var(--green); border:1px solid rgba(127,176,138,.35)}
   .tag.no{color:var(--gold-bright); border:1px solid var(--rule)}
@@ -174,7 +179,7 @@
     <div class="wrap">
       <div class="eyebrow">Provable security for applications</div>
       <h1 style="margin-top:22px">Who can reach what inside your application — <em>decided, not scanned.</em></h1>
-      <p class="lead">The cloud base is already proven. The application on top of it is not. We decide who can reach what — over <em>every</em> request, not a sample — and return a proof, or the exact request that breaks it.</p>
+      <p class="lead">The cloud base is already proven. The application on top of it is not. We decide who can reach what, which network paths exist, and where regulated data can go — over <em>every</em> request, not a sample — and return a proof, or the exact chain that breaks it.</p>
       <div class="cta">
         <span class="btn" data-mail="r" role="button" tabindex="0" style="padding:13px 22px; font-size:13px" aria-label="Email the founder">Start a micro-proof</span>
         <a class="ghost" href="solutions/">See the deck →</a>
@@ -191,13 +196,13 @@
         <h2>The base is proven. The app, and the seams, are not.</h2></div>
       <div class="stackgrid">
         <div class="stack">
-          <div class="layer plugins"><div class="lt">Plugins &amp; extensions</div><div class="ls">run inside the app — inherit its privilege</div></div>
-          <div class="layer app"><div class="lt">Application <span class="tag no">unproven</span></div><div class="ls">its own roles, tokens &amp; config — OWASP #1 &amp; #2</div></div>
+          <div class="layer plugins"><div class="lt">Plugins &amp; extensions <span class="num">1</span></div><div class="ls">run inside the app — inherit its privilege</div></div>
+          <div class="layer app"><div class="lt">Application <span class="tag no">unproven</span> <span class="num">1</span></div><div class="ls">its own roles, tokens &amp; config — OWASP #1 &amp; #2</div></div>
           <div class="layer seam"><div class="lt">The seam</div>
             <div class="seamitems">
-              <i><span class="dot" style="background:var(--cyb)"></span>access control via APIs</i>
-              <i><span class="dot" style="background:var(--cyb)"></span>data paths &amp; copies</i>
-              <i><span class="dot" style="background:var(--cyb)"></span>network paths between zones</i>
+              <i><span class="num">1</span>access via APIs</i>
+              <i><span class="num">3</span>data paths &amp; copies</i>
+              <i><span class="num">2</span>network paths</i>
             </div>
           </div>
           <div class="layer cloud"><div class="lt">Cloud &amp; infrastructure <span class="tag ok">proven ✓</span></div><div class="ls">VMs · databases · queues · storage · IAM · network</div></div>
@@ -218,8 +223,8 @@
       <div class="sechead"><span class="eyebrow">One method — three services</span>
         <h2>One engine. One evidence layer. Three questions nothing else answers.</h2></div>
       <div class="sols">
-        <div class="sol"><div class="n">1</div><div><div class="area">Access control</div><h3>App entitlement proofs</h3><p class="what">Who may do what.</p><p>What can each role, token and public user reach — and can any reach what it must not?</p></div></div>
-        <div class="sol"><div class="n">2</div><div><div class="area">Network isolation</div><h3>Network reachability &amp; segmentation</h3><p class="what">What traffic can reach where.</p><p>Does any path reach a protected subnet from an untrusted zone — and does east-west segmentation actually hold?</p></div></div>
+        <div class="sol"><div class="n">1</div><div><div class="area">Access control</div><h3>App entitlement proofs</h3><p class="what">Who may do what.</p><p>What can each role, token and public user reach — in the app and in the Kubernetes cluster beneath it — and can any reach what it must not?</p></div></div>
+        <div class="sol"><div class="n">2</div><div><div class="area">Network isolation</div><h3>Network reachability &amp; segmentation</h3><p class="what">What traffic can reach where.</p><p>Does any path reach a protected subnet or pod from an untrusted zone — across cloud, data centre, OT and Kubernetes — and does east-west segmentation actually hold?</p></div></div>
         <div class="sol"><div class="n">3</div><div><div class="area">Data residency</div><h3>Data residency &amp; sovereignty proofs</h3><p class="what">Where regulated data can go.</p><p>Can regulated data leave the country or the organisation — through a backup, a replica, a cache or a key — or could anyone make it leave?</p></div></div>
       </div>
     </div>
@@ -234,7 +239,7 @@
         <h2>Scanners sample. A proof decides over every request.</h2></div>
       <div class="proof">
         <div class="pcard u"><div class="k">UNSAT</div><p>No violating state exists — over the whole modelled space. Not “none was found.”</p></div>
-        <div class="pcard s"><div class="k">SAT + witness</div><p>The exact request, path or call ordering that breaks it — reproducible on your estate.</p></div>
+        <div class="pcard s"><div class="k">SAT + witness</div><p>The exact request, path or chain that breaks it — reproducible on your estate.</p></div>
       </div>
       <p class="proofline" style="margin-top:34px">A preventive control, with evidence behind it — beside your testing and your SOC. We add to your stack; we don’t replace it.</p>
     </div>
@@ -246,7 +251,7 @@
   <section id="founder">
     <div class="wrap">
       <div class="founder">
-        <div class="portrait"><img src="assets/raghavendra.jpeg" alt="Dr. Raghavendra Ramesh"></div>
+        <div class="portrait"><img src="assets/raghavendra-suit.jpeg" alt="Dr. Raghavendra Ramesh"></div>
         <div>
           <h3>Dr. Raghavendra Ramesh</h3>
           <div class="role">Founder &amp; CEO</div>
