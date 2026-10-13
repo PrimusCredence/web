@@ -3,12 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PrimusCredence — Application security, decided.</title>
-<meta name="description" content="The cloud base is proven. The application on top of it is not. PrimusCredence proves who can reach what inside your application — over every request, not a sample — across its own access control, its network isolation, and where its regulated data can go.">
-<meta property="og:title" content="PrimusCredence — application security, decided not scanned">
-<meta property="og:description" content="Scanners tell you what they found. A proof tells you what cannot happen. Provable security for applications.">
+<title>PrimusCredence — Provable Security for Applications</title>
+<meta name="description" content="Formal proofs for the application layer above an already-proven cloud: who may do what, what traffic can reach where, and where regulated data can go. A proof, or the exact request, path or chain that breaks it. UAE.">
+<meta name="theme-color" content="#0a0a0c">
+<meta property="og:site_name" content="PrimusCredence">
+<meta property="og:title" content="PrimusCredence — Provable Security for Applications">
+<meta property="og:description" content="Detection shows what is happening. A proof shows what cannot happen. Access control, network isolation and data residency — proved for your applications.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://primuscredence.com/">
+<meta property="og:image" content="https://primuscredence.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PrimusCredence — Provable Security for Applications. Three services: access control, network isolation, data residency.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://primuscredence.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +27,8 @@
     --gold:#c9a227; --gold-bright:#e3c46b; --gold-dim:#8c7526;
     --rule:rgba(201,162,39,0.18); --rule-soft:rgba(201,162,39,0.09);
     --hair:rgba(232,227,214,0.08);
-    --text:#e8e3d6; --dim:#a29c8c; --faint:#6f6a5e;
-    --cyb:#7ba3d9; --green:#7fb08a; --pink:#d98bb0;
+    --text:#e8e3d6; --dim:#a8a292; --faint:#8b8576;
+    --cyb:#7ba3d9; --green:#7fb08a; --pink:#d98bb0; --amber:#e0a052;
     --maxw:1060px;
     color-scheme:dark;
   }
@@ -33,7 +40,7 @@
     font-size:17px; line-height:1.65; font-weight:300;
     -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
   }
-  h1,h2,h3{font-family:'Source Serif 4',Georgia,serif; font-weight:600; margin:0; text-wrap:balance; letter-spacing:-.01em}
+  h1,h2,h3{font-family:'Source Serif 4',Georgia,serif; font-weight:600; margin:0; text-wrap:balance; letter-spacing:-.01em; line-height:1.22}
   a{color:var(--gold-bright); text-decoration:none}
   a:hover{color:#f0d792}
   :focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:3px}
@@ -63,7 +70,10 @@
     background:rgba(10,10,12,.72); border-bottom:1px solid var(--hair)}
   .bar .wrap{display:flex; align-items:center; justify-content:space-between; height:62px}
   .brand{font-family:'Source Serif 4',serif; font-weight:600; font-size:20px; letter-spacing:-.01em}
+  .brand{color:var(--text)} .brand:hover{color:var(--text)}
   .brand .c{color:var(--gold)}
+  .skip{position:absolute; left:-9999px; top:8px; z-index:60; background:var(--raised); padding:8px 14px; border-radius:4px}
+  .skip:focus{left:12px}
   .bar nav{display:flex; gap:26px; align-items:center}
   .bar nav a{color:var(--dim); font-size:13.5px; letter-spacing:.02em}
   .bar nav a:hover{color:var(--text)}
@@ -71,13 +81,19 @@
     text-transform:uppercase; color:var(--gold-bright); border:1px solid var(--rule); border-radius:4px;
     padding:9px 16px; cursor:pointer; transition:.2s; user-select:none}
   .btn:hover{background:rgba(201,162,39,.10); border-color:var(--gold-dim)}
-  @media(max-width:680px){ .bar nav a:not(.btn){display:none} }
+  .btn.solid{background:var(--gold); color:#0a0a0c; border-color:var(--gold); font-weight:500}
+  .btn.solid:hover{background:var(--gold-bright); color:#0a0a0c}
+  @media(max-width:760px){ .bar nav a:not(.btn){display:none} }
 
   /* hero */
-  .hero{padding:120px 0 96px}
+  .hero{padding:110px 0 84px}
+  @media(max-width:680px){ .hero{padding:64px 0 56px} section{padding:60px 0} }
   .hero h1{font-size:clamp(38px,6vw,72px); line-height:1.04}
   .hero .lead{margin-top:28px; max-width:620px; font-size:clamp(17px,2.4vw,21px); color:var(--dim)}
-  .hero .cta{margin-top:44px; display:flex; gap:18px; flex-wrap:wrap; align-items:center}
+  .hero .who{margin-top:20px; max-width:640px; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.02em; color:var(--gold)}
+  .hero .prec{margin-top:34px; font-size:14px; color:var(--faint); max-width:640px}
+  .hero .prec b{font-weight:500; color:var(--dim)}
+  .hero .cta{margin-top:36px; display:flex; gap:18px; flex-wrap:wrap; align-items:center}
   .cta .ghost{font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; color:var(--dim); border-bottom:1px solid var(--rule-soft); padding-bottom:3px}
   .cta .ghost:hover{color:var(--gold-bright)}
 
@@ -115,11 +131,24 @@
   /* ---- services ---- */
   .sols{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
   .sol{border:1px solid var(--hair); border-left:3px solid var(--cyb); border-radius:12px; background:var(--raised);
-    padding:26px 28px; display:flex; gap:20px; align-items:flex-start; transition:.2s}
-  .sol:hover{border-color:var(--rule); transform:translateY(-2px)}
-  .sol .n{flex:0 0 auto; width:40px; height:40px; border-radius:50%; border:1px solid var(--rule);
-    color:var(--gold-bright); font-family:'IBM Plex Mono',monospace; font-size:17px; display:grid; place-items:center}
-  .sol h3{font-size:21px}
+    padding:26px 26px 24px; display:flex; flex-direction:column; transition:border-color .2s}
+  .sol:hover{border-color:var(--rule)}
+  .sol .top{display:flex; align-items:center; gap:14px; margin-bottom:14px}
+  .sol .n{flex:0 0 auto; width:36px; height:36px; border-radius:50%; border:1px solid var(--rule);
+    color:var(--gold-bright); font-family:'IBM Plex Mono',monospace; font-size:16px; display:grid; place-items:center}
+  .sol h3{font-size:20px; line-height:1.25}
+  .sol .demo{margin-top:18px; padding-top:16px; border-top:1px solid var(--hair)}
+  .sol .demo .eyebrow{font-size:11px; letter-spacing:.18em; color:var(--cyb)}
+  .sol ul{list-style:none; margin:10px 0 0; padding:0}
+  .sol li{margin:0 0 11px; font-size:14px; line-height:1.5; color:var(--dim)}
+  .sol li b{display:block; font-weight:500; color:var(--text)}
+  .v{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.06em; line-height:1;
+     padding:4px 8px; border-radius:999px; margin:0 0 5px; color:var(--amber); border:1px solid rgba(224,160,82,.45)}
+  .v.ok{color:var(--green); border-color:rgba(127,176,138,.5)}
+  .v.out{color:var(--dim); border-color:var(--hair)}
+  .sol .note{margin-top:auto; padding-top:14px; font-family:'Source Serif 4',serif; font-style:italic; font-size:15.5px; color:var(--text); line-height:1.4}
+  .sol .eng{margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--faint); line-height:1.6}
+  .sollead{margin:-24px 0 34px; max-width:720px; color:var(--dim)}
   .sol p{margin:6px 0 0; font-size:14.5px; color:var(--dim)}
   .sol p.what{font-size:16px; font-weight:600; color:var(--cyb)}
   .sol .area{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyb); margin-bottom:6px}
@@ -134,11 +163,30 @@
   .proofline{font-family:'Source Serif 4',serif; font-style:italic; font-size:clamp(20px,2.8vw,28px); max-width:760px; line-height:1.35}
   @media(max-width:680px){ .proof{grid-template-columns:1fr} }
 
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:0}
+  .step{border:1px solid var(--hair); border-radius:12px 12px 0 0; background:var(--raised); padding:20px 20px 18px}
+  .step .sn{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold)}
+  .step h3{font-size:20px; margin-top:4px}
+  .step p{margin:6px 0 0; font-size:14.5px; color:var(--dim); line-height:1.5}
+  .aibar{background:linear-gradient(90deg,#8c7526,#c9a227 50%,#8c7526); color:#0a0a0c; text-align:center; border-radius:0 0 12px 12px;
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; padding:11px 16px; margin:4px 0 26px}
+  .honest{margin-top:22px; font-size:14.5px; color:var(--faint); max-width:760px}
+  @media(max-width:860px){ .steps{grid-template-columns:1fr 1fr} .step{border-radius:12px} .aibar{border-radius:12px} }
+  @media(max-width:340px){ .steps{grid-template-columns:1fr} }
+
+  /* ---- providers ---- */
+  .prov{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .prov ul{margin:12px 0 0; padding:0; list-style:none}
+  .prov li{padding:7px 0 7px 22px; position:relative; color:var(--dim); font-size:15.5px}
+  .prov li:before{content:""; position:absolute; left:2px; top:17px; width:8px; height:8px; border-radius:50%; background:var(--gold)}
+  .provline{margin-top:30px; font-family:'Source Serif 4',serif; font-style:italic; font-size:clamp(19px,2.4vw,24px); color:var(--gold-bright)}
+  @media(max-width:680px){ .prov{grid-template-columns:1fr} }
+
   /* ---- founder ---- */
   .founder{display:grid; grid-template-columns:200px 1fr; gap:44px; align-items:center}
   .portrait{width:200px; height:200px; border-radius:12px; overflow:hidden; border:1px solid var(--rule); background:var(--raised)}
   .portrait img{width:100%; height:100%; object-fit:cover; filter:grayscale(.2) contrast(1.04) brightness(.92) sepia(.1)}
-  .founder h3{font-size:26px}
+  .founder h2{font-size:26px}
   .founder .role{color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.12em; text-transform:uppercase; margin-top:8px}
   .founder p{margin-top:16px; max-width:560px; color:var(--dim)}
   .founder .track{margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--faint)}
@@ -150,6 +198,9 @@
   .contact .maillarge{display:inline-block; margin-top:34px; font-family:'IBM Plex Mono',monospace; font-size:clamp(15px,2.4vw,20px);
     color:var(--gold-bright); border:1px solid var(--rule); border-radius:6px; padding:16px 30px; cursor:pointer; transition:.2s; user-select:none}
   .contact .maillarge:hover{background:rgba(201,162,39,.12); border-color:var(--gold-dim)}
+  .contact .eyebrow{display:block; margin-bottom:16px}
+  .contact .alt{margin-top:18px; font-size:15px; color:var(--dim)}
+  .contact .alt .lnk{color:var(--gold-bright); cursor:pointer; border-bottom:1px solid var(--rule)}
   .contact .altmail{margin-top:22px; font-family:'IBM Plex Mono',monospace; font-size:12.8px; color:var(--faint)}
   .contact .altmail .lnk{color:var(--dim); cursor:pointer} .contact .altmail .lnk:hover{color:var(--gold-bright)}
 
@@ -161,29 +212,34 @@
 <body>
 <div id="logicfield" aria-hidden="true"></div>
 
+<a class="skip" href="#main">Skip to content</a>
 <header class="bar">
   <div class="wrap">
-    <span class="brand">Primus<span class="c">Credence</span></span>
-    <nav>
-      <a href="#stack">The stack</a>
+    <a class="brand" href="#top" aria-label="PrimusCredence — back to top">Primus<span class="c">Credence</span></a>
+    <nav aria-label="Main">
       <a href="#solutions">Services</a>
+      <a href="#method">Method</a>
+      <a href="#providers">For providers</a>
       <a href="solutions/">The deck</a>
-      <span class="btn" data-mail="r" role="button" tabindex="0" aria-label="Email the founder">Email</span>
+      <span class="btn" data-mail="d" role="button" tabindex="0" aria-label="Email to book a demo">Book a demo</span>
     </nav>
   </div>
 </header>
 
-<main>
+<main id="main">
   <!-- hero -->
-  <section class="hero">
+  <section class="hero" id="top">
     <div class="wrap">
       <div class="eyebrow">Provable security for applications</div>
-      <h1 style="margin-top:22px">Who can reach what inside your application — <em>decided, not scanned.</em></h1>
-      <p class="lead">The cloud base is already proven. The application on top of it is not. We decide who can reach what, which network paths exist, and where regulated data can go — over <em>every</em> request, not a sample — and return a proof, or the exact chain that breaks it.</p>
+      <h1 style="margin-top:22px">Who can reach what inside your application — <em>proved, not assumed.</em></h1>
+      <p class="lead">The cloud base is already formally proven. The application on top of it, its plugins and the seams between are not. We prove three things there — who may do what, what traffic can reach where, and where regulated data can go — and return a proof, or the exact request, path or chain that breaks it.</p>
+      <p class="who">For platform &amp; AppSec teams and ISVs — and for the MSSPs, consultancies and auditors who serve them.</p>
       <div class="cta">
-        <span class="btn" data-mail="r" role="button" tabindex="0" style="padding:13px 22px; font-size:13px" aria-label="Email the founder">Start a micro-proof</span>
+        <span class="btn solid" data-mail="d" role="button" tabindex="0" style="padding:13px 22px; font-size:13px" aria-label="Email to book a demo">Book a demo</span>
+        <a class="ghost" href="#contact">Start with a Micro Assessment →</a>
         <a class="ghost" href="solutions/">See the deck →</a>
       </div>
+      <p class="prec"><b>The same method</b> AWS uses on its own platform — Zelkova behind IAM Access Analyzer, Tiros behind VPC Reachability Analyzer, Cedar Analysis — applied to the layer above it.</p>
     </div>
   </section>
 
@@ -196,20 +252,20 @@
         <h2>The base is proven. The app, and the seams, are not.</h2></div>
       <div class="stackgrid">
         <div class="stack">
-          <div class="layer plugins"><div class="lt">Plugins &amp; extensions <span class="num">1</span></div><div class="ls">run inside the app — inherit its privilege</div></div>
-          <div class="layer app"><div class="lt">Application <span class="tag no">unproven</span> <span class="num">1</span></div><div class="ls">its own roles, tokens &amp; config — OWASP #1 &amp; #2</div></div>
+          <div class="layer plugins"><div class="lt">Plugins &amp; extensions <span class="num" title="Service 1">1</span></div><div class="ls">run inside the app — inherit its privilege</div></div>
+          <div class="layer app"><div class="lt">Application <span class="tag no">unproven</span> <span class="num" title="Service 1">1</span></div><div class="ls">its own roles, tokens &amp; config — OWASP #1 &amp; #2</div></div>
           <div class="layer seam"><div class="lt">The seam</div>
             <div class="seamitems">
-              <i><span class="num">1</span>access via APIs</i>
-              <i><span class="num">3</span>data paths &amp; copies</i>
-              <i><span class="num">2</span>network paths</i>
+              <i><span class="num" title="Service 1">1</span>access via APIs</i>
+              <i><span class="num" title="Service 2">2</span>network paths</i>
+              <i><span class="num" title="Service 3">3</span>data paths &amp; copies</i>
             </div>
           </div>
           <div class="layer cloud"><div class="lt">Cloud &amp; infrastructure <span class="tag ok">proven ✓</span></div><div class="ls">VMs · databases · queues · storage · IAM · network</div></div>
         </div>
         <div class="stacknote">
-          <div class="big">The hyperscalers formally proved the cloud base. The application above it was never proved — and the seams between quietly undo it.</div>
-          <div class="small">→ that gap is exactly what we prove</div>
+          <div class="big">The hyperscalers formally proved the cloud base. The application above it was never proved — and the seams between can quietly undo it.</div>
+          <div class="small">→ that gap is what we prove</div>
         </div>
       </div>
     </div>
@@ -221,27 +277,107 @@
   <section id="solutions">
     <div class="wrap">
       <div class="sechead"><span class="eyebrow">One method — three services</span>
-        <h2>One engine. One evidence layer. Three questions nothing else answers.</h2></div>
+        <h2>Access control, network isolation, data residency.</h2></div>
+      <p class="sollead">Each service answers one question over every case the model allows. In a demo we show the findings below, then the fix, then the proof.</p>
       <div class="sols">
-        <div class="sol"><div class="n">1</div><div><div class="area">Access control</div><h3>App entitlement proofs</h3><p class="what">Who may do what.</p><p>What can each role, token and public user reach — in the app and in the Kubernetes cluster beneath it — and can any reach what it must not?</p></div></div>
-        <div class="sol"><div class="n">2</div><div><div class="area">Network isolation</div><h3>Network reachability &amp; segmentation</h3><p class="what">What traffic can reach where.</p><p>Does any path reach a protected subnet or pod from an untrusted zone — across cloud, data centre, OT and Kubernetes — and does east-west segmentation actually hold?</p></div></div>
-        <div class="sol"><div class="n">3</div><div><div class="area">Data residency</div><h3>Data residency &amp; sovereignty proofs</h3><p class="what">Where regulated data can go.</p><p>Can regulated data leave the country or the organisation — through a backup, a replica, a cache or a key — or could anyone make it leave?</p></div></div>
+        <article class="sol">
+          <div class="top"><div class="n" aria-hidden="true">1</div><div class="area">Access control</div></div>
+          <h3>Application Access-Policy &amp; Entitlement Verification</h3>
+          <p class="what">Who may do what.</p>
+          <p>Can any app role, API token, plugin route or public user reach data it must not — through the app or its cloud role?</p>
+          <div class="demo"><span class="eyebrow">In the demo</span>
+            <ul>
+              <li><span class="v">VIOLATED</span><b>Two admin changes, each fine</b>Together, an Auditor at one hospital exports another hospital’s restricted records. HTTP 200.</li>
+              <li><span class="v">VIOLATED</span><b>The GraphQL plugin side door</b>No login, any document. REST still says 403.</li>
+              <li><span class="v">VIOLATED</span><b>The app ↔ cloud seam</b>One cloud role for all users: files cross tenants.</li>
+              <li><span class="v ok">PROVED</span><b>After each fix</b>Every user, every request.</li>
+            </ul>
+          </div>
+          <p class="note">Checked at the moment an admin clicks Save — before anyone can use the change.</p>
+          <p class="eng">Cedar + SymCC (CVC5), from the live app · precedent: AWS Cedar Analysis</p>
+        </article>
+        <article class="sol">
+          <div class="top"><div class="n" aria-hidden="true">2</div><div class="area">Network isolation</div></div>
+          <h3>Network Reachability &amp; Segmentation Proofs</h3>
+          <p class="what">What traffic can reach where.</p>
+          <p>Does any path exist from an untrusted zone to this one — and does east-west segmentation actually hold?</p>
+          <div class="demo"><span class="eyebrow">In the demo</span>
+            <ul>
+              <li><span class="v">VIOLATED</span><b>One policy, every zone pair</b>FortiGate/OT, AWS, Kubernetes. AWS → historian → SCADA, hop by hop, with the rule and its owner.</li>
+              <li><span class="v">WOULD VIOLATE</span><b>A change, before the CAB</b>A pending firewall rule opens 2 new paths into OT.</li>
+              <li><span class="v">VIOLATED</span><b>One dash in a NetworkPolicy</b>Any namespace reaches tenant B’s database on 5432.</li>
+              <li><span class="v ok">PROVED</span><b>Every row, after the fix</b>No packet sent.</li>
+            </ul>
+          </div>
+          <p class="note">No scanning window, no production traffic — safe on OT, and re-run on every change.</p>
+          <p class="eng">Batfish + Z3, from config files · precedent: AWS Tiros → VPC Reachability Analyzer</p>
+        </article>
+        <article class="sol">
+          <div class="top"><div class="n" aria-hidden="true">3</div><div class="area">Data residency</div></div>
+          <h3>Data Residency &amp; Sovereignty Proofs</h3>
+          <p class="what">Where regulated data can go.</p>
+          <p>Can regulated data leave the country or the organisation — or could anyone make it leave?</p>
+          <div class="demo"><span class="eyebrow">In the demo</span>
+            <ul>
+              <li><span class="v">AT RISK (can)</span><b>Nothing has left — yet</b>An ops role can replicate the data to a <span style="white-space:nowrap">“-replica”</span> bucket outside the organisation. Replayed live.</li>
+              <li><span class="v">VIOLATED (is)</span><b>A DR copy and a CDN</b>A backup in Frankfurt; edge caches outside the UAE.</li>
+              <li><span class="v out">OUTSIDE MODEL</span><b>Application egress</b>Shown, not hidden: the app can reach the internet.</li>
+              <li><span class="v ok">PROVED</span><b>After the fix</b>For storage, keys and edge.</li>
+            </ul>
+          </div>
+          <p class="note">Not where your data is — where it can go.</p>
+          <p class="eng">SMT over IAM, SCPs and key policies · precedent: AWS Zelkova → IAM Access Analyzer</p>
+        </article>
       </div>
     </div>
   </section>
 
   <div class="wrap"><div class="divider"></div></div>
 
-  <!-- proof -->
-  <section id="proof">
+  <!-- method -->
+  <section id="method">
     <div class="wrap">
-      <div class="sechead"><span class="eyebrow">Why a proof</span>
-        <h2>Scanners sample. A proof decides over every request.</h2></div>
+      <div class="sechead"><span class="eyebrow">How it works</span>
+        <h2>Detection shows what is happening. A proof shows what cannot happen.</h2></div>
+      <div class="steps">
+        <div class="step"><div class="sn">01</div><h3>Formalise</h3><p>Your existing artefact becomes a logical model.</p></div>
+        <div class="step"><div class="sn">02</div><h3>State</h3><p>The bad state you fear becomes a formula.</p></div>
+        <div class="step"><div class="sn">03</div><h3>Solve</h3><p>Z3, CVC5 and Batfish decide every case.</p></div>
+        <div class="step"><div class="sn">04</div><h3>Report</h3><p>A proof, or a reproducible witness.</p></div>
+      </div>
+      <div class="aibar">AI assists every step · the expert owns the spec</div>
       <div class="proof">
-        <div class="pcard u"><div class="k">UNSAT</div><p>No violating state exists — over the whole modelled space. Not “none was found.”</p></div>
+        <div class="pcard u"><div class="k">UNSAT</div><p>No violating state exists — over the entire space, under a stated model. Not “none was found”.</p></div>
         <div class="pcard s"><div class="k">SAT + witness</div><p>The exact request, path or chain that breaks it — reproducible on your estate.</p></div>
       </div>
-      <p class="proofline" style="margin-top:34px">A preventive control, with evidence behind it — beside your testing and your SOC. We add to your stack; we don’t replace it.</p>
+      <p class="honest">Not every property is decidable, and a proof holds only for the property and model stated — both are written down. Industrial practice: AWS · Microsoft · Meta · Airbus.</p>
+      <p class="proofline" style="margin-top:30px">Preventive evidence, beside your testing and your SOC. We add to your stack; we don’t replace it.</p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="divider"></div></div>
+
+  <!-- providers -->
+  <section id="providers">
+    <div class="wrap">
+      <div class="sechead"><span class="eyebrow">For MSSPs, consultancies &amp; auditors</span>
+        <h2>We do not certify — so you have a channel, not a rival.</h2></div>
+      <div class="prov">
+        <div class="pcard"><div class="k" style="color:var(--gold-bright)">The commercial move</div>
+          <ul>
+            <li>Proof inside bids you already win</li>
+            <li>Recurring: re-proven on every change</li>
+            <li>You keep the client and the contract</li>
+          </ul></div>
+        <div class="pcard"><div class="k" style="color:var(--gold-bright)">Why it deploys easily</div>
+          <ul>
+            <li>Read-only access, no agent on any host</li>
+            <li>No scanning window, no production traffic</li>
+            <li>Verdicts can land in your SIEM and tickets</li>
+          </ul></div>
+      </div>
+      <p class="provline">We produce the technical evidence. Your assessor keeps the opinion.</p>
+      <p class="honest" style="margin-top:12px">One analysis, read by engineering, risk and audit — each in its own terms.</p>
     </div>
   </section>
 
@@ -251,11 +387,11 @@
   <section id="founder">
     <div class="wrap">
       <div class="founder">
-        <div class="portrait"><img src="assets/raghavendra-suit.jpeg" alt="Dr. Raghavendra Ramesh"></div>
+        <div class="portrait"><img src="assets/raghavendra-400.jpg" width="200" height="200" loading="lazy" decoding="async" alt="Portrait of Dr. Raghavendra Ramesh, founder of PrimusCredence"></div>
         <div>
-          <h3>Dr. Raghavendra Ramesh</h3>
+          <h2>Dr. Raghavendra Ramesh</h2>
           <div class="role">Founder &amp; CEO</div>
-          <p>Twenty-two years applying mathematical methods to the security and correctness of real systems — a PhD from IISc Bangalore in model checking, a decade of security static analysis at Oracle Labs, and consensus verification at ConsenSys and Supra.</p>
+          <p>Twenty-two years applying mathematical methods to the security and correctness of real systems — a PhD from IISc Bangalore in model checking for information-flow security, Java vulnerability detection at Oracle Labs, and consensus verification at ConsenSys and Supra.</p>
           <div class="track">Static analysis · theorem proving · model checking &nbsp;·&nbsp; Dafny · TLA+ · IVy · Lean · Isabelle</div>
         </div>
       </div>
@@ -265,9 +401,12 @@
   <!-- contact -->
   <section class="contact" id="contact">
     <div class="wrap">
+      <span class="eyebrow">Start here — Micro Assessment of Service 1</span>
       <h2>Let us prove one property on your estate.</h2>
-      <p class="lead" style="margin:18px auto 0; max-width:560px; color:var(--dim)">One narrow, high-risk slice. Read-only, no agent, weeks not months — and a counter-example on your own systems, or a proof.</p>
-      <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra"></span>
+      <p class="lead" style="margin:18px auto 0; max-width:580px; color:var(--dim)">One narrow, high-risk slice. Read-only access, no agent deployed, weeks not months — and a counter-example on your own systems, or a proof.</p>
+      <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra Ramesh about a Micro Assessment"></span>
+      <noscript><p class="alt">Email raghavendra at primuscredence dot com</p></noscript>
+      <p class="alt">Would rather see it first? <span class="lnk" data-mail="d" role="button" tabindex="0" aria-label="Email to book a demo">Book a demo of any service</span>.</p>
       <div class="altmail">General enquiries · <span class="lnk" data-mail="i" role="button" tabindex="0" aria-label="Email the general enquiries address"></span></div>
     </div>
   </section>
@@ -275,8 +414,8 @@
 
 <footer>
   <div class="wrap">
-    <p>PrimusCredence · UAE</p>
-    <p>primuscredence.com</p>
+    <p>© 2026 PrimusCredence · UAE</p>
+    <p><a href="solutions/solutions-slides.pdf" style="color:inherit">Deck (PDF)</a> · primuscredence.com</p>
   </div>
 </footer>
 
@@ -307,8 +446,8 @@
 
   /* email: assembled at runtime, not selectable */
   var D=['primuscredence','com'].join('.');
-  var BOX={r:'raghavendra', i:'info'};
-  var SUBJ={r:'Micro-Proof Assessment — enquiry', i:'Enquiry — PrimusCredence'};
+  var BOX={r:'raghavendra', d:'raghavendra', i:'info'};
+  var SUBJ={r:'Micro Assessment — enquiry', d:'Demo request — PrimusCredence', i:'Enquiry — PrimusCredence'};
   var LABEL={}; /* keep button labels that already have text */
   function addr(k){ return BOX[k]+String.fromCharCode(64)+D; }
   function openMail(k){ window.location.href='mailto:'+addr(k)+'?subject='+encodeURIComponent(SUBJ[k]); }
