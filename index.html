@@ -33,7 +33,7 @@
   "areaServed": "GCC",
   "address": {"@type": "PostalAddress", "addressCountry": "AE"},
   "founder": {"@type": "Person", "name": "Dr. Raghavendra Ramesh", "jobTitle": "Founder & CEO", "alumniOf": "Indian Institute of Science, Bangalore"},
-  "knowsAbout": ["Formal verification", "Application security", "Access control", "Network segmentation", "Data residency", "SMT solving"]
+  "knowsAbout": ["Formal verification", "Application security", "Access control", "Network segmentation", "Data residency", "Automated reasoning"]
 }
 </script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230a0a0c'/><text y='66' x='50' text-anchor='middle' font-size='40' font-family='Georgia,serif' font-weight='700' fill='%23c9a227'>PC</text></svg>">
@@ -192,15 +192,11 @@
   .wcard{border:1px solid var(--hair); border-radius:12px; background:var(--panel); display:flex; flex-direction:column; min-width:0}
   .wcard .wh{padding:14px 18px 10px; border-bottom:1px solid var(--hair); font-size:14px; color:var(--dim)}
   .wcard .wh b{display:block; font-family:'Source Serif 4',serif; font-weight:600; font-size:17px; color:var(--text)}
-  .wcard pre{margin:0; padding:14px 18px; font-family:'IBM Plex Mono',monospace; font-size:11.6px; line-height:1.6; color:var(--dim);
-    white-space:pre; overflow-x:auto; flex:1}
-  .wcard pre .r{color:var(--amber)} .wcard pre .g{color:var(--green)} .wcard pre .k{color:var(--text)} .wcard pre .ph{color:var(--pink)}
+  .wcard .wl{margin:0; padding:14px 18px 14px 36px; flex:1; font-size:14px; line-height:1.55; color:var(--dim)}
+  .wcard .wl li{margin:0 0 6px}
   .wcard .wf{padding:11px 18px 14px; border-top:1px solid var(--hair); font-size:13.5px; color:var(--dim)}
   .wcard .wf .v{margin:0 6px 0 0}
-  .illus{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--pink); border:1px dashed rgba(217,139,176,.55); border-radius:4px; padding:4px 9px}
   .witlead{margin:-24px 0 26px; max-width:760px; color:var(--dim)}
-  .witlead .illus{margin-right:8px}
   .swipe{display:none; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--faint); margin:0 0 10px}
   /* phones/tablets: the three witnesses sit side by side and swipe, so they do not triple the page length */
   @media(max-width:960px){
@@ -301,14 +297,14 @@
     <div class="wrap">
       <div class="eyebrow">Provable security for applications — a new field beside your AppSec tools</div>
       <h1 style="margin-top:22px">Who can reach what inside your application — <em>proved, not assumed.</em></h1>
-      <p class="lead">The cloud base is already formally proven. The application on top of it, its plugins and the seams between are not. We prove three things there — who may do what, what traffic can reach where, and where regulated data can go — and return a proof — a strong compliance statement — or the exact request, path or chain that breaks it. Then we help your developers fix it, and re-prove.</p>
+      <p class="lead">The cloud base is already formally proven. The application on top of it, its plugins and the seams between are not. We prove three things there — who may do what, what traffic can reach where, and where regulated data can go — and return either a proof, which is a strong compliance statement, or the exact request, path or chain that breaks it. Then we help your developers fix it, and re-prove.</p>
       <p class="who">For platform &amp; AppSec teams, ISVs, private enterprises and government in the UAE and GCC — and for the MSSPs, consultancies and auditors who serve them.</p>
       <div class="cta">
         <span class="btn solid" data-mail="d" role="button" tabindex="0" style="padding:13px 22px; font-size:13px" aria-label="Email to book a demo">Book a demo</span>
         <a class="ghost" href="#contact">Start with a Micro Assessment →</a>
         <a class="ghost" href="solutions/">See the deck →</a>
       </div>
-      <p class="prec"><b>The same method</b> AWS uses on its own platform — Zelkova behind IAM Access Analyzer, Tiros behind VPC Reachability Analyzer, Cedar Analysis — applied to the layer above it.</p>
+      <p class="prec"><b>The same class of automated reasoning</b> the hyperscalers use to verify their own platforms — applied to the layer above it.</p>
     </div>
   </section>
 
@@ -357,15 +353,14 @@
           <p>Can any app role, API token, plugin route or public user reach data it must not — through the app or its cloud role?</p>
           <div class="demo"><div class="demohead"><span class="eyebrow">In the demo</span><span class="dnote">tools run first; none decides these</span></div>
             <ul>
-              <li><details><summary><span class="v">VIOLATED</span><b>Two admin changes, each fine</b></summary><p>Together, an Auditor at one hospital exports another hospital’s restricted records. HTTP 200.</p></details></li>
-              <li><details><summary><span class="v">VIOLATED</span><b>The GraphQL plugin side door</b></summary><p>No login, any document. REST still says 403.</p></details></li>
-              <li><details><summary><span class="v">VIOLATED</span><b>The app ↔ cloud seam</b></summary><p>One cloud role for all users: files cross tenants.</p></details></li>
+              <li><details><summary><span class="v">VIOLATED</span><b>Two allowed steps, one breach</b></summary><p>Each step is allowed on its own; together they cross tenants.</p></details></li>
+              <li><details><summary><span class="v">VIOLATED</span><b>A plugin side door</b></summary><p>A plugin route bypasses the app’s own checks.</p></details></li>
+              <li><details><summary><span class="v">VIOLATED</span><b>The app ↔ cloud seam</b></summary><p>The app’s cloud role lets data cross tenants.</p></details></li>
               <li><details><summary><span class="v ok">PROVED</span><b>After each fix</b></summary><p>Every user, every request.</p></details></li>
             </ul>
           </div>
-          <p class="note">Checked at the moment an admin clicks Save — before anyone can use the change.</p>
-          <p class="eng">Cedar + SymCC (CVC5), from the live app · precedent: AWS Cedar Analysis</p>
-          <p class="eng">Reads the app’s roles, permissions and plugin routes, and its cloud role’s policies — read-only.</p>
+          <p class="note">Checked whenever access settings change — before anyone can use the change.</p>
+          <p class="eng">Reads the app’s roles, permissions and routes, and its cloud role — read-only.</p>
         </article>
         <article class="sol">
           <div class="top"><div class="n" aria-hidden="true">2</div><div class="area">Network isolation</div></div>
@@ -375,14 +370,13 @@
           <p>Does any path exist from an untrusted zone to this one — and does east-west segmentation actually hold?</p>
           <div class="demo"><div class="demohead"><span class="eyebrow">In the demo</span><span class="dnote">tools run first; none decides these</span></div>
             <ul>
-              <li><details><summary><span class="v">VIOLATED</span><b>One policy, every zone pair</b></summary><p>FortiGate/OT and AWS. AWS → historian → SCADA, hop by hop, with the rule and its owner.</p></details></li>
-              <li><details><summary><span class="v">WOULD VIOLATE</span><b>A change, before the CAB</b></summary><p>A pending firewall rule opens 2 new paths into OT.</p></details></li>
-              <li><details><summary><span class="v">VIOLATED</span><b>One dash in a NetworkPolicy (optional)</b></summary><p>Any namespace reaches tenant B’s database on 5432.</p></details></li>
+              <li><details><summary><span class="v">VIOLATED</span><b>One policy, every zone pair</b></summary><p>From the cloud into OT, hop by hop — each rule and its owner.</p></details></li>
+              <li><details><summary><span class="v">WOULD VIOLATE</span><b>A change, before approval</b></summary><p>A pending firewall rule would open paths into OT.</p></details></li>
+              <li><details><summary><span class="v">VIOLATED</span><b>A one-character slip</b></summary><p>Any workload reaches another tenant’s database.</p></details></li>
               <li><details><summary><span class="v ok">PROVED</span><b>Every row, after the fix</b></summary><p>No packet sent.</p></details></li>
             </ul>
           </div>
           <p class="note">No scanning window, no production traffic — safe on OT, and re-run on every change.</p>
-          <p class="eng">Batfish + Z3, from config files · precedent: AWS Tiros → VPC Reachability Analyzer</p>
           <p class="eng">Reads device configurations and cloud network descriptions — no packet sent.</p>
         </article>
         <article class="sol">
@@ -393,82 +387,56 @@
           <p>Can regulated data leave the country or the organisation — or could anyone make it leave?</p>
           <div class="demo"><div class="demohead"><span class="eyebrow">In the demo</span><span class="dnote">tools run first; none decides these</span></div>
             <ul>
-              <li><details><summary><span class="v">AT RISK (can)</span><b>Nothing has left — yet</b></summary><p>An ops role can replicate the data to a <span style="white-space:nowrap">“-replica”</span> bucket outside the organisation. Replayed live.</p></details></li>
-              <li><details><summary><span class="v">VIOLATED (is)</span><b>A DR copy and a CDN</b></summary><p>A backup in Frankfurt; edge caches outside the UAE.</p></details></li>
+              <li><details><summary><span class="v">AT RISK</span><b>Nothing has left — yet</b></summary><p>An operations role could move the data outside the organisation.</p></details></li>
+              <li><details><summary><span class="v">VIOLATED</span><b>Copies abroad</b></summary><p>A backup and edge caches sit outside the country.</p></details></li>
               <li><details><summary><span class="v out">OUTSIDE MODEL</span><b>Application egress</b></summary><p>Shown, not hidden: the app can reach the internet.</p></details></li>
               <li><details><summary><span class="v ok">PROVED</span><b>After the fix</b></summary><p>For storage, keys and edge.</p></details></li>
             </ul>
           </div>
           <p class="note">Not where your data is — where it can go. Today, and whatever anyone could set up.</p>
-          <p class="eng">SMT over IAM, SCPs and key policies · precedent: AWS Zelkova → IAM Access Analyzer</p>
-          <p class="eng">Reads IAM, organisation, storage, key and CDN policies — read-only.</p>
+          <p class="eng">Reads cloud access, organisation, storage, key and CDN policies — read-only.</p>
         </article>
       </div>
       <div class="endstrip"><span class="eyebrow">Every service ends</span><span>in a proof — or the exact request, path or chain that breaks it.</span></div>
     </div>
   </section>
 
-  <!-- witness excerpts: illustrative, from the demo mockups (demo/mockups/service1–3); &lt;…&gt; are values only a real run can fill -->
+  <!-- what comes back -->
   <section id="witness" style="padding-top:0">
     <div class="wrap">
       <div class="sechead"><span class="eyebrow">What comes back</span>
         <h2>Not a score. The exact thing that breaks it.</h2></div>
-      <p class="witlead"><span class="illus">Illustrative</span>Excerpts from our demo mockups, not engine output from your estate. Values in &lt;angle brackets&gt; come only from a real run.</p>
+      <p class="witlead">Every finding is concrete and reproducible on your own estate — and every fix is re-proved.</p>
       <p class="swipe" aria-hidden="true">Swipe for the path and the chain →</p>
       <div class="wit">
         <figure class="wcard" style="margin:0">
-          <figcaption class="wh"><b>1 · The request</b>Access control — who, what, and which change caused it</figcaption>
-<pre aria-label="Illustrative Service 1 witness"><span class="r">PROPERTY VIOLATED (SAT)</span>
-R1 tenant isolation
- who     Hana (Auditor,
-         Metro General Hospital)
- action  export
- what    "St. Jude — RESTRICTED Record"
- caused  admin/Auditor/document.read
-         <span class="k">← this change</span>
-         admin/Auditor/document.export
-         <span class="k">← earlier change, proved then</span>
- scope   <span class="ph">&lt;n&gt;</span> users ×
-         <span class="ph">&lt;n&gt;</span> restricted records
-
-R1 <span class="r">✗</span>  R2–R8 <span class="g">✓</span></pre>
-          <div class="wf"><span class="v ok">PROVED</span>after the fix: R1, every user, every request.</div>
+          <figcaption class="wh"><b>1 · The request</b>Access control</figcaption>
+          <ul class="wl">
+            <li>Who — the user, role or token</li>
+            <li>What — the action and the record</li>
+            <li>Why — the setting or change that allowed it</li>
+            <li>How far — every user and record affected</li>
+          </ul>
+          <div class="wf"><span class="v ok">PROVED</span>after the fix: every user, every request.</div>
         </figure>
         <figure class="wcard" style="margin:0">
-          <figcaption class="wh"><b>2 · The path</b>Network isolation — hop by hop, with the rule and its owner</figcaption>
-<pre aria-label="Illustrative Service 2 witness"><span class="r">VIOLATED</span>  cloud tenant A → historian
-packet  tcp <span class="ph">&lt;src&gt;</span> → historian:5450
-        found by the solver; none sent
-
-1 vpn-edge    no route-map out:
-              every prefix advertised
-              owner <span class="ph">&lt;netops&gt;</span>
-2 AWS TGW     learns historian route
-              owner <span class="ph">&lt;cloud team&gt;</span>
-3 tenant A    10.0.0.0/8 → TGW
-              owner <span class="ph">&lt;app team&gt;</span>
-4 FortiGate   corp rule: 10.0.0.0/8
-              also matches the cloud
-              owner <span class="ph">&lt;OT security&gt;</span>
-  <span class="r">DELIVERED</span></pre>
-          <div class="wf"><span class="v ok">PROVED</span>after the fix: every row, must-reach rows kept.</div>
+          <figcaption class="wh"><b>2 · The path</b>Network isolation</figcaption>
+          <ul class="wl">
+            <li>From which zone, to which</li>
+            <li>Hop by hop, across cloud and on-premises</li>
+            <li>The rule at each hop, and its owner</li>
+            <li>Found from configuration — no packet sent</li>
+          </ul>
+          <div class="wf"><span class="v ok">PROVED</span>after the fix: every zone pair, required paths kept.</div>
         </figure>
         <figure class="wcard" style="margin:0">
-          <figcaption class="wh"><b>3 · The chain</b>Data residency — store, mechanism, role, policy, destination</figcaption>
-<pre aria-label="Illustrative Service 3 witness"><span class="r">AT RISK (can)</span>  media × replication
-Nothing has left. This role can
-make it leave:
-
-1 DevOpsRole
-    may set bucket replication
-    stmt "ManageReplication"
-2 … and pass s3-replication-role
-    stmt "PassS3Roles"
-3 s3-replication-role
-    may replicate to *-replica/*
-4 destination, chosen by solver:
-    "x-replica", account ∉ org
-    no SCP on aws:ResourceOrgID</pre>
+          <figcaption class="wh"><b>3 · The chain</b>Data residency</figcaption>
+          <ul class="wl">
+            <li>Which regulated store</li>
+            <li>The mechanism that could move it</li>
+            <li>Who could set that mechanism up</li>
+            <li>Where the data would end up</li>
+          </ul>
           <div class="wf"><span class="v ok">PROVED</span>after the fix: storage, keys and edge.</div>
         </figure>
       </div>
@@ -485,13 +453,13 @@ make it leave:
       <div class="steps">
         <div class="step"><div class="sn">01</div><h3>Learn</h3><p>We learn the app’s logic and turn it into a logical model.</p></div>
         <div class="step"><div class="sn">02</div><h3>Define</h3><p>Its desired security properties become formulas.</p></div>
-        <div class="step"><div class="sn">03</div><h3>Solve</h3><p>Z3, CVC5 and Batfish decide every case.</p></div>
+        <div class="step"><div class="sn">03</div><h3>Solve</h3><p>Automated solvers decide every case.</p></div>
         <div class="step"><div class="sn">04</div><h3>Report</h3><p>A proof — or the attack, a fix and a re-proof.</p></div>
       </div>
       <div class="aibar">AI assists every step · the expert owns the spec</div>
       <div class="proof">
-        <div class="pcard u"><div class="k">UNSAT</div><p>No violating state exists — over the entire space, under a stated model. Not “none was found” — a strong compliance statement.</p></div>
-        <div class="pcard s"><div class="k">SAT + witness</div><p>The exact request, path or chain that breaks it — reproducible on your estate. We demonstrate the attack existing tools miss, help your developers fix it, and re-prove.</p></div>
+        <div class="pcard u"><div class="k">PROOF</div><p>No violating state exists — over the entire space, under a stated model. Not “none was found” — a strong compliance statement.</p></div>
+        <div class="pcard s"><div class="k">COUNTER-EXAMPLE</div><p>The exact request, path or chain that breaks it — reproducible on your estate. We demonstrate the attack existing tools miss, help your developers fix it, and re-prove.</p></div>
       </div>
       <p class="honest">Not every property is decidable, and a proof holds only for the property and model stated — both are written down. Industrial practice: AWS · Microsoft · Meta · Airbus.</p>
       <p class="proofline" style="margin-top:30px">Preventive evidence, beside your testing and your SOC. We add to your stack; we don’t replace it.</p>
@@ -514,9 +482,10 @@ make it leave:
           </ul></div>
         <div class="pcard"><div class="k" style="color:var(--gold-bright)">Why it deploys easily</div>
           <ul>
-            <li>Read-only access, no agent on any host</li>
+            <li>Read-only access, nothing installed on any host</li>
             <li>No scanning window, no production traffic</li>
             <li>Verdicts can land in your SIEM and tickets</li>
+            <li>AI runs in your tenancy; data stays in-region</li>
           </ul></div>
       </div>
       <p class="provline">We produce the technical evidence. Your assessor keeps the opinion.</p>
@@ -531,7 +500,7 @@ make it leave:
 
   <div class="wrap"><div class="divider"></div></div>
 
-  <!-- closing banner (deck slide 19) -->
+  <!-- closing banner -->
   <section class="banner" aria-label="Summary">
     <div class="wrap">
       <p>Bringing mathematical rigour to security —</p>
@@ -561,7 +530,7 @@ make it leave:
     <div class="wrap">
       <span class="eyebrow">Start here — Micro Assessment of Service 1</span>
       <h2>Let us prove one property on your estate.</h2>
-      <p class="lead" style="margin:18px auto 0; max-width:580px; color:var(--dim)">One narrow, high-risk slice. Read-only access, no agent deployed, weeks not months — and a counter-example on your own systems, or a proof.</p>
+      <p class="lead" style="margin:18px auto 0; max-width:580px; color:var(--dim)">One narrow, high-risk slice. Read-only access, nothing installed, weeks not months — and a counter-example on your own systems, or a proof.</p>
       <span class="maillarge" data-mail="r" role="button" tabindex="0" aria-label="Email Dr. Raghavendra Ramesh about a Micro Assessment"></span>
       <noscript><p class="alt">Email raghavendra at primuscredence dot com</p></noscript>
       <p class="alt">Would rather see it first? <span class="lnk" data-mail="d" role="button" tabindex="0" aria-label="Email to book a demo">Book a demo of any service</span>.</p>
